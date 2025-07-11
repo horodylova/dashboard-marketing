@@ -1,1 +1,215 @@
- 
+@import 'https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap';
+
+:root {
+    /* Color System Swatch */
+    /* Misc */  
+    --kendo-color-app-surface: #fff;
+    --kendo-color-surface: #EFEDFC;
+    --kendo-color-surface-alt: #fff;
+    --kendo-color-on-app-surface: #333333;
+    --kendo-color-subtle: #525252;
+    --kendo-color-border: rgba(31, 31, 31, .16);
+    --kendo-color-border-alt: rgba(31, 31, 31, .24);
+    /* Base */ 
+    --kendo-color-base-subtle: #F5F5F5;
+    --kendo-color-base-subtle-hover: #EBEBEB;
+    --kendo-color-base-subtle-active: #E0E0E0;
+    --kendo-color-base: #EBEBEB;
+    --kendo-color-base-hover: #E0E0E0;
+    --kendo-color-base-active: #CCCCCC;
+    --kendo-color-base-emphasis: #B8B8B8;
+    --kendo-color-on-base: #333333;
+    --kendo-color-base-on-surface: #333333;
+    --kendo-color-base-on-subtle: #333333;    
+    /* Primary */
+    --kendo-color-primary-subtle: #CECAF6;
+    --kendo-color-primary-subtle-hover: #BEB9F4;
+    --kendo-color-primary-subtle-active: #ADA7F1;
+    --kendo-color-primary: #5B50E2;
+    --kendo-color-primary-hover: #4B3EE0;
+    --kendo-color-primary-active: #3122D3;
+    --kendo-color-primary-emphasis: #181169;
+    --kendo-color-on-primary: #fff;
+    --kendo-color-primary-on-surface: #5B50E2;
+    --kendo-color-primary-on-subtle: #181169;
+    /* Secondary */
+    --kendo-color-secondary-subtle: #7A7A7A;
+    --kendo-color-secondary-subtle-hover: #666;
+    --kendo-color-secondary-subtle-active: #525252;
+    --kendo-color-secondary: #525252;
+    --kendo-color-secondary-hover: #3D3D3D;
+    --kendo-color-secondary-active: #333;
+    --kendo-color-secondary-emphasis: #333;
+    --kendo-color-on-secondary: #FFFFFF;
+    --kendo-color-secondary-on-surface: #525252;
+    --kendo-color-secondary-on-subtle: #FFFFFF;
+    /* Tertiary */
+    --kendo-color-tertiary-subtle: #EBF0A8;
+    --kendo-color-tertiary-subtle-hover: #E7ED97;
+    --kendo-color-tertiary-subtle-active: #E2E986;
+    --kendo-color-tertiary: #D2DD41;
+    --kendo-color-tertiary-hover: #C4CF25;
+    --kendo-color-tertiary-active: #A3AD1F;
+    --kendo-color-tertiary-emphasis: #D2DD41;
+    --kendo-color-on-tertiary: #000000;
+    --kendo-color-tertiary-on-surface: #D2DD41;
+    --kendo-color-tertiary-on-subtle: #41450C;
+    /* Error */
+    --kendo-color-error-subtle: #FDD9D9;
+    --kendo-color-error-subtle-hover: #FBC5C5;
+    --kendo-color-error-subtle-active: #FAB2B2;
+    --kendo-color-error: #e61b24;
+    --kendo-color-error-hover: #E60F0F;
+    --kendo-color-error-active: #C00C0C;
+    --kendo-color-error-emphasis: #F88C8C;
+    --kendo-color-on-error: #FFFFFF;
+    --kendo-color-error-on-surface: #C00C0C;
+    --kendo-color-error-on-subtle: #4D0505;
+    /* Success */
+    --kendo-color-success-subtle: #CFF2EB;
+    --kendo-color-success-subtle-hover: #BFEEE4;
+    --kendo-color-success-subtle-active: #9EE5D7;
+    --kendo-color-success: #00846e;
+    --kendo-color-success-hover: #22816E;
+    --kendo-color-success-active: #1A6152;
+    --kendo-color-success-emphasis: #7EDDCA;
+    --kendo-color-on-success: #fff;
+    --kendo-color-success-on-surface: #22816E;
+    --kendo-color-success-on-subtle: #114037;
+    /* Warning */
+    --kendo-color-warning-subtle: #FFF3D6;
+    --kendo-color-warning-subtle-hover: #FFEDC2;
+    --kendo-color-warning-subtle-active: #FFE7AD;
+    --kendo-color-warning: #FFC847;
+    --kendo-color-warning-hover: #FFC233;
+    --kendo-color-warning-active: #FFBC1F;
+    --kendo-color-warning-emphasis: #FFD470;
+    --kendo-color-on-warning: #000000;
+    --kendo-color-warning-on-surface: #FFC233;
+    --kendo-color-warning-on-subtle: #523900;
+    /* Info */
+    --kendo-color-info-subtle: #D8EDFD;
+    --kendo-color-info-subtle-hover: #C4E4FD;
+    --kendo-color-info-subtle-active: #B1DBFC;
+    --kendo-color-info: #3BA5F7;
+    --kendo-color-info-hover: #289DF6;
+    --kendo-color-info-active: #0A89EB;
+    --kendo-color-info-emphasis: #89C9FA;
+    --kendo-color-on-info: #000000;
+    --kendo-color-info-on-surface: #289DF6;
+    --kendo-color-info-on-subtle: #054576;
+    /* Light */
+    --kendo-color-light-subtle: #F5F5F5;
+    --kendo-color-light-subtle-hover: #EBEBEB;
+    --kendo-color-light-subtle-active: #E0E0E0;
+    --kendo-color-light: #FFF;
+    --kendo-color-light-hover: #F5F5F5;
+    --kendo-color-light-active: #EBEBEB;
+    --kendo-color-light-emphasis: #B8B8B8;
+    --kendo-color-on-light: #1F1F1F;
+    --kendo-color-light-on-surface: #EBEBEB;
+    --kendo-color-light-on-subtle: #333;
+    /* Dark */
+    --kendo-color-dark-subtle: #292929;
+    --kendo-color-dark-subtle-hover: #333;
+    --kendo-color-dark-subtle-active: #3D3D3D;
+    --kendo-color-dark: #101419;
+    --kendo-color-dark-hover: #1F1F1F;
+    --kendo-color-dark-active: #292929;
+    --kendo-color-dark-emphasis: #666;
+    --kendo-color-on-dark: #FFFFFF;
+    --kendo-color-dark-on-surface: #1F1F1F;
+    --kendo-color-dark-on-subtle: #F5F5F5;
+    /* Series A */
+    --kendo-color-series-a-subtler: #F49A9D;
+    --kendo-color-series-a: #E82C33;
+    --kendo-color-series-a-bold: #C1151B;
+    --kendo-color-series-a-subtle: #EE6368;
+    --kendo-color-series-a-bolder: #A51217;
+    /* Series B */
+    --kendo-color-series-b-subtler: #A1D5F7;
+    --kendo-color-series-b: #31A2ED;
+    --kendo-color-series-b-bold: #1283CE;
+    --kendo-color-series-b-subtle: #69BBF2;
+    --kendo-color-series-b-bolder: #0D5F96;
+    /* Series C */
+    --kendo-color-series-c-subtler: #B4E4B5;
+    --kendo-color-series-c: #59C55D;
+    --kendo-color-series-c-bold: #3AA63E;
+    --kendo-color-series-c-subtle: #86D589;
+    --kendo-color-series-c-bolder: #2A792D;
+    /* Series D */
+    --kendo-color-series-d-subtler: #F2A6C4;
+    --kendo-color-series-d: #E23C7E;
+    --kendo-color-series-d-bold: #C31D60;
+    --kendo-color-series-d-subtle: #EA71A1;
+    --kendo-color-series-d-bolder: #8E1546;
+    /* Series E */
+    --kendo-color-series-e-subtler: #FAE89E;
+    --kendo-color-series-e: #F4CB2A;
+    --kendo-color-series-e-bold: #E0B400;
+    --kendo-color-series-e-subtle: #F7D964;
+    --kendo-color-series-e-bolder: #A38300;
+    /* Series F */
+    --kendo-color-series-f-subtler: #A8B4F0;
+    --kendo-color-series-f: #4B62D2;
+    --kendo-color-series-f-bold: #384BA8;
+    --kendo-color-series-f-subtle: #7487E7;
+    --kendo-color-series-f-bolder: #29367A;
+
+   /* Typography */
+   --kendo-font-family: 'Quicksand', sans-serif;
+
+   --kendo-font-size: 14px;
+   --kendo-font-size-sm: 12px;
+   --kendo-font-size-md: var(--kendo-font-size); 
+   --kendo-font-size-lg: 16px;
+   --kendo-font-size-xl: 20px;
+
+   --kendo-h1-font-size: 56px;
+   --kendo-h2-font-size: 42px;
+   --kendo-h3-font-size: 35px;
+   --kendo-h4-font-size: 28px;
+   --kendo-h5-font-size: 21px;
+   --kendo-h6-font-size: 14px;
+
+   --kendo-line-height-xs: 1.2;
+   --kendo-line-height-sm: 1.25;
+   --kendo-line-height-md: 1.42;
+   --kendo-line-height-lg: 1.5;
+
+   --kendo-h1-line-height: calc((var(--kendo-font-size) * 4) * 1.25);
+   --kendo-h2-line-height: calc((var(--kendo-font-size) * 3) * 1.2);
+   --kendo-h3-line-height: calc((var(--kendo-font-size) * 2.5) * 1.25);
+   --kendo-h4-line-height: calc((var(--kendo-font-size) * 2) * 1.2);
+   --kendo-h5-line-height: calc((var(--kendo-font-size) * 1.5) * 1.25);
+   --kendo-h6-line-height: calc((var(--kendo-font-size) * 1) * 1.25);
+
+   --kendo-h1-font-weight: 400;
+   --kendo-h2-font-weight: 400;
+   --kendo-h3-font-weight: 400;
+   --kendo-h4-font-weight: 700;
+   --kendo-h5-font-weight: 700;
+   --kendo-h6-font-weight: 700;
+
+
+   /* Border radius */
+   --kendo-border-radius-xs: 1px;
+   --kendo-border-radius-sm: 2px;
+   --kendo-border-radius-md: 4px;
+   --kendo-border-radius-lg: 8px;
+   --kendo-border-radius-xl: 12px;
+   --kendo-border-radius-xxl: 24px;
+   --kendo-border-radius-xxxl: 48px;
+   --kendo-border-radius-full: 9999px;
+
+   /* Panel Gradient */
+   --panel-gradient: linear-gradient(to bottom, var(--kendo-color-primary) 7%, var(--kendo-color-primary-subtle) 0%);
+}
+
+.k-drawer-wrapper ul {
+    padding: 16px
+}
+.k-drawer-container {
+    padding: 0
+}
