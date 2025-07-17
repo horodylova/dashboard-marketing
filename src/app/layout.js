@@ -1,3 +1,5 @@
+import "@progress/kendo-theme-default/dist/all.css"
+import "@progress/kendo-theme-utils/dist/all.css"
 import "./globals.css";
 
 export const metadata = {

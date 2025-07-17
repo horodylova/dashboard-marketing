@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
  
 import {
@@ -67,7 +69,7 @@ import {
   postReachData,
 } from './data';
 
-import './App.css';
+import './globals.css';
 
 import Logo from '../../public/logo.svg';
 import CompactLogo from '../../public/logo-compact.svg';
