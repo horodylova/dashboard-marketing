@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   AppBar,
   AppBarSection,
@@ -29,10 +28,10 @@ const Header = () => {
         <AppBarSection className="k-flex-basis-0 k-flex-grow k-gap-2">
           <Button title="Menu" svgIcon={menuIcon} fillMode="clear" themeColor="light" />
           <a href="#" className="k-d-none k-d-md-flex">
-            <Image src={Logo} alt="Logo" width={120} height={30} />
+            <Logo width={120} height={30} />
           </a>
           <a href="#" className="k-d-flex k-d-md-none">
-            <Image src={CompactLogo} alt="Compact Logo" width={30} height={30} />
+            <CompactLogo width={30} height={30} />
           </a>
         </AppBarSection>
         <AppBarSection className="k-flex-basis-0 k-flex-grow k-justify-content-center">

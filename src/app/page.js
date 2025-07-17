@@ -1,34 +1,30 @@
 "use client";
 
 import Image from "next/image";
- 
+
 import {
   Drawer,
   DrawerContent,
   DrawerItem,
-} from '@progress/kendo-react-layout';
-import { SvgIcon } from '@progress/kendo-react-common';
-import {
-  Checkbox,
-} from '@progress/kendo-react-inputs';
+} from "@progress/kendo-react-layout";
+import { SvgIcon } from "@progress/kendo-react-common";
+import { Checkbox } from "@progress/kendo-react-inputs";
 import {
   arrowDownIcon,
   arrowUpIcon,
   checkIcon,
   chevronDownIcon,
   xIcon,
-} from '@progress/kendo-svg-icons';
-import { Badge, BadgeContainer } from '@progress/kendo-react-indicators';
-import { Button, Chip } from '@progress/kendo-react-buttons';
+} from "@progress/kendo-svg-icons";
+import { Badge, BadgeContainer } from "@progress/kendo-react-indicators";
+import { Button, Chip } from "@progress/kendo-react-buttons";
 import {
   DatePicker,
   DateInput,
   MultiViewCalendar,
-} from '@progress/kendo-react-dateinputs';
-import {
-  ListView,
-} from '@progress/kendo-react-listview';
-import { pencilIcon, trashIcon } from '@progress/kendo-svg-icons';
+} from "@progress/kendo-react-dateinputs";
+import { ListView } from "@progress/kendo-react-listview";
+import { pencilIcon, trashIcon } from "@progress/kendo-svg-icons";
 import {
   Chart,
   ChartLegend,
@@ -39,14 +35,11 @@ import {
   ChartCategoryAxis,
   ChartCategoryAxisItem,
   ChartSeriesLabels,
-} from '@progress/kendo-react-charts';
+} from "@progress/kendo-react-charts";
 
-import {
-  Grid,
-  GridColumn,
-} from '@progress/kendo-react-grid';
+import { Grid, GridColumn } from "@progress/kendo-react-grid";
 
-import { listViewSvgIcons, gridSvgIcons } from './svg-icons';
+import { listViewSvgIcons, gridSvgIcons } from "./svg-icons";
 
 import {
   listViewData,
@@ -58,43 +51,30 @@ import {
   clickRateData,
   followers,
   postReachData,
-} from './data';
+} from "./data";
 
-import './globals.css';
+import "./globals.css";
 
-import React from 'react';
+import React from "react";
 
-// Import Header component
-import Header from './components/Header';
-
-const CustomDrawerItem = (props) => {
-  if (!props.separator) {
-    return (
-      <DrawerItem selected={props.selected}>
-        <Image
-          src={props.text !== 'Help' ? drawerImages[props.id] : drawerImages[7]}
-          alt="Emoji"
-          className="k-w-4 k-h-4"
-          width={16}
-          height={16}
-        />
-        <span className="k-item-text">{props.text}</span>
-        {props.expandable && <span className="k-spacer" />}
-        {props.expandable && (
-          <span className="k-drawer-toggle">
-            <SvgIcon icon={chevronDownIcon} />
-          </span>
-        )}
-      </DrawerItem>
-    );
-  } else {
-    return <DrawerItem separator={props.separator} />;
-  }
-};
+import Header from "./components/Header";
+import CustomDrawerItem from "./components/CustomDrawerItem";
+import CalendarPanel from "./components/CalendarPanel";
+import PostReachCard from "./components/PostReachCard";
+import ClickThroughRateCard from "./components/ClickThroughRateCard";
+import FollowersGrowthCard from "./components/FollowersGrowthCard";
+import FollowersCard from "./components/FollowersCard";
+import ScheduledPostsCard from "./components/ScheduledPostsCard";
+import BrowserUsageCard from "./components/BrowserUsageCard";
+import ToDoListCard from './components/ToDoListCard';
+import DrawerLayout from "./components/DrawerLayout";
 
 const ToDoListItemRender = (props) => {
   return (
-    <div role="listitem" className="k-d-flex k-justify-content-between k-px-2 k-py-1">
+    <div
+      role="listitem"
+      className="k-d-flex k-justify-content-between k-px-2 k-py-1"
+    >
       <div className="k-d-flex k-align-items-center">
         <label className="k-checkbox-label">
           <Checkbox checked={props.dataItem.checked} />
@@ -102,7 +82,12 @@ const ToDoListItemRender = (props) => {
         </label>
       </div>
       <div className="k-white-space-nowrap">
-        <Button title="Edit To Do" svgIcon={pencilIcon} fillMode="flat" size="small" />
+        <Button
+          title="Edit To Do"
+          svgIcon={pencilIcon}
+          fillMode="flat"
+          size="small"
+        />
         <Button
           title="Delete To Do"
           svgIcon={trashIcon}
@@ -117,14 +102,17 @@ const ToDoListItemRender = (props) => {
 
 const BrowserUsageItemRender = (props) => {
   let walletClass =
-    'k-font-size-sm k-line-height-lg k-font-weight-bold k-color-success';
+    "k-font-size-sm k-line-height-lg k-font-weight-bold k-color-success";
   if (props.dataItem.inDebt) {
-    walletClass = walletClass + ' ' + 'k-color-error';
+    walletClass = walletClass + " " + "k-color-error";
   } else {
-    walletClass = walletClass + ' ' + 'k-color-success';
+    walletClass = walletClass + " " + "k-color-success";
   }
   return (
-    <div role="listitem" className="k-d-flex k-gap-3 k-border-b k-border-b-solid k-border-border k-p-2">
+    <div
+      role="listitem"
+      className="k-d-flex k-gap-3 k-border-b k-border-b-solid k-border-border k-p-2"
+    >
       <div>
         {props.index !== undefined && listViewSvgIcons[props.index].svg}
       </div>
@@ -138,8 +126,8 @@ const BrowserUsageItemRender = (props) => {
         <span
           className={
             props.dataItem.isRising
-              ? 'k-font-size-sm k-color-success k-font-weight-bold'
-              : 'k-font-size-sm k-color-error k-font-weight-bold'
+              ? "k-font-size-sm k-color-success k-font-weight-bold"
+              : "k-font-size-sm k-color-error k-font-weight-bold"
           }
         >
           <SvgIcon
@@ -175,11 +163,11 @@ const PlatformCell = (props) => {
 
 const StatusCell = (props) => {
   const themeColor =
-    props.dataItem.status === 'published'
-      ? 'success'
-      : props.dataItem.status === 'postponed'
-        ? 'error'
-        : 'warning';
+    props.dataItem.status === "published"
+      ? "success"
+      : props.dataItem.status === "postponed"
+        ? "error"
+        : "warning";
   return (
     <td {...props.tdProps} colSpan={1}>
       <BadgeContainer>
@@ -195,7 +183,12 @@ const StatusCell = (props) => {
 const ActionCell = (props) => {
   return (
     <td {...props.tdProps} colSpan={1} className="k-command-cell">
-      <Button title="Edit Scheduled Post" svgIcon={pencilIcon} fillMode="flat" size="small" />
+      <Button
+        title="Edit Scheduled Post"
+        svgIcon={pencilIcon}
+        fillMode="flat"
+        size="small"
+      />
       <Button
         title="Delete Scheduled Post"
         svgIcon={trashIcon}
@@ -210,20 +203,20 @@ const ActionCell = (props) => {
 export default function SocialMediaManagementDashboard() {
   return (
     <>
-          {/* Using Header component */}
+      {/* Using Header component */}
       <Header />
       {/* END OF TPNAV-L-1 */}
 
       <Drawer
         expanded={true}
         className="!k-flex-none !k-pos-sticky"
-        style={{ height: 'calc(100vh - 46px)', top: '46px' }}
+        style={{ height: "calc(100vh - 46px)", top: "46px" }}
         mode="push"
         width={248}
         items={drawerItems}
         item={CustomDrawerItem}
       >
-        <DrawerContent style={{ background: 'var(--panel-gradient)' }}>
+        <DrawerContent style={{ background: "var(--panel-gradient)" }}>
           <main>
             <div className="k-bg-primary k-color-white">
               <h1 className="k-h1 k-py-6 k-px-10 !k-mb-0">Hello, admin!</h1>
@@ -519,435 +512,21 @@ export default function SocialMediaManagementDashboard() {
               </div>
               {/* End of CMPCTCARD-L-7 */}
 
-              {/* DASHBRDCARD-L-7 -> Panel with ListView (with checkboxes and edit/delete buttons) and DatePicker in the header */}
-              <div
-                className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-4 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
-                style={{ maxHeight: '392px' }}
-              >
-                <div className="k-d-flex k-flex-row k-justify-content-between k-align-items-center k-p-4">
-                  <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-                    To Do List
-                  </span>
-                  <div style={{ width: '142px' }}>
-                    <DatePicker
-                      value={new Date('6/12/2023')}
-                      fillMode="flat"
-                      dateInput={() => (
-                        <>
-                          <DateInput ariaLabel="To Do List date picker" value={new Date('6 / 12 / 2023')} />
-                          <span className="k-clear-value">
-                            <SvgIcon icon={xIcon}></SvgIcon>
-                          </span>
-                        </>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="k-d-flex k-px-4 k-pb-4 k-flex-1 k-overflow-y-auto">
-                  <ListView
-                    className="k-w-full k-height-auto k-overflow-y-auto k-gap-1"
-                    data={listViewData}
-                    item={ToDoListItemRender}
-                  />
-                </div>
-              </div>
-              {/* End of DASHBRDCARD-L-7 */}
+             <ToDoListCard/>
+             
+              <BrowserUsageCard/>
 
-              {/* DASHBRDCARD-L-2 -> Panel with ListView and DatePicker in the header */}
-              <div
-                className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-5 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
-                style={{ maxHeight: '392px' }}
-              >
-                <div className="k-d-flex k-flex-row k-justify-content-between k-align-items-center k-p-4">
-                  <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-                    Browser Usage
-                  </span>
-                  <div style={{ width: '164px' }}>
-                    <DatePicker
-                      value={new Date('6/12/2023')}
-                      fillMode="flat"
-                      dateInput={() => (
-                        <>
-                          <DateInput ariaLabel="Browser Usage date picker" value={new Date('6 / 12 / 2023')} />
-                          <span className="k-clear-value">
-                            <SvgIcon icon={xIcon}></SvgIcon>
-                          </span>
-                        </>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="k-d-flex k-px-4 k-flex-1 k-overflow-auto">
-                  <ListView
-                    data={browsers}
-                    item={BrowserUsageItemRender}
-                    className="k-flex-1"
-                  />
-                </div>
-                <div className="k-d-flex k-flex-row k-p-4">
-                  <Button fillMode="clear" themeColor="primary">
-                    View all browsers
-                  </Button>
-                </div>
-              </div>
-              {/* End of DASHBRDCARD-L-2 */}
+              <CalendarPanel />
 
-              {/* DASHBRDCARD-L-10 -> Panel with Calendar */}
-              <div
-                className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-3 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
-                style={{ maxHeight: '392px' }}
-              >
-                <div className="k-d-flex k-align-items-center k-p-4">
-                  <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-                    Calendar
-                  </span>
-                </div>
-                <div className="k-px-4 k-d-flex k-justify-content-center k-flex-1">
-                  <MultiViewCalendar views={1} value={new Date(2023, 0, 21)} />
-                </div>
-                <div className="k-p-4">
-                  <Button fillMode="clear" themeColor="primary">
-                    View schedule
-                  </Button>
-                </div>
-              </div>
-              {/* End of DASHBRDCARD-L-10 */}
+              <FollowersCard />
 
-              {/* DASHBRDCARD-L-11 -> Panel with Pie Chart and DatePicker in the header */}
-              <div className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-4 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
-                <div className="k-d-flex k-justify-content-between k-align-items-center k-p-4">
-                  <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-                    Followers
-                  </span>
-                  <div style={{ width: '164px' }}>
-                    <DatePicker
-                      value={new Date('6/14/2023')}
-                      fillMode="flat"
-                      dateInput={() => (
-                        <>
-                          <DateInput ariaLabel="Followers date picker" value={new Date('6 / 12 / 2023')} />
-                          <span className="k-clear-value">
-                            <SvgIcon icon={xIcon}></SvgIcon>
-                          </span>
-                        </>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="k-px-4 k-pb-4 k-flex-1 k-justify-content-center">
-                  {/* Pie Chart with 293px height */}
-                  <Chart style={{ height: '293px' }}>
-                    <ChartSeries>
-                      <ChartSeriesItem
-                        type="pie"
-                        legendItem={{ type: 'line' }}
-                        data={followers}
-                        categoryField="platform"
-                        field="share"
-                        padding={10}
-                        border={{ width: 3, color: '#fff' }}
-                      >
-                        <ChartSeriesLabels position="center" />
-                      </ChartSeriesItem>
-                    </ChartSeries>
-                    <ChartLegend
-                      position="bottom"
-                      align="center"
-                      padding={{ left: 60, right: 60 }}
-                    />
-                  </Chart>
-                  {/* End of Pie Chart */}
-                </div>
-              </div>
-              {/* End of DASHBRDCARD-L-11 */}
+              <ScheduledPostsCard />
 
-              {/* Panel with Grid and DatePicker in the header*/}
-              <div className="k-d-flex k-flex-col k-col-span-md-6 k-col-span-xl-8 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
-                <div className="k-d-flex k-flex-row k-justify-content-between k-align-items-center k-px-4 k-py-4">
-                  <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-                    Scheduled Posts
-                  </span>
-                  <div style={{ width: '164px' }}>
-                    <DatePicker
-                      value={new Date('6/14/2023')}
-                      fillMode="flat"
-                      dateInput={() => (
-                        <>
-                          <DateInput ariaLabel="Scheduled Posts date picker" value={new Date('6 / 12 / 2023')} />
-                          <span className="k-clear-value">
-                            <SvgIcon icon={xIcon}></SvgIcon>
-                          </span>
-                        </>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="k-d-flex k-px-4 k-flex-1 k-overflow-auto">
-                  <Grid data={gridData} className="k-grid-no-scrollbar">
-                    <GridColumn field="time" title="Time" width="96px" />
-                    <GridColumn field="postTitle" title="Post Title" />
-                    <GridColumn
-                      title="Platform"
-                      width="96px"
-                      cells={{
-                        data: PlatformCell,
-                      }}
-                    />
-                    <GridColumn
-                      field="status"
-                      title="Status"
-                      cells={{
-                        data: StatusCell,
-                      }}
-                      width="96px"
-                    />
-                    <GridColumn
-                      title="Action"
-                      cells={{
-                        data: ActionCell,
-                      }}
-                      width="96px"
-                    />
-                  </Grid>
-                </div>
-                <div className="k-d-flex k-flex-row k-px-4 k-py-3">
-                  <Button fillMode="clear" themeColor="primary">
-                    View all posts
-                  </Button>
-                </div>
-              </div>
-              {/* End */}
+              <FollowersGrowthCard />
 
-              {/* DASHBRDCARD-L-11 -> Panel with Bar Chart and DatePicker in the header */}
-              <div className="k-d-flex k-flex-col k-col-span-md-6 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
-                <div className="k-d-flex k-justify-content-between k-align-items-center k-p-4">
-                  <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-                    Followers Growth
-                  </span>
-                  <div style={{ width: '164px' }}>
-                    <DatePicker
-                      value={new Date('6/12/2023')}
-                      fillMode="flat"
-                      dateInput={() => (
-                        <>
-                          <DateInput ariaLabel="Followers Growth date picker" value={new Date('6 / 12 / 2023')} />
-                          <span className="k-clear-value">
-                            <SvgIcon icon={xIcon}></SvgIcon>
-                          </span>
-                        </>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="k-px-4 k-pb-4 k-flex-1">
-                  {/* Bar Chart with 6 series & default height */}
-                  <Chart >
-                    <ChartCategoryAxis>
-                      <ChartCategoryAxisItem
-                        categories={['2023', '2022', '2021', '2020']}
-                      />
-                    </ChartCategoryAxis>
-                    <ChartValueAxis>
-                      <ChartValueAxisItem
-                        labels={{ format: '{0}k' }}
-                        majorGridLines={{ visible: false }}
-                        min={0}
-                        max={900}
-                        majorUnit={100}
-                      />
-                    </ChartValueAxis>
-                    <ChartSeries>
-                      {followersGrowth.map((f) => {
-                        return (
-                          <ChartSeriesItem
-                            key={f.name}
-                            type="bar"
-                            data={f.data}
-                            name={f.name}
-                            legendItem={{ type: 'line' }}
-                          />
-                        );
-                      })}
-                    </ChartSeries>
-                    <ChartLegend position="bottom" orientation="horizontal" />
-                  </Chart>
-                  {/* End of Bar Chart */}
-                </div>
-              </div>
-              {/* End of DASHBRDCARD-L-11 */}
+              <ClickThroughRateCard />
 
-              {/* End of DASHBRDCARD-L-11 -> Panel with Line Chart and DatePicker in the header */}
-              <div className="k-d-flex k-flex-col k-col-span-md-6 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
-                <div className="k-d-flex k-justify-content-between k-align-items-center k-p-4">
-                  <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-                    Average click-through rate
-                  </span>
-                  <div style={{ width: '164px' }}>
-                    <DatePicker
-                      value={new Date('6/12/2023')}
-                      fillMode="flat"
-                      dateInput={() => (
-                        <>
-                          <DateInput ariaLabel="Average click-through rate date picker" value={new Date('6 / 12 / 2023')} />
-                          <span className="k-clear-value">
-                            <SvgIcon icon={xIcon}></SvgIcon>
-                          </span>
-                        </>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="k-d-flex k-flex-col k-px-4 k-pb-4 k-flex-1 k-gap-2">
-                  {/* Column Chart with 6 series & default height */}
-                  <Chart >
-                    <ChartCategoryAxis>
-                      <ChartCategoryAxisItem
-                        categories={[
-                          'Jan',
-                          'Feb',
-                          'Mar',
-                          'Apr',
-                          'May',
-                          'Jun',
-                          'Jul',
-                          'Aug',
-                          'Sep',
-                          'Oct',
-                          'Nov',
-                          'Dec',
-                        ]}
-                      />
-                    </ChartCategoryAxis>
-                    <ChartValueAxis>
-                      <ChartValueAxisItem
-                        min={0}
-                        max={100}
-                        labels={{ format: '{0}%' }}
-                        majorUnit={10}
-                      />
-                    </ChartValueAxis>
-                    <ChartSeries>
-                      {clickRateData.map((c) => {
-                        return (
-                          <ChartSeriesItem
-                            key={c.name}
-                            type="column"
-                            legendItem={{ type: 'line' }}
-                            data={c.data}
-                            name={c.name}
-                          />
-                        );
-                      })}
-                    </ChartSeries>
-                    <ChartLegend position="bottom" orientation="horizontal" />
-                  </Chart>
-                  {/* End of Column Chart */}
-                </div>
-              </div>
-              {/* End of DASHBRDCARD-L-11 */}
-
-              {/* DASHBRDCARD-L-11 -> Panel with Line Chart and DatePicker in the header */}
-              <div className="k-d-flex k-flex-col k-col-span-md-6 k-col-span-xl-12 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
-                <div className="k-d-flex k-justify-content-between k-align-items-center k-p-4">
-                  <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-                    Post Reach
-                  </span>
-                  <div style={{ width: '164px' }}>
-                    <DatePicker
-                      value={new Date('6/12/2023')}
-                      fillMode="flat"
-                      dateInput={() => (
-                        <>
-                          <DateInput ariaLabel="Post Reach date picker" value={new Date('6 / 12 / 2023')} />
-                          <span className="k-clear-value">
-                            <SvgIcon icon={xIcon}></SvgIcon>
-                          </span>
-                        </>
-                      )}
-                    />
-                  </div>
-                </div>
-                <div className="k-d-flex k-gap-2 k-px-4 k-pb-4">
-                  <Chip
-                    text="Instagram"
-                    themeColor="base"
-                    rounded="full"
-                    size="small"
-                  ></Chip>
-                  <Chip
-                    text="Facebook"
-                    themeColor="base"
-                    rounded="full"
-                    size="small"
-                    svgIcon={checkIcon}
-                  ></Chip>
-                  <Chip
-                    text="YouTube"
-                    themeColor="base"
-                    rounded="full"
-                    size="small"
-                  ></Chip>
-                  <Chip
-                    text="TikTok"
-                    themeColor="base"
-                    rounded="full"
-                    size="small"
-                  ></Chip>
-                  <Chip
-                    text="Twitter"
-                    themeColor="base"
-                    rounded="full"
-                    size="small"
-                  ></Chip>
-                  <Chip
-                    text="LinkedIn"
-                    themeColor="base"
-                    rounded="full"
-                    size="small"
-                  ></Chip>
-                </div>
-                <div className="k-px-4 k-pb-4 k-flex-1">
-                  {/* Line Chart with two series & height 362px */}
-                  <Chart style={{ height: '362px' }}>
-                    <ChartSeries>
-                      <ChartSeriesItem
-                        type="line"
-                        data={postReachData}
-                        field="Viewers[0].number"
-                        categoryField="Date"
-                        name="Organic"
-                      />
-                      <ChartSeriesItem
-                        type="line"
-                        data={postReachData}
-                        field="Viewers[1].number"
-                        categoryField="Date"
-                        name="Paid"
-                      />
-                    </ChartSeries>
-                    <ChartCategoryAxis>
-                      <ChartCategoryAxisItem
-                        baseUnit="hours"
-                        labels={{
-                          rotation: 270,
-                          position: 'start',
-                          format: 'haa',
-                        }}
-                      />
-                    </ChartCategoryAxis>
-                    <ChartValueAxis>
-                      <ChartValueAxisItem
-                        labels={{ format: '{0}k' }}
-                        min={0}
-                        max={500}
-                      />
-                    </ChartValueAxis>
-                    <ChartLegend position="bottom" orientation="horizontal" />
-                  </Chart>
-                  {/* End of Line Chart */}
-                </div>
-              </div>
-              {/* End of DASHBRDCARD-L-11 */}
+              <PostReachCard />
             </div>
           </main>
           <footer className="!k-bg-primary k-color-white k-mt-4 k-bg-light k-py-6 k-px-10">
@@ -960,4 +539,3 @@ export default function SocialMediaManagementDashboard() {
     </>
   );
 }
-
