@@ -3,32 +3,23 @@
 import Image from "next/image";
  
 import {
-  AppBar,
-  AppBarSection,
   Drawer,
   DrawerContent,
   DrawerItem,
 } from '@progress/kendo-react-layout';
 import { SvgIcon } from '@progress/kendo-react-common';
 import {
-  InputPrefix,
-  TextBox,
   Checkbox,
 } from '@progress/kendo-react-inputs';
 import {
   arrowDownIcon,
   arrowUpIcon,
-  bellIcon,
   checkIcon,
   chevronDownIcon,
-  envelopIcon,
-  menuIcon,
-  searchIcon,
-  userIcon,
   xIcon,
 } from '@progress/kendo-svg-icons';
 import { Badge, BadgeContainer } from '@progress/kendo-react-indicators';
-import { DropDownButton, Button, Chip } from '@progress/kendo-react-buttons';
+import { Button, Chip } from '@progress/kendo-react-buttons';
 import {
   DatePicker,
   DateInput,
@@ -71,9 +62,10 @@ import {
 
 import './globals.css';
 
-import Logo from '../../public/logo.svg';
-import CompactLogo from '../../public/logo-compact.svg';
 import React from 'react';
+
+// Import Header component
+import Header from './components/Header';
 
 const CustomDrawerItem = (props) => {
   if (!props.separator) {
@@ -218,71 +210,8 @@ const ActionCell = (props) => {
 export default function SocialMediaManagementDashboard() {
   return (
     <>
-      {/* TPNAV-L-1 */}
-      <header className="k-d-contents">
-        <AppBar positionMode="sticky" themeColor="primary">
-          <AppBarSection className="k-flex-basis-0 k-flex-grow k-gap-2">
-            <Button title="Menu" svgIcon={menuIcon} fillMode="clear" themeColor="light" />
-            <a href="#" className="k-d-none k-d-md-flex">
-              <Image src={Logo} alt="Logo" width={120} height={30} />
-            </a>
-            <a href="#" className="k-d-flex k-d-md-none">
-              <Image src={CompactLogo} alt="Compact Logo" width={30} height={30} />
-            </a>
-          </AppBarSection>
-          <AppBarSection className="k-flex-basis-0 k-flex-grow k-justify-content-center">
-            <TextBox
-              className="k-d-xs-none k-d-md-flex"
-              style={{ width: '360px' }}
-              placeholder="Input value"
-              name="input-value"
-              prefix={() => (
-                <>
-                  <InputPrefix>
-                    <SvgIcon icon={searchIcon} />
-                  </InputPrefix>
-                </>
-              )}
-            />
-          </AppBarSection>
-          <AppBarSection className="k-flex-basis-0 k-flex-grow k-justify-content-end k-gap-1.5">
-            <Button
-              className="k-d-md-none"
-              svgIcon={searchIcon}
-              fillMode="clear"
-              themeColor="light"
-            />
-            <BadgeContainer>
-              <Button title="Notifications" svgIcon={bellIcon} fillMode="flat" />
-              <Badge
-                rounded="medium"
-                position="inside"
-                align={{ vertical: 'top', horizontal: 'end' }}
-                themeColor="error"
-              />
-            </BadgeContainer>
-
-            <BadgeContainer>
-              <Button title="Emails" svgIcon={envelopIcon} fillMode="flat" />
-              <Badge
-                rounded="medium"
-                position="inside"
-                align={{ vertical: 'top', horizontal: 'end' }}
-                themeColor="error"
-              />
-            </BadgeContainer>
-            <span className="k-appbar-separator k-color-border" />
-            {/* DropDownButton with Icon and Text */}
-            <DropDownButton
-              svgIcon={userIcon}
-              text="Hi admin"
-              themeColor="light"
-              fillMode="clear"
-            />
-            {/* End of DropDownButton with Icon and Text */}
-          </AppBarSection>
-        </AppBar>
-      </header>
+          {/* Using Header component */}
+      <Header />
       {/* END OF TPNAV-L-1 */}
 
       <Drawer
