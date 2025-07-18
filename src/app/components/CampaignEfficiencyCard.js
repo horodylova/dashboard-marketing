@@ -49,38 +49,46 @@ const CampaignEfficiencyItemRender = (props) => {
   );
 };
 
+// Функция для определения, является ли дата активной
+const isDateActive = (date, activeDates) => {
+  if (!date || !activeDates || !Array.isArray(activeDates) || activeDates.length === 0) return true;
+  
+  // Преобразуем дату в формат YYYY-MM-DD для сравнения
+  const dateString = date.toISOString().split('T')[0];
+  
+  // Добавим отладочный вывод
+  console.log('Checking date:', dateString, 'Active dates:', activeDates);
+  
+  return activeDates.includes(dateString);
+};
+
 // Кастомный компонент ячейки календаря для отключения неактивных дат
 const CustomCalendarCell = (props) => {
   const { activeDates } = props;
+  const isActive = isDateActive(props.date, activeDates);
   
   return (
     <td
       {...props.tdProps}
       role="gridcell"
       aria-selected={props.isSelected}
-      onClick={props.onClick}
-      onKeyDown={props.onKeyDown}
+      onClick={isActive ? props.onClick : undefined}
+      onKeyDown={isActive ? props.onKeyDown : undefined}
       title={props.title}
-      aria-disabled={!props.isEnabled || !isDateActive(props.date, activeDates)}
-      className={props.className}
+      aria-disabled={!props.isEnabled || !isActive}
+      className={`${props.className} ${!isActive ? 'k-disabled' : ''}`}
     >
       <span
         className={props.linkClassName}
         style={{
-          color: !isDateActive(props.date, activeDates) ? "#ccc" : undefined,
+          color: !isActive ? "#ccc" : undefined,
+          pointerEvents: !isActive ? "none" : undefined
         }}
       >
         {props.formattedDate}
       </span>
     </td>
   );
-};
-
-// Функция для определения, является ли дата активной
-const isDateActive = (date, activeDates) => {
-  if (!date || !activeDates || !Array.isArray(activeDates)) return true;
-  const dateString = date.toISOString().split('T')[0];
-  return activeDates.includes(dateString);
 };
 
 const CampaignEfficiencyCard = () => {
@@ -98,6 +106,10 @@ const CampaignEfficiencyCard = () => {
         setCampaignData(data);
         setCampaigns(getUniqueCampaigns(data));
         const dates = getActiveCampaignDates(data);
+        
+        // Добавим отладочный вывод
+        console.log('Active dates:', dates);
+        
         setActiveDates(dates);
         
         // Устанавливаем начальную дату на последнюю активную дату
@@ -143,7 +155,10 @@ const CampaignEfficiencyCard = () => {
       <Calendar
         {...props}
         cell={(cellProps) => (
-          <CustomCalendarCell {...cellProps} activeDates={activeDates} />
+          <CustomCalendarCell 
+            {...cellProps} 
+            activeDates={activeDates} 
+          />
         )}
       />
     );
