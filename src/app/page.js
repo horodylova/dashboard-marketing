@@ -69,6 +69,7 @@ import BrowserUsageCard from "./components/BrowserUsageCard";
 import ToDoListCard from './components/ToDoListCard';
 import DrawerLayout from "./components/DrawerLayout";
 import CampaignCard from './components/CampaignCard';
+import CampaignEfficiencyCard from './components/CampaignEfficiencyCard';
 
 const ToDoListItemRender = (props) => {
   return (
@@ -243,7 +244,7 @@ export default function SocialMediaManagementDashboard() {
               {/* ToDoListCard - начинается с нового ряда */}
               <ToDoListCard/>
               
-              <BrowserUsageCard/>
+              <CampaignEfficiencyCard/>
 
               <CalendarPanel />
 
