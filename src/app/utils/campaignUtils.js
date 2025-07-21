@@ -3,34 +3,72 @@
 export function getUniqueCampaigns(data) {
   if (!data || !data.data || !Array.isArray(data.data)) return [];
   
-  const uniqueCampaignIds = {};
+  // Получаем последние данные для каждой кампании
+  const campaignDataByDate = {};
   
+  // Группируем данные по ID кампании и дате
   data.data.forEach(item => {
-    if (item.campaign_id && !uniqueCampaignIds[item.campaign_id]) {
-      uniqueCampaignIds[item.campaign_id] = {
-        id: item.campaign_id,
-        name: item.campaign_name,
-        platform: item.platform
-      };
+    if (!item.campaign_id) return;
+    
+    if (!campaignDataByDate[item.campaign_id]) {
+      campaignDataByDate[item.campaign_id] = {};
     }
+    
+    if (!campaignDataByDate[item.campaign_id][item.date]) {
+      campaignDataByDate[item.campaign_id][item.date] = [];
+    }
+    
+    campaignDataByDate[item.campaign_id][item.date].push(item);
   });
   
-  return Object.values(uniqueCampaignIds).slice(0, 4);
+  // Для каждой кампании находим последние данные
+  const uniqueCampaigns = {};
+  
+  Object.keys(campaignDataByDate).forEach(campaignId => {
+    const dates = Object.keys(campaignDataByDate[campaignId]).sort();
+    const latestDate = dates[dates.length - 1];
+    
+    // Берем последнюю запись за последнюю дату
+    const latestEntries = campaignDataByDate[campaignId][latestDate];
+    latestEntries.sort((a, b) => {
+      const timeA = new Date(`${a.date} ${a.time}`);
+      const timeB = new Date(`${b.date} ${b.time}`);
+      return timeB - timeA;
+    });
+    
+    const latestEntry = latestEntries[0];
+    
+    uniqueCampaigns[campaignId] = {
+      id: campaignId,
+      name: latestEntry.campaign_name,
+      platform: latestEntry.platform,
+      ai_score: latestEntry.ai_score,
+      ai_comment: latestEntry.ai_comment
+    };
+  });
+  
+  return Object.values(uniqueCampaigns);
 }
 
 export function calculateTotalLandingPageViews(data, campaignId) {
   if (!data || !data.data || !Array.isArray(data.data)) return 0;
   
-  return data.data
-    .filter(item => item.campaign_id === campaignId)
+  // Получаем последние данные для кампании за каждый день
+  const latestDataByDate = getLatestDataByDate(data.data, campaignId);
+  
+  // Суммируем landing_page_views из последних данных за каждый день
+  return Object.values(latestDataByDate)
     .reduce((total, item) => total + (item.landing_page_views || 0), 0);
 }
 
 export function calculateTotalLeads(data, campaignId) {
   if (!data || !data.data || !Array.isArray(data.data)) return 0;
   
-  return data.data
-    .filter(item => item.campaign_id === campaignId)
+  // Получаем последние данные для кампании за каждый день
+  const latestDataByDate = getLatestDataByDate(data.data, campaignId);
+  
+  // Суммируем leads из последних данных за каждый день
+  return Object.values(latestDataByDate)
     .reduce((total, item) => total + (item.leads || 0), 0);
 }
 
@@ -52,7 +90,38 @@ export function getLatestSpend(data, campaignId) {
   return campaignData[0].spend || 0;
 }
 
-// Новые функции для расчета конверсии и отслеживания изменений по дням
+// Вспомогательная функция для получения последних данных за каждый день
+function getLatestDataByDate(data, campaignId) {
+  const campaignData = data.filter(item => item.campaign_id === campaignId);
+  const dataByDate = {};
+  
+  // Группируем данные по дате
+  campaignData.forEach(item => {
+    if (!item.date) return;
+    
+    if (!dataByDate[item.date]) {
+      dataByDate[item.date] = [];
+    }
+    
+    dataByDate[item.date].push(item);
+  });
+  
+  // Для каждой даты находим последнюю запись
+  const latestDataByDate = {};
+  
+  Object.keys(dataByDate).forEach(date => {
+    const entries = dataByDate[date];
+    entries.sort((a, b) => {
+      const timeA = new Date(`${a.date} ${a.time}`);
+      const timeB = new Date(`${b.date} ${b.time}`);
+      return timeB - timeA;
+    });
+    
+    latestDataByDate[date] = entries[0];
+  });
+  
+  return latestDataByDate;
+}
 
 // Получение активных дат кампаний
 export function getActiveCampaignDates(data) {
@@ -73,17 +142,14 @@ export function getActiveCampaignDates(data) {
 export function groupCampaignDataByDate(data, campaignId) {
   if (!data || !data.data || !Array.isArray(data.data)) return {};
   
-  const campaignData = data.data.filter(item => item.campaign_id === campaignId);
+  // Получаем последние данные за каждый день
+  const latestDataByDate = getLatestDataByDate(data.data, campaignId);
+  
+  // Преобразуем в формат, ожидаемый функцией calculateDailyConversion
   const groupedByDate = {};
   
-  campaignData.forEach(item => {
-    if (!item.date) return;
-    
-    if (!groupedByDate[item.date]) {
-      groupedByDate[item.date] = [];
-    }
-    
-    groupedByDate[item.date].push(item);
+  Object.keys(latestDataByDate).forEach(date => {
+    groupedByDate[date] = [latestDataByDate[date]];
   });
   
   return groupedByDate;

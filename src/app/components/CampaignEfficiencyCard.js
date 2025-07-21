@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DatePicker, DateInput, Calendar } from "@progress/kendo-react-dateinputs";
+import { DatePicker, DateInput } from "@progress/kendo-react-dateinputs";
 import { SvgIcon } from "@progress/kendo-react-common";
 import { Button } from "@progress/kendo-react-buttons";
 import { ListView } from "@progress/kendo-react-listview";
 import { xIcon, arrowUpIcon, arrowDownIcon } from "@progress/kendo-svg-icons";
-import { listViewSvgIcons } from "../svg-icons";
+import { gridSvgIcons } from "../svg-icons";
+import { Popup } from "@progress/kendo-react-popup";
 import {
   getUniqueCampaigns,
   getActiveCampaignDates,
@@ -16,13 +17,15 @@ import {
 const CampaignEfficiencyItemRender = (props) => {
   const { dataItem } = props;
   
+  const icon = gridSvgIcons.find(icon => icon.name === dataItem.platform?.toLowerCase())?.svg;
+  
   return (
     <div
       role="listitem"
-      className="k-d-flex k-gap-3 k-border-b k-border-b-solid k-border-border k-p-2"
+      className="k-d-flex k-gap-3 k-border-b k-border-b-solid k-border-border k-p-2 k-align-items-center"
     >
-      <div>
-        {props.index !== undefined && listViewSvgIcons[props.index % listViewSvgIcons.length].svg}
+      <div className="k-d-flex k-align-items-center">
+        {icon}
       </div>
       <div className="k-d-flex k-flex-col k-flex-1">
         <span className="k-font-size-md">{dataItem.name}</span>
@@ -30,12 +33,12 @@ const CampaignEfficiencyItemRender = (props) => {
           {dataItem.date}
         </span>
       </div>
-      <div className="k-d-flex k-flex-col k-align-items-end">
+      <div className="k-d-flex k-flex-col k-align-items-end k-justify-content-center">
         <span
           className={
             dataItem.change >= 0
-              ? "k-font-size-sm k-color-success k-font-weight-bold"
-              : "k-font-size-sm k-color-error k-font-weight-bold"
+              ? "k-font-size-md k-color-success k-font-weight-bold"
+              : "k-font-size-md k-color-error k-font-weight-bold"
           }
         >
           <SvgIcon
@@ -43,51 +46,8 @@ const CampaignEfficiencyItemRender = (props) => {
           />
           {Math.abs(dataItem.change).toFixed(2)}%
         </span>
-        <span className="k-font-size-sm k-color-subtle">{dataItem.conversion.toFixed(2)}%</span>
       </div>
     </div>
-  );
-};
-
-// Функция для определения, является ли дата активной
-const isDateActive = (date, activeDates) => {
-  if (!date || !activeDates || !Array.isArray(activeDates) || activeDates.length === 0) return true;
-  
-  // Преобразуем дату в формат YYYY-MM-DD для сравнения
-  const dateString = date.toISOString().split('T')[0];
-  
-  // Добавим отладочный вывод
-  console.log('Checking date:', dateString, 'Active dates:', activeDates);
-  
-  return activeDates.includes(dateString);
-};
-
-// Кастомный компонент ячейки календаря для отключения неактивных дат
-const CustomCalendarCell = (props) => {
-  const { activeDates } = props;
-  const isActive = isDateActive(props.date, activeDates);
-  
-  return (
-    <td
-      {...props.tdProps}
-      role="gridcell"
-      aria-selected={props.isSelected}
-      onClick={isActive ? props.onClick : undefined}
-      onKeyDown={isActive ? props.onKeyDown : undefined}
-      title={props.title}
-      aria-disabled={!props.isEnabled || !isActive}
-      className={`${props.className} ${!isActive ? 'k-disabled' : ''}`}
-    >
-      <span
-        className={props.linkClassName}
-        style={{
-          color: !isActive ? "#ccc" : undefined,
-          pointerEvents: !isActive ? "none" : undefined
-        }}
-      >
-        {props.formattedDate}
-      </span>
-    </td>
   );
 };
 
@@ -97,27 +57,31 @@ const CampaignEfficiencyCard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activeDates, setActiveDates] = useState([]);
   const [efficiencyData, setEfficiencyData] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [anchor, setAnchor] = useState(null);
+  const [firstAvailableDate, setFirstAvailableDate] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCampaignData = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch('/api/get-campaign-data');
         const data = await response.json();
         setCampaignData(data);
         setCampaigns(getUniqueCampaigns(data));
         const dates = getActiveCampaignDates(data);
         
-        // Добавим отладочный вывод
-        console.log('Active dates:', dates);
-        
         setActiveDates(dates);
         
-        // Устанавливаем начальную дату на последнюю активную дату
         if (dates.length > 0) {
+          setFirstAvailableDate(dates[0]);
           setSelectedDate(new Date(dates[dates.length - 1]));
         }
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching campaign data:', error);
+        setIsLoading(false);
       }
     };
 
@@ -129,7 +93,11 @@ const CampaignEfficiencyCard = () => {
     
     const dateString = selectedDate.toISOString().split('T')[0];
     
-    // Получаем данные о конверсии для каждой кампании на выбранную дату
+    if (!activeDates.includes(dateString)) {
+      setEfficiencyData([]);
+      return;
+    }
+    
     const efficiencyItems = campaigns.map(campaign => {
       const { conversion, change } = calculateDailyConversion(campaignData, campaign.id, dateString);
       
@@ -138,35 +106,29 @@ const CampaignEfficiencyCard = () => {
         name: campaign.name,
         date: dateString,
         conversion,
-        change
+        change,
+        platform: campaign.platform
       };
     });
     
     setEfficiencyData(efficiencyItems);
-  }, [campaignData, campaigns, selectedDate]);
+  }, [campaignData, campaigns, selectedDate, activeDates]);
 
   const handleDateChange = (e) => {
-    setSelectedDate(e.value);
+    const newDate = e.value;
+    setSelectedDate(newDate);
+    
+    const dateString = newDate.toISOString().split('T')[0];
+    if (!activeDates.includes(dateString)) {
+      setShowPopup(true);
+    } else {
+      setShowPopup(false);
+    }
   };
 
-  // Создаем кастомный календарь с отключенными неактивными датами
-  const CustomCalendar = (props) => {
-    return (
-      <Calendar
-        {...props}
-        cell={(cellProps) => (
-          <CustomCalendarCell 
-            {...cellProps} 
-            activeDates={activeDates} 
-          />
-        )}
-      />
-    );
+  const handleDatePickerClick = (e) => {
+    setAnchor(e.target);
   };
-
-  if (!campaignData || campaigns.length === 0) {
-    return <div className="k-col-span-md-3 k-col-span-xl-5">Loading campaign data...</div>;
-  }
 
   return (
     <div
@@ -175,9 +137,9 @@ const CampaignEfficiencyCard = () => {
     >
       <div className="k-d-flex k-flex-row k-justify-content-between k-align-items-center k-p-4">
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-          Кампании: Эффективность
+          Campaigns: Efficiency
         </span>
-        <div style={{ width: "164px" }}>
+        <div style={{ width: "164px" }} onClick={handleDatePickerClick}>
           <DatePicker
             value={selectedDate}
             onChange={handleDateChange}
@@ -193,20 +155,43 @@ const CampaignEfficiencyCard = () => {
                 </span>
               </>
             )}
-            calendar={props => <CustomCalendar {...props} />}
           />
+          {showPopup && anchor && (
+            <Popup
+              anchor={anchor}
+              show={showPopup}
+              popupClass="k-popup-content"
+              animate={false}
+              position="bottom"
+            >
+              <div className="k-p-3 k-bg-error-lighter k-color-error k-rounded-md">
+                Data available from {firstAvailableDate}
+              </div>
+            </Popup>
+          )}
         </div>
       </div>
       <div className="k-d-flex k-px-4 k-flex-1 k-overflow-auto">
-        <ListView
-          data={efficiencyData}
-          item={CampaignEfficiencyItemRender}
-          className="k-flex-1"
-        />
+        {isLoading ? (
+          <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle">
+            <p>Loading campaign data...</p>
+          </div>
+        ) : efficiencyData.length > 0 ? (
+          <ListView
+            data={efficiencyData}
+            item={CampaignEfficiencyItemRender}
+            className="k-flex-1"
+          />
+        ) : (
+          <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle">
+            <p>No data available for the selected date.</p>
+            <p>Please select a date between {firstAvailableDate} and {activeDates[activeDates.length - 1]}.</p>
+          </div>
+        )}
       </div>
       <div className="k-d-flex k-flex-row k-p-4">
         <Button fillMode="clear" themeColor="primary">
-          Просмотреть все кампании
+          View all campaigns
         </Button>
       </div>
     </div>

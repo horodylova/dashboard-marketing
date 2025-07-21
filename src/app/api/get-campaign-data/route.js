@@ -5,55 +5,44 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request) {
   try {
-    const credentialsPath = path.join(process.cwd(), 'keys', 'nextjssheetsapi-a37754115bd4.json');
-    const credentials = JSON.parse(await fs.readFile(credentialsPath, 'utf-8'));
-
-    const auth = new google.auth.GoogleAuth({
-      credentials,
-      scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-    });
-
-    const sheets = google.sheets({ version: 'v4', auth });
-
-    const spreadsheetId = '19eynqTiwxtbIweEKtGPTAWa8JqwKT8EdYxeKjnOex60';
-    const range = 'Campaigns Data!A:R'; 
-
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range,
-    });
-
-    const rows = response.data.values;
-
-    if (!rows || rows.length === 0) {
-      return NextResponse.json({ data: [] });
+    const makeWebhookUrl = 'https://hook.eu2.make.com/wz2dy834j224f03ij1jhzhxnpfh10qrj';
+    
+    const response = await fetch(makeWebhookUrl);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
-
- 
-    const headers = [
-        "campaign_id", "campaign_name", "platform", "placement", "audience",
-        "date", "time", "status", "spend", "impressions", "reach", "clicks",
-        "landing_page_views", "video_plays_50", "leads", "ctr", "cpc", "cpm"
-    ];
-
-
-    const data = rows.slice(1).map(row => {
-      let obj = {};
-      headers.forEach((header, index) => {
-       
-        if (["spend", "impressions", "reach", "clicks", "landing_page_views", "video_plays_50", "leads", "ctr", "cpc", "cpm"].includes(header)) {
-            obj[header] = parseFloat(row[index]) || 0; 
-        } else {
-            obj[header] = row[index];
-        }
-      });
-      return obj;
-    });
+    
+    const rawData = await response.json();
+    
+    // Преобразуем данные в нужный формат
+    const data = rawData.map(item => ({
+      campaign_id: item[0],
+      campaign_name: item[1],
+      platform: item[2],
+      placement: item[3],
+      audience: item[4],
+      date: item[5],
+      time: item[6],
+      status: item[7],
+      spend: parseFloat(item[8]) || 0,
+      impressions: parseFloat(item[9]) || 0,
+      reach: parseFloat(item[10]) || 0,
+      clicks: parseFloat(item[11]) || 0,
+      landing_page_views: parseFloat(item[12]) || 0,
+      video_plays_50: parseFloat(item[13]) || 0,
+      leads: parseFloat(item[14]) || 0,
+      ctr: parseFloat(item[15]) || 0,
+      cpc: parseFloat(item[16]) || 0,
+      cpm: parseFloat(item[17]) || 0,
+      ai_score: item[18],
+      ai_comment: item[19]
+    }));
 
     return NextResponse.json({ data });
 
   } catch (error) {
-    console.error('Error fetching from Google Sheets API:', error);
+    console.error('Error fetching from Make API:', error);
     return NextResponse.json(
       { message: 'Internal Server Error', error: error.message },
       { status: 500 }

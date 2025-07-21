@@ -66,141 +66,11 @@ import FollowersGrowthCard from "./components/FollowersGrowthCard";
 import FollowersCard from "./components/FollowersCard";
 import ScheduledPostsCard from "./components/ScheduledPostsCard";
 import BrowserUsageCard from "./components/BrowserUsageCard";
-import ToDoListCard from './components/ToDoListCard';
+import CampaignsList from './components/CampaignsList';
 import DrawerLayout from "./components/DrawerLayout";
 import CampaignCard from './components/CampaignCard';
 import CampaignEfficiencyCard from './components/CampaignEfficiencyCard';
 
-const ToDoListItemRender = (props) => {
-  return (
-    <div
-      role="listitem"
-      className="k-d-flex k-justify-content-between k-px-2 k-py-1"
-    >
-      <div className="k-d-flex k-align-items-center">
-        <label className="k-checkbox-label">
-          <Checkbox checked={props.dataItem.checked} />
-          {props.dataItem.text}
-        </label>
-      </div>
-      <div className="k-white-space-nowrap">
-        <Button
-          title="Edit To Do"
-          svgIcon={pencilIcon}
-          fillMode="flat"
-          size="small"
-        />
-        <Button
-          title="Delete To Do"
-          svgIcon={trashIcon}
-          fillMode="flat"
-          size="small"
-          themeColor="error"
-        />
-      </div>
-    </div>
-  );
-};
-
-const BrowserUsageItemRender = (props) => {
-  let walletClass =
-    "k-font-size-sm k-line-height-lg k-font-weight-bold k-color-success";
-  if (props.dataItem.inDebt) {
-    walletClass = walletClass + " " + "k-color-error";
-  } else {
-    walletClass = walletClass + " " + "k-color-success";
-  }
-  return (
-    <div
-      role="listitem"
-      className="k-d-flex k-gap-3 k-border-b k-border-b-solid k-border-border k-p-2"
-    >
-      <div>
-        {props.index !== undefined && listViewSvgIcons[props.index].svg}
-      </div>
-      <div className="k-d-flex k-flex-col k-flex-1">
-        <span className="k-font-size-md">{props.dataItem.name}</span>
-        <span className="k-font-size-sm k-color-subtle  ">
-          {props.dataItem.time}
-        </span>
-      </div>
-      <div className="k-d-flex k-flex-col k-align-items-end">
-        <span
-          className={
-            props.dataItem.isRising
-              ? "k-font-size-sm k-color-success k-font-weight-bold"
-              : "k-font-size-sm k-color-error k-font-weight-bold"
-          }
-        >
-          <SvgIcon
-            icon={props.dataItem.isRising ? arrowUpIcon : arrowDownIcon}
-          />
-          {props.dataItem.valueChange}%
-        </span>
-        <span className="k-font-size-sm k-color-subtle">27 968</span>
-      </div>
-    </div>
-  );
-};
-
-const PlatformCell = (props) => {
-  let svgs = [];
-  props.dataItem.platforms.map((platform) => {
-    gridSvgIcons.map((social) => {
-      if (platform === social.name) {
-        svgs.push(social.svg);
-      }
-    });
-  });
-  return (
-    <td {...props.tdProps} colSpan={1}>
-      {svgs.map((svg) => {
-        return (
-          <React.Fragment key={`social-${React.useId()}`}>{svg}</React.Fragment>
-        );
-      })}
-    </td>
-  );
-};
-
-const StatusCell = (props) => {
-  const themeColor =
-    props.dataItem.status === "published"
-      ? "success"
-      : props.dataItem.status === "postponed"
-        ? "error"
-        : "warning";
-  return (
-    <td {...props.tdProps} colSpan={1}>
-      <BadgeContainer>
-        <Badge themeColor={themeColor} rounded="medium" position="outside">
-          {props.dataItem.status.charAt(0).toUpperCase() +
-            props.dataItem.status.slice(1)}
-        </Badge>
-      </BadgeContainer>
-    </td>
-  );
-};
-
-const ActionCell = (props) => {
-  return (
-    <td {...props.tdProps} colSpan={1} className="k-command-cell">
-      <Button
-        title="Edit Scheduled Post"
-        svgIcon={pencilIcon}
-        fillMode="flat"
-        size="small"
-      />
-      <Button
-        title="Delete Scheduled Post"
-        svgIcon={trashIcon}
-        fillMode="flat"
-        size="small"
-        themeColor="error"
-      />
-    </td>
-  );
-};
 
 export default function SocialMediaManagementDashboard() {
   useEffect(() => {
@@ -219,9 +89,9 @@ export default function SocialMediaManagementDashboard() {
 
   return (
     <>
-      {/* Using Header component */}
+      
       <Header />
-      {/* END OF TPNAV-L-1 */}
+    
 
       <Drawer
         expanded={true}
@@ -235,14 +105,14 @@ export default function SocialMediaManagementDashboard() {
         <DrawerContent style={{ background: "var(--panel-gradient)" }}>
           <main>
             <div className="k-bg-primary k-color-white">
-              <h1 className="k-h1 k-py-6 k-px-10 !k-mb-0">Hello, admin!</h1>
+              <h1 className="k-h1 k-py-6 k-px-10 !k-mb-0">Active Campaigns</h1>
             </div>
             <div className="k-d-grid k-grid-cols-xs-1 k-grid-cols-md-6 k-grid-cols-xl-12 k-grid-auto-rows-auto k-gap-4 k-px-xs-4 k-px-md-6 k-px-xl-10">
-              {/* Campaign Cards - занимает полную ширину ряда */}
+           
               <CampaignCard />
               
-              {/* ToDoListCard - начинается с нового ряда */}
-              <ToDoListCard/>
+         
+              <CampaignsList/>
               
               <CampaignEfficiencyCard/>
 
