@@ -65,9 +65,9 @@ import ClickThroughRateCard from "./components/ClickThroughRateCard";
 import FollowersGrowthCard from "./components/FollowersGrowthCard";
 import FollowersCard from "./components/FollowersCard";
 import ScheduledPostsCard from "./components/ScheduledPostsCard";
-import BrowserUsageCard from "./components/BrowserUsageCard";
+ 
 import CampaignsList from './components/CampaignsList';
-import DrawerLayout from "./components/DrawerLayout";
+ 
 import CampaignCard from './components/CampaignCard';
 import CampaignEfficiencyCard from './components/CampaignEfficiencyCard';
 

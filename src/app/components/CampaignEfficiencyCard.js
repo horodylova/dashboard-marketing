@@ -136,9 +136,14 @@ const CampaignEfficiencyCard = () => {
       style={{ maxHeight: "392px" }}
     >
       <div className="k-d-flex k-flex-row k-justify-content-between k-align-items-center k-p-4">
-        <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-          Campaigns: Efficiency
-        </span>
+        <div className="k-d-flex k-flex-col">
+          <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
+            Campaigns: Efficiency
+          </span>
+          <span className="k-font-size-xs k-color-subtle k-mt-1">
+            Efficiency Formula: (Clicks / Landing Page Views) × 100%
+          </span>
+        </div>
         <div style={{ width: "164px" }} onClick={handleDatePickerClick}>
           <DatePicker
             value={selectedDate}
@@ -190,9 +195,14 @@ const CampaignEfficiencyCard = () => {
         )}
       </div>
       <div className="k-d-flex k-flex-row k-p-4">
-        <Button fillMode="clear" themeColor="primary">
-          View all campaigns
-        </Button>
+        <div className="k-d-flex k-flex-row k-p-4">
+          <div className="k-d-flex k-flex-col k-w-full">
+           
+            <Button fillMode="clear" themeColor="primary" className="k-mt-2">
+              View all campaigns
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { xIcon, pencilIcon, trashIcon } from '@progress/kendo-svg-icons';
 import { DatePicker, DateInput } from '@progress/kendo-react-dateinputs';
 import { ListView } from '@progress/kendo-react-listview';
 import { Checkbox } from '@progress/kendo-react-inputs';
+import { Popup } from "@progress/kendo-react-popup";
 
 
 const CampaignsListItemRender = (props) => {
@@ -35,6 +36,9 @@ const CampaignsList = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [aiData, setAiData] = useState({ score: 0, overview: '' });
+  const [availableDates, setAvailableDates] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [anchor, setAnchor] = useState(null);
 
   useEffect(() => {
     const fetchCampaignData = async () => {
@@ -64,6 +68,19 @@ const CampaignsList = () => {
         }));
         
         setCampaignItems(campaignList);
+        
+        const uniqueDates = new Set();
+        data.data.forEach(item => {
+          if (item.date) {
+            uniqueDates.add(item.date);
+          }
+        });
+        const dates = Array.from(uniqueDates).sort();
+        setAvailableDates(dates);
+        
+        if (dates.length > 0) {
+          setSelectedDate(new Date(dates[dates.length - 1]));
+        }
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       }
@@ -73,7 +90,6 @@ const CampaignsList = () => {
   }, []);
 
   useEffect(() => {
-    
     if (selectedCampaign) {
       const campaign = campaignItems.find(item => item.id === selectedCampaign);
       if (campaign) {
@@ -90,13 +106,19 @@ const CampaignsList = () => {
     setSelectedCampaign(null);
     setAiData({ score: 0, overview: '' });
     
-  
     setCampaignItems(prevItems => 
       prevItems.map(item => ({
         ...item,
         checked: false
       }))
     );
+    
+    const dateString = e.value.toISOString().split('T')[0];
+    if (!availableDates.includes(dateString)) {
+      setShowPopup(true);
+    } else {
+      setShowPopup(false);
+    }
   };
 
   const handleCheckboxChange = (id) => {
@@ -117,6 +139,10 @@ const CampaignsList = () => {
     }
   };
 
+  const handleDatePickerClick = (e) => {
+    setAnchor(e.target);
+  };
+
   const dateString = selectedDate.toISOString().split('T')[0];
   const filteredCampaigns = campaignItems.filter(item => item.date === dateString);
  
@@ -132,7 +158,7 @@ const CampaignsList = () => {
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
           AI Evaluation
         </span>
-        <div style={{ width: '142px' }}>
+        <div style={{ width: '142px' }} onClick={handleDatePickerClick}>
           <DatePicker
             value={selectedDate}
             onChange={handleDateChange}
@@ -146,6 +172,19 @@ const CampaignsList = () => {
               </>
             )}
           />
+          {showPopup && anchor && (
+            <Popup
+              anchor={anchor}
+              show={showPopup}
+              popupClass="k-popup-content"
+              animate={false}
+              position="bottom"
+            >
+              <div className="k-p-3 k-bg-error-lighter k-color-error k-rounded-md">
+                Data available from {availableDates[0]} to {availableDates[availableDates.length - 1]}
+              </div>
+            </Popup>
+          )}
         </div>
       </div>
       <div className="k-d-flex k-flex-col k-px-4 k-flex-1 k-overflow-hidden">
@@ -154,11 +193,26 @@ const CampaignsList = () => {
           <span className="k-font-size-sm k-color-subtle">AI Score</span>
         </div>
         <div className="k-overflow-y-auto" style={{ maxHeight: '180px' }}>
-          <ListView
-            className="k-w-full k-height-auto k-overflow-y-auto k-gap-1"
-            data={filteredCampaigns}
-            item={(props) => <CampaignsListItemRender {...props} onCheckboxChange={handleCheckboxChange} />}
-          />
+          {availableDates.includes(dateString) ? (
+            filteredCampaigns.length > 0 ? (
+              <ListView
+                className="k-w-full k-height-auto k-overflow-y-auto k-gap-1"
+                data={filteredCampaigns}
+                item={(props) => <CampaignsListItemRender {...props} onCheckboxChange={handleCheckboxChange} />}
+              />
+            ) : (
+              <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle k-p-4">
+                <p>No campaigns found for the selected date.</p>
+              </div>
+            )
+          ) : (
+            <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle k-p-4">
+              <p>No data available for the selected date.</p>
+              {availableDates.length > 0 && (
+                <p>Data available from {availableDates[0]} to {availableDates[availableDates.length - 1]}.</p>
+              )}
+            </div>
+          )}
         </div>
         
         {selectedCampaignInFilteredList && (
