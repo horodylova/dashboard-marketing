@@ -1,65 +1,21 @@
 "use client";
 
-import Image from "next/image";
-
 import {
   Drawer,
   DrawerContent,
-  DrawerItem,
 } from "@progress/kendo-react-layout";
-import { SvgIcon } from "@progress/kendo-react-common";
-import { Checkbox } from "@progress/kendo-react-inputs";
-import {
-  arrowDownIcon,
-  arrowUpIcon,
-  checkIcon,
-  chevronDownIcon,
-  xIcon,
-} from "@progress/kendo-svg-icons";
-import { Badge, BadgeContainer } from "@progress/kendo-react-indicators";
-import { Button, Chip } from "@progress/kendo-react-buttons";
-import {
-  DatePicker,
-  DateInput,
-  MultiViewCalendar,
-} from "@progress/kendo-react-dateinputs";
-import { ListView } from "@progress/kendo-react-listview";
-import { pencilIcon, trashIcon } from "@progress/kendo-svg-icons";
-import {
-  Chart,
-  ChartLegend,
-  ChartSeries,
-  ChartSeriesItem,
-  ChartValueAxis,
-  ChartValueAxisItem,
-  ChartCategoryAxis,
-  ChartCategoryAxisItem,
-  ChartSeriesLabels,
-} from "@progress/kendo-react-charts";
-
-import { Grid, GridColumn } from "@progress/kendo-react-grid";
-
-import { listViewSvgIcons, gridSvgIcons } from "./svg-icons";
 
 import {
-  listViewData,
   drawerItems,
-  browsers,
-  gridData,
-  drawerImages,
-  followersGrowth,
-  clickRateData,
-  followers,
-  postReachData,
 } from "./data";
 
 import "./globals.css";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Header from "./components/Header";
 import CustomDrawerItem from "./components/CustomDrawerItem";
-import CalendarPanel from "./components/CalendarPanel";
+import CampaignPerformanceTrend from "./components/CampaignPerformanceTrend";
 import PostReachCard from "./components/PostReachCard";
 import ClickThroughRateCard from "./components/ClickThroughRateCard";
 import FollowersGrowthCard from "./components/FollowersGrowthCard";
@@ -73,6 +29,9 @@ import CampaignEfficiencyCard from './components/CampaignEfficiencyCard';
 
 
 export default function SocialMediaManagementDashboard() {
+  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [campaignName, setCampaignName] = useState('');
+
   useEffect(() => {
     const fetchCampaignData = async () => {
       try {
@@ -86,6 +45,11 @@ export default function SocialMediaManagementDashboard() {
 
     fetchCampaignData();
   }, []);
+
+  const handleCampaignSelect = (campaignId, name) => {
+    setSelectedCampaign(campaignId);
+    setCampaignName(name);
+  };
 
   return (
     <>
@@ -112,11 +76,17 @@ export default function SocialMediaManagementDashboard() {
               <CampaignCard />
               
          
-              <CampaignsList/>
+              <CampaignsList 
+                selectedCampaign={selectedCampaign}
+                onCampaignSelect={handleCampaignSelect}
+              />
               
               <CampaignEfficiencyCard/>
 
-              <CalendarPanel />
+              <CampaignPerformanceTrend 
+                selectedCampaign={selectedCampaign}
+                campaignName={campaignName}
+              />
 
               <FollowersCard />
 

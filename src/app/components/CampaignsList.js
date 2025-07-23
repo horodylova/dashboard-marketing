@@ -10,7 +10,7 @@ import { Checkbox } from '@progress/kendo-react-inputs';
 const CampaignsListItemRender = (props) => {
   const handleCheckboxChange = () => {
     if (props.onCheckboxChange) {
-      props.onCheckboxChange(props.dataItem.id);
+      props.onCheckboxChange(props.dataItem.id, props.dataItem.text);
     }
   };
 
@@ -29,10 +29,10 @@ const CampaignsListItemRender = (props) => {
   );
 };
 
-const CampaignsList = () => {
+const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
   const [campaignItems, setCampaignItems] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [localSelectedCampaign, setLocalSelectedCampaign] = useState(null);
   const [aiData, setAiData] = useState({ score: 0, overview: '' });
   const [availableDates, setAvailableDates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -102,7 +102,7 @@ const CampaignsList = () => {
       return {
         id: campaignId,
         text: latestData.text,
-        checked: selectedCampaign === campaignId,
+        checked: localSelectedCampaign === campaignId,
         platform: latestData.platform,
         ai_score: latestData.ai_score,
         ai_comment: latestData.ai_comment,
@@ -111,11 +111,11 @@ const CampaignsList = () => {
     });
     
     setFilteredCampaigns(filtered);
-  }, [selectedDate, campaignItems, selectedCampaign]);
+  }, [selectedDate, campaignItems, localSelectedCampaign]);
 
   useEffect(() => {
-    if (selectedCampaign) {
-      const campaign = filteredCampaigns.find(item => item.id === selectedCampaign);
+    if (localSelectedCampaign) {
+      const campaign = filteredCampaigns.find(item => item.id === localSelectedCampaign);
       if (campaign) {
         setAiData({
           score: campaign.ai_score || 0,
@@ -123,11 +123,11 @@ const CampaignsList = () => {
         });
       }
     }
-  }, [selectedCampaign, filteredCampaigns]);
+  }, [localSelectedCampaign, filteredCampaigns]);
 
   const handleDateChange = (e) => {
     setSelectedDate(e.value);
-    setSelectedCampaign(null);
+    setLocalSelectedCampaign(null);
     setAiData({ score: 0, overview: '' });
     
     setCampaignItems(prevItems => 
@@ -138,22 +138,24 @@ const CampaignsList = () => {
     );
   };
 
-  const handleCheckboxChange = (id) => {
+  const handleCheckboxChange = (id, name) => {
     setCampaignItems(prevItems => 
       prevItems.map(item => ({
         ...item,
         checked: item.id === id ? true : false
       }))
     );
-    setSelectedCampaign(id);
+    setLocalSelectedCampaign(id);
+    
+    if (onCampaignSelect) {
+      onCampaignSelect(id, name);
+    }
   };
-
- 
 
   const dateString = selectedDate.toISOString().split('T')[0];
   
-  const selectedCampaignInFilteredList = selectedCampaign && 
-    filteredCampaigns.some(item => item.id === selectedCampaign);
+  const selectedCampaignInFilteredList = localSelectedCampaign && 
+    filteredCampaigns.some(item => item.id === localSelectedCampaign);
 
   return (
     <div
