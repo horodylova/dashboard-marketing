@@ -80,14 +80,15 @@ export default function SocialMediaManagementDashboard() {
                 selectedCampaign={selectedCampaign}
                 onCampaignSelect={handleCampaignSelect}
               />
-              
-              <CampaignEfficiencyCard/>
-
-              <CampaignPerformanceTrend 
+                <CampaignPerformanceTrend 
                 selectedCampaign={selectedCampaign}
                 campaignName={campaignName}
               />
 
+              
+              <CampaignEfficiencyCard/>
+
+            
               <FollowersCard />
 
               <ScheduledPostsCard />
