@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { SvgIcon } from '@progress/kendo-react-common';
-import { xIcon, pencilIcon, trashIcon } from '@progress/kendo-svg-icons';
-import { DatePicker, DateInput } from '@progress/kendo-react-dateinputs';
+import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { ListView } from '@progress/kendo-react-listview';
 import { Checkbox } from '@progress/kendo-react-inputs';
-import { Popup } from "@progress/kendo-react-popup";
+ 
 
 
 const CampaignsListItemRender = (props) => {
@@ -37,34 +35,24 @@ const CampaignsList = () => {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [aiData, setAiData] = useState({ score: 0, overview: '' });
   const [availableDates, setAvailableDates] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-  const [anchor, setAnchor] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [filteredCampaigns, setFilteredCampaigns] = useState([]);
 
   useEffect(() => {
     const fetchCampaignData = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch('/api/get-campaign-data');
         const data = await response.json();
          
-        const uniqueCampaigns = {};
-        data.data.forEach(item => {
-          uniqueCampaigns[item.campaign_id] = {
-            name: item.campaign_name,
-            platform: item.platform,
-            ai_score: item.ai_score,
-            ai_comment: item.ai_comment,
-            date: item.date
-          };
-        });
-        
-        const campaignList = Object.entries(uniqueCampaigns).map(([id, campaign]) => ({
-          id,
-          text: campaign.name,
+        const campaignList = data.data.map(item => ({
+          id: item.campaign_id,
+          text: item.campaign_name,
           checked: false,
-          platform: campaign.platform,
-          ai_score: campaign.ai_score,
-          ai_comment: campaign.ai_comment,
-          date: campaign.date
+          platform: item.platform,
+          ai_score: item.ai_score,
+          ai_comment: item.ai_comment,
+          date: item.date
         }));
         
         setCampaignItems(campaignList);
@@ -83,6 +71,8 @@ const CampaignsList = () => {
         }
       } catch (error) {
         console.error('Error fetching campaign data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -90,8 +80,42 @@ const CampaignsList = () => {
   }, []);
 
   useEffect(() => {
+    const dateString = selectedDate.toISOString().split('T')[0];
+    
+    const campaignsForSelectedDate = campaignItems
+      .filter(item => item.date === dateString)
+      .reduce((acc, item) => {
+        if (!acc[item.id]) {
+          acc[item.id] = [];
+        }
+        acc[item.id].push(item);
+        return acc;
+      }, {});
+    
+    const filtered = Object.entries(campaignsForSelectedDate).map(([campaignId, campaignData]) => {
+      const latestData = campaignData.sort((a, b) => {
+        const timeA = new Date(`${a.date} ${a.time || '00:00:00'}`);
+        const timeB = new Date(`${b.date} ${b.time || '00:00:00'}`);
+        return timeB - timeA;
+      })[0];
+      
+      return {
+        id: campaignId,
+        text: latestData.text,
+        checked: selectedCampaign === campaignId,
+        platform: latestData.platform,
+        ai_score: latestData.ai_score,
+        ai_comment: latestData.ai_comment,
+        date: latestData.date
+      };
+    });
+    
+    setFilteredCampaigns(filtered);
+  }, [selectedDate, campaignItems, selectedCampaign]);
+
+  useEffect(() => {
     if (selectedCampaign) {
-      const campaign = campaignItems.find(item => item.id === selectedCampaign);
+      const campaign = filteredCampaigns.find(item => item.id === selectedCampaign);
       if (campaign) {
         setAiData({
           score: campaign.ai_score || 0,
@@ -99,7 +123,7 @@ const CampaignsList = () => {
         });
       }
     }
-  }, [selectedCampaign, campaignItems]);
+  }, [selectedCampaign, filteredCampaigns]);
 
   const handleDateChange = (e) => {
     setSelectedDate(e.value);
@@ -112,13 +136,6 @@ const CampaignsList = () => {
         checked: false
       }))
     );
-    
-    const dateString = e.value.toISOString().split('T')[0];
-    if (!availableDates.includes(dateString)) {
-      setShowPopup(true);
-    } else {
-      setShowPopup(false);
-    }
   };
 
   const handleCheckboxChange = (id) => {
@@ -129,23 +146,12 @@ const CampaignsList = () => {
       }))
     );
     setSelectedCampaign(id);
- 
-    const campaign = campaignItems.find(item => item.id === id);
-    if (campaign) {
-      setAiData({
-        score: campaign.ai_score || 0,
-        overview: campaign.ai_comment || 'No AI evaluation available for this campaign.'
-      });
-    }
   };
 
-  const handleDatePickerClick = (e) => {
-    setAnchor(e.target);
-  };
+ 
 
   const dateString = selectedDate.toISOString().split('T')[0];
-  const filteredCampaigns = campaignItems.filter(item => item.date === dateString);
- 
+  
   const selectedCampaignInFilteredList = selectedCampaign && 
     filteredCampaigns.some(item => item.id === selectedCampaign);
 
@@ -158,33 +164,12 @@ const CampaignsList = () => {
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
           AI Evaluation
         </span>
-        <div style={{ width: '142px' }} onClick={handleDatePickerClick}>
+        <div style={{ width: '142px' }} >
           <DatePicker
             value={selectedDate}
             onChange={handleDateChange}
             fillMode="flat"
-            dateInput={() => (
-              <>
-                <DateInput ariaLabel="Campaigns List date picker" value={selectedDate} />
-                <span className="k-clear-value">
-                  <SvgIcon icon={xIcon}></SvgIcon>
-                </span>
-              </>
-            )}
           />
-          {showPopup && anchor && (
-            <Popup
-              anchor={anchor}
-              show={showPopup}
-              popupClass="k-popup-content"
-              animate={false}
-              position="bottom"
-            >
-              <div className="k-p-3 k-bg-error-lighter k-color-error k-rounded-md">
-                Data available from {availableDates[0]} to {availableDates[availableDates.length - 1]}
-              </div>
-            </Popup>
-          )}
         </div>
       </div>
       <div className="k-d-flex k-flex-col k-px-4 k-flex-1 k-overflow-hidden">
@@ -193,7 +178,11 @@ const CampaignsList = () => {
           <span className="k-font-size-sm k-color-subtle">AI Score</span>
         </div>
         <div className="k-overflow-y-auto" style={{ maxHeight: '180px' }}>
-          {availableDates.includes(dateString) ? (
+          {isLoading ? (
+            <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle k-p-4">
+              <p>Loading campaigns...</p>
+            </div>
+          ) : availableDates.includes(dateString) ? (
             filteredCampaigns.length > 0 ? (
               <ListView
                 className="k-w-full k-height-auto k-overflow-y-auto k-gap-1"
