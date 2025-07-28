@@ -215,3 +215,32 @@ export function calculateDailyConversion(data, campaignId, date) {
     change: parseFloat(change.toFixed(2))
   };
 }
+
+export function getPageViewsByDayOfWeek(data) {
+  if (!data || !data.data || !Array.isArray(data.data)) return [];
+  
+  const campaigns = getUniqueCampaigns(data);
+  const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  
+  return campaigns.map(campaign => {
+    const campaignData = data.data.filter(item => item.campaign_id === campaign.id);
+    
+    const pageViewsByDay = dayNames.map(dayName => {
+      const dayIndex = dayNames.indexOf(dayName);
+      
+      const dayData = campaignData.filter(item => {
+        if (!item.date) return false;
+        const date = new Date(item.date);
+        return date.getDay() === (dayIndex + 1) % 7;
+      });
+      
+      const totalViews = dayData.reduce((sum, item) => sum + (item.landing_page_views || 0), 0);
+      return totalViews;
+    });
+    
+    return {
+      name: campaign.name,
+      data: pageViewsByDay
+    };
+  });
+}

@@ -86,9 +86,10 @@ const SpendDistributionCard = () => {
               </ChartSeriesItem>
             </ChartSeries>
             <ChartLegend
-              position="bottom"
+              position="right"
               align="center"
-              padding={{ left: 60, right: 60 }}
+              orientation="vertical"
+              padding={{ left: 20, right: 20 }}
             />
           </Chart>
         ) : (
