@@ -21,27 +21,13 @@ This dashboard collects and visualises all your key advertising metrics from var
 
 - **Frontend**: [Next.js](https://nextjs.org/)  
 - **Automation & Data Collection**: [Make (Integromat)](https://www.make.com/)
-- **Dashboard Components**: Kendo UI / Recharts / TailwindCSS (optional)
+- **Dashboard Components**: Kendo UI 
 
 ## 🚀 Hosting & Maintenance
 
 - The website is **free to host and use**.  
 - Includes a multilingual onboarding session (available in 🇺🇦 Ukrainian, 🇬🇧 English, 🇸🇪 Swedish).
 - Post-launch updates (e.g. adding metrics/tables/logic) are available at a **friendly commercial rate** – with full code ownership retained.
-
-## 💼 About Make Free Plan
-
-The **Free tier** on Make allows:
-- Up to **1000 operations/month**
-- Data fetches every **15 minutes or longer**
-
-If advanced analytics or more frequent syncing is needed, I’ll help you **analyse the pricing plans** and choose the most cost-effective option. Most likely, you won’t need a big budget for it.
-
-## 🧩 Future Extensions (Optional)
-
-- Integration with Google Sheets or BigQuery
-- AI-powered campaign scoring
-- KPI forecasting based on historical performance
 
 ## 📬 Let’s Talk
 
