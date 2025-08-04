@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { DrawerItem } from '@progress/kendo-react-layout';
 import { Button } from '@progress/kendo-react-buttons';
-import { Checkbox } from '@progress/kendo-react-inputs';
 import AddCompanyModal from './AddCompanyModal';
 
 const CompanyDrawerSection = () => {
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [editingCompany, setEditingCompany] = useState(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -18,121 +18,221 @@ const CompanyDrawerSection = () => {
   }, []);
 
   const loadCompanies = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch('/companies.json');
       const data = await response.json();
       setCompanies(data);
-      
-      const butterfly = data.find(company => company.isDefault);
-      if (butterfly) {
-        setSelectedCompany(butterfly.id);
+      if (data.length > 0) {
+        setSelectedCompany(data[0].id);
       }
     } catch (error) {
       console.error('Error loading companies:', error);
-      const fallbackData = [{
-        id: 1,
-        name: '🦋 Butterfly',
-        webhookUrl: '',
-        isDefault: true,
-        enabled: true
-      }];
-      setCompanies(fallbackData);
-      setSelectedCompany(1);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const saveCompanies = async (newCompanies) => {
-    try {
-      setCompanies(newCompanies);
-      console.log('Saving companies:', newCompanies);
-    } catch (error) {
-      console.error('Error saving companies:', error);
+  const handleCompanyClick = (companyId) => {
+    setSelectedCompany(companyId);
+  };
+
+  const handleAddCompany = () => {
+    setEditingCompany(null);
+    setShowModal(true);
+  };
+
+  const handleEditCompany = (company) => {
+    setEditingCompany(company);
+    setShowModal(true);
+  };
+
+  const handleDeleteCompany = (companyId) => {
+    if (window.confirm('Are you sure you want to delete this company?')) {
+      setCompanies(companies.filter(company => company.id !== companyId));
+      if (selectedCompany === companyId) {
+        const remainingCompanies = companies.filter(company => company.id !== companyId);
+        setSelectedCompany(remainingCompanies.length > 0 ? remainingCompanies[0].id : null);
+      }
     }
   };
 
-  const handleAddCompany = (newCompanyData) => {
-    const newCompany = {
-      id: Date.now(),
-      name: newCompanyData.name,
-      webhookUrl: newCompanyData.webhookUrl,
-      isDefault: false,
-      enabled: false
-    };
-
-    const updatedCompanies = [newCompany, ...companies];
-    saveCompanies(updatedCompanies);
-    setModalVisible(false);
+  const handleSaveCompany = (companyData) => {
+    if (editingCompany) {
+      setCompanies(companies.map(company => 
+        company.id === editingCompany.id 
+          ? { ...company, ...companyData }
+          : company
+      ));
+    } else {
+      const newCompany = {
+        id: Date.now(),
+        ...companyData
+      };
+      setCompanies([...companies, newCompany]);
+    }
+    setShowModal(false);
+    setEditingCompany(null);
   };
 
-  const handleCompanySelect = (companyId) => {
-    const company = companies.find(c => c.id === companyId);
-    if (company && company.isDefault) {
-      setSelectedCompany(companyId);
-    }
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEditingCompany(null);
   };
 
   if (!isClient) {
-    return (
-      <div className="company-drawer-section">
-        <div className="k-px-4 k-py-2">
-          <Button
-            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-            style={{ width: '100%' }}
-            disabled
-          >
-            ➕ Add Company
-          </Button>
-        </div>
-        <div className="companies-list">
-          <DrawerItem className="company-item selected">
-            <div className="k-d-flex k-align-items-center k-w-full k-px-2">
-              <Checkbox checked={true} disabled className="k-mr-2" />
-              <span className="k-item-text k-flex-1">🦋 Butterfly</span>
-            </div>
-          </DrawerItem>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
-    <div className="company-drawer-section">
-      <div className="k-px-4 k-py-2">
+    <div 
+      className="company-drawer-section" 
+      style={{ 
+        background: 'white',
+        minHeight: '100vh',
+        width: '320px',
+        padding: '16px 0',
+        paddingTop: '50px'
+      }}
+    >
+      <div 
+        className="companies-list"
+        style={{
+          minHeight: isLoading ? '200px' : 'auto',
+          marginBottom: '16px'
+        }}
+      >
+        {isLoading ? (
+          <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>
+        ) : (
+          companies.map((company) => (
+            <div
+              key={company.id}
+              className="company-item"
+              onClick={() => handleCompanyClick(company.id)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '12px 16px',
+                cursor: 'pointer',
+                backgroundColor: selectedCompany === company.id ? 'rgba(91, 80, 226, 0.1)' : 'transparent',
+                borderLeft: selectedCompany === company.id ? '3px solid var(--kendo-color-primary)' : '3px solid transparent',
+                transition: 'all 0.2s ease',
+                minHeight: '48px'
+              }}
+              onMouseEnter={(e) => {
+                if (selectedCompany !== company.id) {
+                  e.target.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedCompany !== company.id) {
+                  e.target.style.backgroundColor = 'transparent';
+                }
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                <span 
+                  className="k-item-text" 
+                  style={{ 
+                    color: 'black',
+                    fontSize: '14px',
+                    fontWeight: selectedCompany === company.id ? '600' : '400',
+                    fontFamily: 'Quicksand, sans-serif'
+                  }}
+                >
+                  {company.name}
+                </span>
+              </div>
+              {company.name !== 'Butterfly' && (
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditCompany(company);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                      padding: '4px',
+                      borderRadius: '4px',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(0, 0, 255, 0.1)'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteCompany(company.id);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                      padding: '4px',
+                      borderRadius: '4px',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255, 0, 0, 0.1)'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                  >
+                    🗑️
+                  </button>
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+      
+      <div style={{
+        padding: '0 16px',
+        borderTop: '1px solid rgba(31, 31, 31, 0.16)',
+        paddingTop: '16px'
+      }}>
         <Button
-          onClick={() => setModalVisible(true)}
-          className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-          style={{ width: '100%' }}
+          onClick={handleAddCompany}
+          style={{
+            width: '100%',
+            backgroundColor: 'var(--kendo-color-primary)',
+            color: 'white',
+            border: 'none',
+            padding: '12px 16px',
+            borderRadius: '4px',
+            fontWeight: 'bold',
+            fontSize: '14px',
+            fontFamily: 'Quicksand, sans-serif',
+            boxShadow: '0 2px 4px rgba(91, 80, 226, 0.2)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = 'var(--kendo-color-primary-hover)';
+            e.target.style.transform = 'translateY(-1px)';
+            e.target.style.boxShadow = '0 4px 8px rgba(91, 80, 226, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'var(--kendo-color-primary)';
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 2px 4px rgba(91, 80, 226, 0.2)';
+          }}
         >
-          ➕ Add Company
+          Add Company
         </Button>
       </div>
 
-      <div className="companies-list">
-        {companies.map((company) => (
-          <DrawerItem
-            key={company.id}
-            className={`company-item ${selectedCompany === company.id ? 'selected' : ''}`}
-          >
-            <div className="k-d-flex k-align-items-center k-w-full k-px-2">
-              <Checkbox
-                checked={selectedCompany === company.id}
-                disabled={!company.isDefault}
-                onChange={() => handleCompanySelect(company.id)}
-                className="k-mr-2"
-              />
-              <span className="k-item-text k-flex-1">{company.name}</span>
-            </div>
-          </DrawerItem>
-        ))}
-      </div>
-
-      {isClient && (
-        <AddCompanyModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onSave={handleAddCompany}
-        />
-      )}
+      <AddCompanyModal
+        visible={showModal}
+        onClose={handleCloseModal}
+        onSave={handleSaveCompany}
+        editingCompany={editingCompany}
+      />
     </div>
   );
 };

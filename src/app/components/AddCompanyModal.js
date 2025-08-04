@@ -15,7 +15,7 @@ import {
 } from '@progress/kendo-react-inputs';
 import { Button } from '@progress/kendo-react-buttons';
 
-const AddCompanyModal = ({ visible, onClose, onSave }) => {
+const AddCompanyModal = ({ visible, onClose, onSave, editingCompany }) => {
   const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -26,11 +26,25 @@ const AddCompanyModal = ({ visible, onClose, onSave }) => {
     setIsClient(true);
   }, []);
 
-  const handleSubmit = (dataItem) => {
-    if (dataItem.name && dataItem.webhookUrl) {
+  useEffect(() => {
+    if (visible) {
+      if (editingCompany) {
+        setFormData({
+          name: editingCompany.name || '',
+          webhookUrl: editingCompany.webhookUrl || ''
+        });
+      } else {
+        setFormData({ name: '', webhookUrl: '' });
+      }
+    }
+  }, [editingCompany, visible]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (formData.name && formData.webhookUrl) {
       onSave({
-        name: `🏢 ${dataItem.name}`,
-        webhookUrl: dataItem.webhookUrl
+        name: formData.name,
+        webhookUrl: formData.webhookUrl
       });
       setFormData({ name: '', webhookUrl: '' });
     }
@@ -39,6 +53,14 @@ const AddCompanyModal = ({ visible, onClose, onSave }) => {
   const handleCancel = () => {
     setFormData({ name: '', webhookUrl: '' });
     onClose();
+  };
+
+  const handleFieldChange = (event) => {
+    const { name, value } = event.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const requiredValidator = (value) => {
@@ -57,56 +79,49 @@ const AddCompanyModal = ({ visible, onClose, onSave }) => {
 
   return (
     <Dialog
-      title="➕ Add Company"
+      title={editingCompany ? "Edit Company" : "Add Company"}
       onClose={handleCancel}
       visible={visible}
       width={450}
       height={300}
     >
-      <Form
-        onSubmit={handleSubmit}
-        initialValues={formData}
-        render={(formRenderProps) => (
-          <FormElement style={{ maxWidth: 650 }}>
-            <fieldset className="k-form-fieldset">
-              <div className="k-form-field">
-                <Field
-                  name="name"
-                  component={Input}
-                  label="Company Name"
-                  validator={requiredValidator}
-                  placeholder="Enter company name"
-                />
-              </div>
-              <div className="k-form-field">
-                <Field
-                  name="webhookUrl"
-                  component={Input}
-                  label="Webhook URL (Make.com)"
-                  validator={urlValidator}
-                  placeholder="https://hook.eu1.make.com/..."
-                />
-              </div>
-            </fieldset>
-            <DialogActionsBar>
-              <Button
-                type="button"
-                onClick={handleCancel}
-                className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
-                disabled={!formRenderProps.allowSubmit}
-              >
-                Add
-              </Button>
-            </DialogActionsBar>
-          </FormElement>
-        )}
-      />
+      <form onSubmit={handleSubmit}>
+        <div style={{ padding: '20px' }}>
+          <div className="k-form-field" style={{ marginBottom: '15px' }}>
+            <label className="k-label">Company Name</label>
+            <Input
+              name="name"
+              value={formData.name}
+              onChange={handleFieldChange}
+              required
+            />
+          </div>
+          <div className="k-form-field" style={{ marginBottom: '15px' }}>
+            <label className="k-label">Webhook URL</label>
+            <Input
+              name="webhookUrl"
+              value={formData.webhookUrl}
+              onChange={handleFieldChange}
+              required
+            />
+          </div>
+        </div>
+        <DialogActionsBar>
+          <Button
+            onClick={handleCancel}
+            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-base"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+            disabled={!formData.name || !formData.webhookUrl}
+          >
+            {editingCompany ? "Save" : "Add"}
+          </Button>
+        </DialogActionsBar>
+      </form>
     </Dialog>
   );
 };
