@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@progress/kendo-react-buttons';
 import AddCompanyModal from './AddCompanyModal';
 
-const CompanyDrawerSection = () => {
+const CompanyDrawerSection = ({ isMobile = false }) => {
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [isClient, setIsClient] = useState(false);
@@ -89,10 +89,10 @@ const CompanyDrawerSection = () => {
       className="company-drawer-section" 
       style={{ 
         background: 'white',
-        minHeight: '100vh',
-        width: '320px',
+        minHeight: isMobile ? '100vh' : '100vh',
+        width: isMobile ? '100%' : (window.innerWidth >= 1024 ? '320px' : '280px'),
         padding: '16px 0',
-        paddingTop: '50px'
+        paddingTop: isMobile ? '60px' : '50px'
       }}
     >
       <div 
@@ -114,12 +114,12 @@ const CompanyDrawerSection = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '12px 16px',
+                padding: isMobile ? '16px 20px' : '12px 16px',
                 cursor: 'pointer',
                 backgroundColor: selectedCompany === company.id ? 'rgba(91, 80, 226, 0.1)' : 'transparent',
                 borderLeft: selectedCompany === company.id ? '3px solid var(--kendo-color-primary)' : '3px solid transparent',
                 transition: 'all 0.2s ease',
-                minHeight: '48px'
+                minHeight: isMobile ? '56px' : '48px'
               }}
               onMouseEnter={(e) => {
                 if (selectedCompany !== company.id) {
@@ -137,7 +137,7 @@ const CompanyDrawerSection = () => {
                   className="k-item-text" 
                   style={{ 
                     color: 'black',
-                    fontSize: '14px',
+                    fontSize: isMobile ? '16px' : '14px',
                     fontWeight: selectedCompany === company.id ? '600' : '400',
                     fontFamily: 'Quicksand, sans-serif'
                   }}
@@ -156,8 +156,8 @@ const CompanyDrawerSection = () => {
                       background: 'none',
                       border: 'none',
                       cursor: 'pointer',
-                      fontSize: '16px',
-                      padding: '4px',
+                      fontSize: isMobile ? '18px' : '16px',
+                      padding: isMobile ? '8px' : '4px',
                       borderRadius: '4px',
                       transition: 'background-color 0.2s'
                     }}
@@ -175,8 +175,8 @@ const CompanyDrawerSection = () => {
                       background: 'none',
                       border: 'none',
                       cursor: 'pointer',
-                      fontSize: '16px',
-                      padding: '4px',
+                      fontSize: isMobile ? '18px' : '16px',
+                      padding: isMobile ? '8px' : '4px',
                       borderRadius: '4px',
                       transition: 'background-color 0.2s'
                     }}
@@ -193,7 +193,7 @@ const CompanyDrawerSection = () => {
       </div>
       
       <div style={{
-        padding: '0 16px',
+        padding: isMobile ? '0 20px' : '0 16px',
         borderTop: '1px solid rgba(31, 31, 31, 0.16)',
         paddingTop: '16px'
       }}>
@@ -204,10 +204,10 @@ const CompanyDrawerSection = () => {
             backgroundColor: 'var(--kendo-color-primary)',
             color: 'white',
             border: 'none',
-            padding: '12px 16px',
+            padding: isMobile ? '16px 20px' : '12px 16px',
             borderRadius: '4px',
             fontWeight: 'bold',
-            fontSize: '14px',
+            fontSize: isMobile ? '16px' : '14px',
             fontFamily: 'Quicksand, sans-serif',
             boxShadow: '0 2px 4px rgba(91, 80, 226, 0.2)',
             transition: 'all 0.2s ease'

@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  Drawer,
-  DrawerContent,
-} from "@progress/kendo-react-layout";
-
 import "./globals.css";
 
 import React, { useEffect, useState } from "react";
@@ -20,11 +15,32 @@ import ScheduledPostsCard from "./components/ScheduledPostsCard";
 import CampaignsList from './components/CampaignsList';
 import CampaignCard from './components/CampaignCard';
 import CampaignEfficiencyCard from './components/CampaignEfficiencyCard';
+import  Footer from './components/Footer'
 
 export default function SocialMediaManagementDashboard() {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [campaignName, setCampaignName] = useState('');
-  const [drawerExpanded, setDrawerExpanded] = useState(true);
+  const [drawerExpanded, setDrawerExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setDrawerExpanded(true);
+        setIsMobileMenuOpen(false);
+      } else {
+        setDrawerExpanded(false);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const fetchCampaignData = async () => {
@@ -49,11 +65,19 @@ export default function SocialMediaManagementDashboard() {
     setDrawerExpanded(!drawerExpanded);
   };
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
     <>
-      <Header />
+      <Header 
+        onMobileMenuToggle={handleMobileMenuToggle}
+        isMobileMenuOpen={isMobileMenuOpen}
+        isMobile={isMobile}
+      />
 
-      {!drawerExpanded && (
+      {!isMobile && !drawerExpanded && (
         <button
           onClick={toggleDrawer}
           style={{
@@ -75,7 +99,7 @@ export default function SocialMediaManagementDashboard() {
       )}
 
       <div style={{ display: 'flex', minHeight: 'calc(100vh - 46px)' }}>
-        {drawerExpanded && (
+        {!isMobile && drawerExpanded && (
           <div 
             style={{
               width: '320px',
@@ -120,7 +144,7 @@ export default function SocialMediaManagementDashboard() {
         }}>
           <main style={{ flex: 1 }}>
             <div className="k-bg-primary k-color-white">
-              <h1 className="k-h1 k-py-6 k-px-10 !k-mb-0">Active Campaigns</h1>
+              <h1 className="k-h1 k-py-6 k-px-4 k-px-md-6 k-px-xl-10 !k-mb-0">Active Campaigns</h1>
             </div>
             <div className="k-d-grid k-grid-cols-xs-1 k-grid-cols-md-6 k-grid-cols-xl-12 k-grid-auto-rows-auto k-gap-4 k-px-xs-4 k-px-md-6 k-px-xl-10" style={{ paddingBottom: '2rem' }}>
               <CampaignCard />
@@ -140,11 +164,7 @@ export default function SocialMediaManagementDashboard() {
               <PostReachCard />
             </div>
           </main>
-          <footer className="!k-bg-primary k-color-white k-bg-light k-py-6 k-px-10" style={{ marginTop: 'auto' }}>
-            <p className="!k-mb-0">
-              Copyright &#169; 2024 Progress Software. All rights reserved.
-            </p>
-          </footer>
+          <Footer/>
         </div>
       </div>
     </>

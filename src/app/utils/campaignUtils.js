@@ -53,10 +53,8 @@ export function getUniqueCampaigns(data) {
 export function calculateTotalLandingPageViews(data, campaignId) {
   if (!data || !data.data || !Array.isArray(data.data)) return 0;
   
-  // Получаем последние данные для кампании за каждый день
   const latestDataByDate = getLatestDataByDate(data.data, campaignId);
   
-  // Суммируем landing_page_views из последних данных за каждый день
   return Object.values(latestDataByDate)
     .reduce((total, item) => total + (item.landing_page_views || 0), 0);
 }
@@ -64,10 +62,8 @@ export function calculateTotalLandingPageViews(data, campaignId) {
 export function calculateTotalLeads(data, campaignId) {
   if (!data || !data.data || !Array.isArray(data.data)) return 0;
   
-  // Получаем последние данные для кампании за каждый день
   const latestDataByDate = getLatestDataByDate(data.data, campaignId);
-  
-  // Суммируем leads из последних данных за каждый день
+
   return Object.values(latestDataByDate)
     .reduce((total, item) => total + (item.leads || 0), 0);
 }
@@ -79,23 +75,19 @@ export function getLatestSpend(data, campaignId) {
   
   if (campaignData.length === 0) return 0;
   
-  // Сортируем по дате и времени (от новых к старым)
   campaignData.sort((a, b) => {
     const dateA = new Date(`${a.date} ${a.time}`);
     const dateB = new Date(`${b.date} ${b.time}`);
     return dateB - dateA;
   });
   
-  // Возвращаем значение spend из последней записи
   return campaignData[0].spend || 0;
 }
 
-// Вспомогательная функция для получения последних данных за каждый день
 function getLatestDataByDate(data, campaignId) {
   const campaignData = data.filter(item => item.campaign_id === campaignId);
   const dataByDate = {};
   
-  // Группируем данные по дате
   campaignData.forEach(item => {
     if (!item.date) return;
     
@@ -106,7 +98,6 @@ function getLatestDataByDate(data, campaignId) {
     dataByDate[item.date].push(item);
   });
   
-  // Для каждой даты находим последнюю запись
   const latestDataByDate = {};
   
   Object.keys(dataByDate).forEach(date => {
@@ -123,7 +114,6 @@ function getLatestDataByDate(data, campaignId) {
   return latestDataByDate;
 }
 
-// Получение активных дат кампаний
 export function getActiveCampaignDates(data) {
   if (!data || !data.data || !Array.isArray(data.data)) return [];
   
@@ -138,14 +128,11 @@ export function getActiveCampaignDates(data) {
   return Array.from(uniqueDates).sort();
 }
 
-// Группировка данных кампании по дням
 export function groupCampaignDataByDate(data, campaignId) {
   if (!data || !data.data || !Array.isArray(data.data)) return {};
   
-  // Получаем последние данные за каждый день
   const latestDataByDate = getLatestDataByDate(data.data, campaignId);
   
-  // Преобразуем в формат, ожидаемый функцией calculateDailyConversion
   const groupedByDate = {};
   
   Object.keys(latestDataByDate).forEach(date => {
@@ -155,7 +142,6 @@ export function groupCampaignDataByDate(data, campaignId) {
   return groupedByDate;
 }
 
-// Расчет конверсии для кампании за день
 export function calculateDailyConversion(data, campaignId, date) {
   if (!data || !data.data || !Array.isArray(data.data)) return { conversion: 0, change: 0 };
   
@@ -165,7 +151,6 @@ export function calculateDailyConversion(data, campaignId, date) {
     return { conversion: 0, change: 0 };
   }
   
-  // Суммируем clicks и landing_page_views за день
   const dailyData = groupedData[date].reduce(
     (acc, item) => {
       acc.clicks += item.clicks || 0;
@@ -175,17 +160,14 @@ export function calculateDailyConversion(data, campaignId, date) {
     { clicks: 0, landing_page_views: 0 }
   );
   
-  // Рассчитываем конверсию
   const conversion = dailyData.landing_page_views > 0
     ? (dailyData.clicks / dailyData.landing_page_views) * 100
     : 0;
   
-  // Находим предыдущий день
   const dates = Object.keys(groupedData).sort();
   const currentDateIndex = dates.indexOf(date);
   const previousDate = currentDateIndex > 0 ? dates[currentDateIndex - 1] : null;
   
-  // Рассчитываем изменение по сравнению с предыдущим днем
   let change = 0;
   
   if (previousDate) {
@@ -204,9 +186,9 @@ export function calculateDailyConversion(data, campaignId, date) {
     
     change = previousConversion > 0
       ? ((conversion - previousConversion) / previousConversion) * 100
-      : 100; // Если предыдущая конверсия была 0, считаем рост как 100%
+      : 100; 
   } else {
-    // Если это первый день, считаем, что изменений нет
+
     change = 0;
   }
   
