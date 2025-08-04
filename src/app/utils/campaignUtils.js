@@ -244,3 +244,116 @@ export function getPageViewsByDayOfWeek(data) {
     };
   });
 }
+
+export function getClicksByDayOfWeek(data) {
+  if (!data || !data.data || !Array.isArray(data.data)) return [];
+  
+  const campaigns = getUniqueCampaigns(data);
+  const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  
+  return campaigns.map(campaign => {
+    const campaignData = data.data.filter(item => item.campaign_id === campaign.id);
+    
+    const clicksByDay = dayNames.map(dayName => {
+      const dayIndex = dayNames.indexOf(dayName);
+      
+      const dayData = campaignData.filter(item => {
+        if (!item.date) return false;
+        const date = new Date(item.date);
+        return date.getDay() === (dayIndex + 1) % 7;
+      });
+      
+      const totalClicks = dayData.reduce((sum, item) => sum + (item.clicks || 0), 0);
+      return totalClicks;
+    });
+    
+    return {
+      name: campaign.name,
+      data: clicksByDay
+    };
+  });
+}
+
+export function getMetricComparisonData(data, selectedDate = null) {
+  if (!data || !data.data || !Array.isArray(data.data)) return [];
+  
+  const campaigns = getUniqueCampaigns(data);
+  
+  return campaigns.map(campaign => {
+    let campaignData = data.data.filter(item => item.campaign_id === campaign.id);
+    
+    if (selectedDate) {
+      const dateString = selectedDate.toISOString().split('T')[0];
+      campaignData = campaignData.filter(item => item.date === dateString);
+    }
+    
+    if (campaignData.length === 0) {
+      return {
+        campaign: campaign.name,
+        leads: 0,
+        clicks: 0,
+        impressions: 0
+      };
+    }
+    
+    const latestData = campaignData.sort((a, b) => {
+      const dateA = new Date(`${a.date} ${a.time || '00:00:00'}`);
+      const dateB = new Date(`${b.date} ${b.time || '00:00:00'}`);
+      return dateB - dateA;
+    })[0];
+    
+    return {
+      campaign: campaign.name,
+      leads: latestData.leads || 0,
+      clicks: latestData.clicks || 0,
+      impressions: latestData.impressions || 0
+    };
+  });
+}
+
+export function getCampaignPerformanceMatrix(data, selectedDate = null) {
+  if (!data || !data.data || !Array.isArray(data.data)) return [];
+  
+  const campaigns = getUniqueCampaigns(data);
+  
+  return campaigns.map(campaign => {
+    let campaignData = data.data.filter(item => item.campaign_id === campaign.id);
+    
+    if (selectedDate) {
+      const dateString = selectedDate.toISOString().split('T')[0];
+      campaignData = campaignData.filter(item => item.date === dateString);
+    }
+    
+    if (campaignData.length === 0) {
+      return {
+        id: campaign.id,
+        name: campaign.name,
+        cpc: 0,
+        leads: 0,
+        spend: 0,
+        aiScore: 0
+      };
+    }
+    
+    const latestData = campaignData.sort((a, b) => {
+      const dateA = new Date(`${a.date} ${a.time || '00:00:00'}`);
+      const dateB = new Date(`${b.date} ${b.time || '00:00:00'}`);
+      return dateB - dateA;
+    })[0];
+    
+    let cpc = latestData.cpc || 0;
+    
+    if (cpc === 0 && latestData.spend > 0 && latestData.leads > 0) {
+      cpc = latestData.spend / latestData.leads;
+    }
+    
+    return {
+      id: campaign.id,
+      name: campaign.name,
+      cpc: cpc,
+      leads: latestData.leads || 0,
+      spend: latestData.spend || 0,
+      aiScore: latestData.ai_score || 0
+    };
+  });
+}
