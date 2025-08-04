@@ -1,6 +1,4 @@
-import { google } from 'googleapis';
-import path from 'path';
-import fs from 'fs/promises';
+
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {
@@ -14,8 +12,7 @@ export async function GET(request) {
     }
     
     const rawData = await response.json();
-    
-    // Преобразуем данные в нужный формат
+
     const data = rawData.map(item => {
       if (item[1] === 'IG Story - Narrow Audience') {
         console.log('Raw IG Story data:', {
