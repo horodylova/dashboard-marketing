@@ -133,7 +133,7 @@ const CampaignEfficiencyCard = () => {
   return (
     <div
       className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-5 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
-      style={{ maxHeight: "392px" }}
+      style={{ maxHeight: "392px", minHeight: "392px" }}
     >
       <div className="k-d-flex k-flex-row k-justify-content-between k-align-items-center k-p-4">
         <div className="k-d-flex k-flex-col">
@@ -176,7 +176,7 @@ const CampaignEfficiencyCard = () => {
           )}
         </div>
       </div>
-      <div className="k-d-flex k-px-4 k-flex-1 k-overflow-auto">
+      <div className="k-d-flex k-px-4 k-flex-1 k-overflow-auto" style={{ minHeight: '250px' }}>
         {isLoading ? (
           <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle">
             <p>Loading campaign data...</p>

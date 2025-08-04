@@ -47,6 +47,7 @@ export const listViewData = [
   },
 ];
 
+// Новая структура для боковой панели с компаниями
 export const drawerItems = [
   {
     id: 0,
@@ -54,41 +55,11 @@ export const drawerItems = [
     expandable: false,
     selected: true,
   },
-  {
-    id: 1,
-    text: 'Analytics',
-    expandable: true,
-  },
-  {
-    id: 2,
-    text: 'Members',
-    expandable: true,
-  },
-  {
-    id: 3,
-    text: 'Posts',
-    expandable: false,
-  },
-  {
-    id: 4,
-    text: 'Daily Tasks',
-    expandable: false,
-  },
-  {
-    id: 5,
-    text: 'Schedule',
-    expandable: false,
-  },
-  {
-    id: 6,
-    text: 'Settings',
-    expandable: false,
-  },
   { separator: true },
   {
-    id: 6,
-    text: 'Help',
-    expandable: false,
+    id: 'companies-section',
+    text: 'Компании',
+    isSection: true,
   },
 ];
 

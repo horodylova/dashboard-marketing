@@ -37,6 +37,7 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
   const [availableDates, setAvailableDates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
+  const [hasAutoSelected, setHasAutoSelected] = useState(false);
 
   useEffect(() => {
     const fetchCampaignData = async () => {
@@ -114,6 +115,25 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
   }, [selectedDate, campaignItems, localSelectedCampaign]);
 
   useEffect(() => {
+    if (!hasAutoSelected && filteredCampaigns.length > 0 && !localSelectedCampaign) {
+      const firstCampaign = filteredCampaigns[0];
+      setLocalSelectedCampaign(firstCampaign.id);
+      setHasAutoSelected(true);
+      
+      setCampaignItems(prevItems => 
+        prevItems.map(item => ({
+          ...item,
+          checked: item.id === firstCampaign.id
+        }))
+      );
+      
+      if (onCampaignSelect) {
+        onCampaignSelect(firstCampaign.id, firstCampaign.text);
+      }
+    }
+  }, [filteredCampaigns, localSelectedCampaign, hasAutoSelected, onCampaignSelect]);
+
+  useEffect(() => {
     if (localSelectedCampaign) {
       const campaign = filteredCampaigns.find(item => item.id === localSelectedCampaign);
       if (campaign) {
@@ -129,6 +149,7 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
     setSelectedDate(e.value);
     setLocalSelectedCampaign(null);
     setAiData({ score: 0, overview: '' });
+    setHasAutoSelected(false);
     
     setCampaignItems(prevItems => 
       prevItems.map(item => ({
@@ -160,7 +181,7 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
   return (
     <div
       className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-4 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
-      style={{ maxHeight: '392px' }}
+      style={{ maxHeight: '392px', minHeight: '392px' }}
     >
       <div className="k-d-flex k-flex-row k-justify-content-between k-align-items-center k-p-4">
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">

@@ -213,3 +213,29 @@
 .k-drawer-container {
     padding: 0
 }
+
+/* Стили для секции компаний */
+.company-drawer-section {
+  background: var(--panel-gradient);
+  border-right: 1px solid #e0e0e0;
+}
+
+.companies-list .company-item {
+  padding: 8px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.companies-list .company-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.companies-list .company-item.selected {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-left: 3px solid #ff6358;
+}
+
+.drawer-content {
+  background: var(--panel-gradient);
+  border-right: 1px solid #e0e0e0;
+}

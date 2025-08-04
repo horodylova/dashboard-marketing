@@ -108,7 +108,7 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
   return (
     <div
       className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-3 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
-      style={{ maxHeight: '392px' }}
+      style={{ maxHeight: '392px', minHeight: '392px' }}
     >
       <div className="k-d-flex k-align-items-center k-p-4">
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
@@ -122,7 +122,7 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
         </div>
       )}
       
-      <div className="k-px-4 k-d-flex k-justify-content-center k-flex-1">
+      <div className="k-px-4 k-d-flex k-justify-content-center k-flex-1" style={{ height: '280px', minHeight: '280px' }}>
         {isLoading ? (
           <div className="k-d-flex k-align-items-center k-justify-content-center k-flex-1">
             <span className="k-color-subtle">Loading...</span>
