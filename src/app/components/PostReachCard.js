@@ -1,23 +1,53 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { DatePicker } from '@progress/kendo-react-dateinputs';
+import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip, ChartLegend } from '@progress/kendo-react-charts';
 import { SvgIcon } from '@progress/kendo-react-common';
-import { xIcon, infoCircleIcon } from '@progress/kendo-svg-icons';
-import { DatePicker, DateInput } from '@progress/kendo-react-dateinputs';
-import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip } from '@progress/kendo-react-charts';
-import { getCampaignPerformanceMatrix } from '../utils/campaignUtils';
+import { infoCircleIcon } from '@progress/kendo-svg-icons';
+
+const getCampaignPerformanceMatrix = (data, selectedDate) => {
+  if (!data || !data.data || !selectedDate) return [];
+  
+  const dateString = selectedDate.toISOString().split('T')[0];
+  const filteredData = data.data.filter(item => item.date === dateString);
+  
+  const campaignMap = new Map();
+  
+  filteredData.forEach(item => {
+    const campaignName = item.campaign_name;
+    if (!campaignMap.has(campaignName)) {
+      campaignMap.set(campaignName, {
+        name: campaignName,
+        spend: 0,
+        clicks: 0,
+        leads: 0,
+        aiScore: item.ai_score || 0
+      });
+    }
+    
+    const campaign = campaignMap.get(campaignName);
+    campaign.spend += parseFloat(item.spend) || 0;
+    campaign.clicks += parseInt(item.clicks) || 0;
+    campaign.leads += parseInt(item.leads) || 0;
+  });
+  
+  return Array.from(campaignMap.values()).map(campaign => ({
+    ...campaign,
+    cpc: campaign.clicks > 0 ? campaign.spend / campaign.clicks : 0
+  }));
+};
 
 const CampaignPerformanceMatrix = () => {
   const [campaignData, setCampaignData] = useState(null);
   const [chartData, setChartData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showTooltip, setShowTooltip] = useState(false);
   const [availableDates, setAvailableDates] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     const fetchCampaignData = async () => {
-      setIsLoading(true);
       try {
         const response = await fetch('/api/get-campaign-data');
         const data = await response.json();
@@ -106,14 +136,6 @@ const CampaignPerformanceMatrix = () => {
             value={selectedDate}
             onChange={handleDateChange}
             fillMode="flat"
-            dateInput={() => (
-              <>
-                <DateInput ariaLabel="Campaign performance date picker" value={selectedDate} />
-                <span className="k-clear-value">
-                  <SvgIcon icon={xIcon}></SvgIcon>
-                </span>
-              </>
-            )}
           />
         </div>
       </div>
@@ -159,6 +181,7 @@ const CampaignPerformanceMatrix = () => {
                   />
                 ))}
               </ChartSeries>
+              <ChartLegend position="bottom" orientation="horizontal" />
             </Chart>
           ) : (
             <div className="k-d-flex k-justify-content-center k-align-items-center k-flex-col k-color-subtle" style={{ height: '362px' }}>

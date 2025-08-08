@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { SvgIcon } from '@progress/kendo-react-common';
 import { xIcon } from '@progress/kendo-svg-icons';
 import { DatePicker, DateInput } from '@progress/kendo-react-dateinputs';
+import { Popup } from '@progress/kendo-react-popup';
 import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartLegend, ChartTooltip } from '@progress/kendo-react-charts';
 import { getMetricComparisonData, getActiveCampaignDates } from '../utils/campaignUtils';
 
@@ -13,6 +14,9 @@ const MetricComparisonCard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availableDates, setAvailableDates] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [anchor, setAnchor] = useState(null);
+  const [firstAvailableDate, setFirstAvailableDate] = useState("");
 
   useEffect(() => {
     const fetchCampaignData = async () => {
@@ -25,8 +29,10 @@ const MetricComparisonCard = () => {
         const dates = getActiveCampaignDates(data);
         setAvailableDates(dates);
         
-        const metricsData = getMetricComparisonData(data, selectedDate);
-        setChartData(metricsData);
+        if (dates.length > 0) {
+          setFirstAvailableDate(dates[0]);
+          setSelectedDate(new Date(dates[dates.length - 1]));
+        }
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {
@@ -35,10 +41,36 @@ const MetricComparisonCard = () => {
     };
 
     fetchCampaignData();
-  }, [selectedDate]);
+  }, []);
 
-  const handleDateChange = (event) => {
-    setSelectedDate(event.value);
+  useEffect(() => {
+    if (!campaignData || !selectedDate) return;
+    
+    const dateString = selectedDate.toISOString().split('T')[0];
+    
+    if (!availableDates.includes(dateString)) {
+      setChartData([]);
+      return;
+    }
+    
+    const metricsData = getMetricComparisonData(campaignData, selectedDate);
+    setChartData(metricsData);
+  }, [campaignData, selectedDate, availableDates]);
+
+  const handleDateChange = (e) => {
+    const newDate = e.value;
+    setSelectedDate(newDate);
+    
+    const dateString = newDate.toISOString().split('T')[0];
+    if (!availableDates.includes(dateString)) {
+      setShowPopup(true);
+    } else {
+      setShowPopup(false);
+    }
+  };
+
+  const handleDatePickerClick = (e) => {
+    setAnchor(e.target);
   };
 
   const hasDataForSelectedDate = () => {
@@ -66,7 +98,7 @@ const MetricComparisonCard = () => {
     const maxClicks = Math.max(...chartData.map(item => item.clicks));
     const maxImpressions = Math.max(...chartData.map(item => item.impressions));
     
-    const categories = ['Leads', 'Clicks', 'Impressions'];
+    const categories = ['Leads', 'Clicks', 'Impress.'];
     
     const series = chartData.map((campaign, index) => {
       const colors = ['#1877F2', '#E4405F', '#4267B2', '#C13584'];
@@ -98,20 +130,25 @@ const MetricComparisonCard = () => {
             Radar chart comparing campaign performance metrics: Leads, Clicks, and Impressions for selected date
           </span>
         </div>
-        <div style={{ width: '164px' }}>
+        <div style={{ width: '164px' }} onClick={handleDatePickerClick}>
           <DatePicker
             value={selectedDate}
             onChange={handleDateChange}
             fillMode="flat"
-            dateInput={() => (
-              <>
-                <DateInput ariaLabel="Metric comparison date picker" value={selectedDate} />
-                <span className="k-clear-value">
-                  <SvgIcon icon={xIcon}></SvgIcon>
-                </span>
-              </>
-            )}
           />
+          {showPopup && anchor && (
+            <Popup
+              anchor={anchor}
+              show={showPopup}
+              popupClass="k-popup-content"
+              animate={false}
+              position="bottom"
+            >
+              <div className="k-p-3 k-bg-error-lighter k-color-error k-rounded-md">
+                Data available from {firstAvailableDate}
+              </div>
+            </Popup>
+          )}
         </div>
       </div>
       <div className="k-d-flex k-px-4 k-flex-1" style={{ height: '350px', minHeight: '350px' }}>

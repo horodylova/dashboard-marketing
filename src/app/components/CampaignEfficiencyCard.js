@@ -194,16 +194,6 @@ const CampaignEfficiencyCard = () => {
           </div>
         )}
       </div>
-      <div className="k-d-flex k-flex-row k-p-4">
-        <div className="k-d-flex k-flex-row k-p-4">
-          <div className="k-d-flex k-flex-col k-w-full">
-           
-            <Button fillMode="clear" themeColor="primary" className="k-mt-2">
-              View all campaigns
-            </Button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

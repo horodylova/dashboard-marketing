@@ -44,12 +44,7 @@ const Header = ({ onMobileMenuToggle, isMobileMenuOpen, isMobile }) => {
           </AppBarSection>
                      
           <AppBarSection className="k-flex-basis-0 k-flex-grow k-justify-content-end k-gap-1.5">
-            <Button
-              className="k-d-md-none"
-              svgIcon={searchIcon}
-              fillMode="clear"
-              themeColor="light"
-            />
+            
                         
             <span className="k-appbar-separator k-color-border" />
             <DropDownButton

@@ -33,32 +33,32 @@ const CampaignCard = () => {
   }
 
   return (
-    <div className="k-d-flex k-flex-row k-col-span-12 k-gap-4">
+    <div className="k-d-grid k-grid-cols-2 k-grid-cols-md-4 k-col-span-12 k-gap-4">
       {campaigns.map((campaign) => {
         const landingPageViews = calculateTotalLandingPageViews(campaignData, campaign.id);
         const leads = calculateTotalLeads(campaignData, campaign.id);
         const spend = getLatestSpend(campaignData, campaign.id);
         
-        // Находим иконку для соответствующей платформы
         const icon = gridSvgIcons.find(icon => icon.name === campaign.platform?.toLowerCase())?.svg;
 
         return (
           <div 
             key={campaign.id}
-            className="k-d-flex k-flex-col k-flex-1 k-border k-border-solid k-border-border k-overflow-hidden k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
+            className="k-d-flex k-flex-col k-border k-border-solid k-border-border k-overflow-hidden k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
+            style={{ minHeight: '120px' }}
           >
-            <div className="k-d-flex k-p-3 k-gap-2 k-flex-wrap k-justify-content-center k-align-items-center">
-              <div className="k-d-flex">
+            <div className="k-d-flex k-p-2 k-p-md-3 k-gap-2 k-flex-wrap k-justify-content-center k-align-items-center k-flex-1">
+              <div className="k-d-flex k-align-items-center k-justify-content-center" style={{ minHeight: '24px' }}>
                 {icon}
               </div>
-              <div className="k-font-size-lg k-font-weight-bold">
+              <div className="k-font-size-sm k-font-size-md-lg k-font-weight-bold k-text-center" style={{ lineHeight: '1.2' }}>
                 {campaign.name}
               </div>
             </div>
-            <div className="k-d-flex k-gap-1 k-gap-sm-0 k-flex-sm-col k-px-4 k-pb-2 k-justify-content-between k-align-items-center k-font-size-sm k-flex-1">
-              <div>{landingPageViews} page views</div>
-              <div>{leads} leads</div>
-              <div>${spend} spent</div>
+            <div className="k-d-flex k-flex-col k-gap-1 k-px-2 k-px-md-4 k-pb-2 k-font-size-xs k-font-size-md-sm">
+              <div className="k-text-center">{landingPageViews} page views</div>
+              <div className="k-text-center">{leads} leads</div>
+              <div className="k-text-center">${spend} spent</div>
             </div>
           </div>
         );

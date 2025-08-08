@@ -146,7 +146,7 @@ export default function SocialMediaManagementDashboard() {
             <div className="k-bg-primary k-color-white">
               <h1 className="k-h1 k-py-6 k-px-4 k-px-md-6 k-px-xl-10 !k-mb-0">Active Campaigns</h1>
             </div>
-            <div className="k-d-grid k-grid-cols-xs-1 k-grid-cols-md-6 k-grid-cols-xl-12 k-grid-auto-rows-auto k-gap-4 k-px-xs-4 k-px-md-6 k-px-xl-10" style={{ paddingBottom: '2rem' }}>
+            <div className={`${isMobile ? 'k-d-flex k-flex-col k-gap-4 k-px-4' : 'k-d-grid k-grid-cols-xs-1 k-grid-cols-md-6 k-grid-cols-xl-12 k-grid-auto-rows-auto k-gap-4 k-px-xs-4 k-px-md-6 k-px-xl-10'}`} style={{ paddingBottom: '2rem' }}>
               <CampaignCard />
               <CampaignsList 
                 selectedCampaign={selectedCampaign}

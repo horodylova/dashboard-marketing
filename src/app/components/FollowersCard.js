@@ -16,6 +16,18 @@ import {
 const SpendDistributionCard = () => {
   const [campaignData, setCampaignData] = useState(null);
   const [spendData, setSpendData] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const fetchCampaignData = async () => {
@@ -62,7 +74,7 @@ const SpendDistributionCard = () => {
       </div>
       <div className="k-px-4 k-pb-4 k-flex-1 k-justify-content-center">
         {spendData.length > 0 ? (
-          <Chart style={{ height: '293px' }}>
+          <Chart style={{ height: isMobile ? '350px' : '293px' }}>
             <ChartSeries>
               <ChartSeriesItem
                 type="pie"
@@ -86,10 +98,10 @@ const SpendDistributionCard = () => {
               </ChartSeriesItem>
             </ChartSeries>
             <ChartLegend
-              position="right"
+              position={isMobile ? "bottom" : "right"}
               align="center"
-              orientation="vertical"
-              padding={{ left: 20, right: 20 }}
+              orientation={isMobile ? "horizontal" : "vertical"}
+              padding={isMobile ? { top: 20, bottom: 10 } : { left: 20, right: 20 }}
             />
           </Chart>
         ) : (

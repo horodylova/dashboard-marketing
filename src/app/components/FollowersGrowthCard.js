@@ -13,6 +13,18 @@ const PageViewsByDayCard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availableDates, setAvailableDates] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const fetchCampaignData = async () => {
@@ -65,6 +77,10 @@ const PageViewsByDayCard = () => {
     return `${firstDate} - ${lastDate}`;
   };
 
+  const dayCategories = isMobile 
+    ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    : ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
   return (
     <div className="k-d-flex k-flex-col k-col-span-md-6 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
       <div className="k-d-flex k-justify-content-between k-align-items-center k-p-4">
@@ -109,7 +125,7 @@ const PageViewsByDayCard = () => {
               <ChartTooltip format="{0}: {1} page views" />
               <ChartCategoryAxis>
                 <ChartCategoryAxisItem
-                  categories={['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']}
+                  categories={dayCategories}
                 />
               </ChartCategoryAxis>
               <ChartValueAxis>
