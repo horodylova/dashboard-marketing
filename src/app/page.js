@@ -22,12 +22,15 @@ export default function SocialMediaManagementDashboard() {
   const [campaignName, setCampaignName] = useState('');
   const [drawerExpanded, setDrawerExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth < 768;
+      const tablet = window.innerWidth >= 768 && window.innerWidth <= 1024;
       setIsMobile(mobile);
+      setIsTablet(tablet);
       if (!mobile) {
         setDrawerExpanded(true);
         setIsMobileMenuOpen(false);
@@ -146,23 +149,79 @@ export default function SocialMediaManagementDashboard() {
             <div className="k-bg-primary k-color-white">
               <h1 className="k-h1 k-py-6 k-px-4 k-px-md-6 k-px-xl-10 !k-mb-0">Active Campaigns</h1>
             </div>
-            <div className={`${isMobile ? 'k-d-flex k-flex-col k-gap-4 k-px-4' : 'k-d-grid k-grid-cols-xs-1 k-grid-cols-md-6 k-grid-cols-xl-12 k-grid-auto-rows-auto k-gap-4 k-px-xs-4 k-px-md-6 k-px-xl-10'}`} style={{ paddingBottom: '2rem' }}>
-              <CampaignCard />
-              <CampaignsList 
-                selectedCampaign={selectedCampaign}
-                onCampaignSelect={handleCampaignSelect}
-              />
-              <CampaignPerformanceTrend 
-                selectedCampaign={selectedCampaign}
-                campaignName={campaignName}
-              />
-              <CampaignEfficiencyCard/>
-              <FollowersCard />
-              <ScheduledPostsCard />
-              <FollowersGrowthCard />
-              <ClickThroughRateCard />
-              <PostReachCard />
-            </div>
+            {isMobile ? (
+              <div className="k-d-flex k-flex-col k-gap-4 k-px-4" style={{ paddingBottom: '2rem' }}>
+                <CampaignCard />
+                <CampaignsList 
+                  selectedCampaign={selectedCampaign}
+                  onCampaignSelect={handleCampaignSelect}
+                />
+                <CampaignPerformanceTrend 
+                  selectedCampaign={selectedCampaign}
+                  campaignName={campaignName}
+                />
+                <CampaignEfficiencyCard/>
+                <FollowersCard />
+                <ScheduledPostsCard />
+                <FollowersGrowthCard />
+                <ClickThroughRateCard />
+                <PostReachCard />
+              </div>
+            ) : isTablet ? (
+              <div className="k-d-grid k-grid-cols-2 k-gap-4 k-px-4 k-px-md-6" style={{ paddingBottom: '2rem', gridAutoRows: 'min-content' }}>
+                <div className="k-col-span-2" style={{ minHeight: '200px' }}>
+                  <CampaignCard />
+                </div>
+                <div style={{ minHeight: '400px', minWidth: '0' }}>
+                  <CampaignsList 
+                    selectedCampaign={selectedCampaign}
+                    onCampaignSelect={handleCampaignSelect}
+                  />
+                </div>
+                <div style={{ minHeight: '400px', minWidth: '0' }}>
+                  <CampaignPerformanceTrend 
+                    selectedCampaign={selectedCampaign}
+                    campaignName={campaignName}
+                  />
+                </div>
+                <div style={{ minHeight: '300px', minWidth: '0' }}>
+                  <CampaignEfficiencyCard/>
+                </div>
+                <div style={{ minHeight: '300px', minWidth: '0' }}>
+                  <FollowersCard />
+                </div>
+                <div className="k-col-span-2" style={{ minHeight: '300px' }}>
+                  <ScheduledPostsCard />
+                </div>
+                <div style={{ minHeight: '400px', minWidth: '0' }}>
+                  <FollowersGrowthCard />
+                </div>
+                <div style={{ minHeight: '400px', minWidth: '0' }}>
+                  <ClickThroughRateCard />
+                </div>
+                <div className="k-col-span-2" style={{ minHeight: '400px' }}>
+                  <PostReachCard />
+                </div>
+              </div>
+            ) : (
+              <div className="k-d-grid k-grid-cols-xs-1 k-grid-cols-md-6 k-grid-cols-xl-12 k-grid-auto-rows-auto k-gap-4 k-px-xs-4 k-px-md-6 k-px-xl-10" style={{ paddingBottom: '2rem' }}>
+                <CampaignCard />
+                <CampaignsList 
+                  selectedCampaign={selectedCampaign}
+                  onCampaignSelect={handleCampaignSelect}
+                />
+                <CampaignPerformanceTrend 
+                  selectedCampaign={selectedCampaign}
+                  campaignName={campaignName}
+                />
+                <CampaignEfficiencyCard/>
+                <FollowersCard />
+                <ScheduledPostsCard />
+                <FollowersGrowthCard />
+                <ClickThroughRateCard />
+                <PostReachCard />
+              </div>
+            )}
           </main>
           <Footer/>
         </div>

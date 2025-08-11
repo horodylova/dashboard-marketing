@@ -146,12 +146,11 @@ const CampaignPerformanceMatrix = () => {
           </div>
         ) : availableDates.includes(dateString) ? (
           chartData.length > 0 ? (
-            <Chart style={{ height: '362px' }}>
-              <ChartTooltip format="{3}: CPC £{0}, Leads {1}, Spend £{2}" />
+            <Chart style={{ height: '362px' }}>              <ChartTooltip format="{3}: CPC ${0}, Leads {1}, Spend ${2}" />
               <ChartCategoryAxis>
                 <ChartCategoryAxisItem
-                  title={{ text: 'Cost Per Click (CPC) - £' }}
-                  labels={{ format: '£{0}' }}
+                  title={{ text: 'Cost Per Click (CPC) - $' }}
+                  labels={{ format: '${0}' }}
                 />
               </ChartCategoryAxis>
               <ChartValueAxis>
@@ -204,25 +203,25 @@ const CampaignPerformanceMatrix = () => {
             top: '20px',
             right: '20px',
             zIndex: 999999,
-            maxWidth: '350px',
+            maxWidth: window.innerWidth < 768 ? '280px' : '350px',
             backgroundColor: 'white',
             border: '1px solid #e5e7eb',
             borderRadius: '8px',
-            padding: '16px',
+            padding: window.innerWidth < 768 ? '12px' : '16px',
             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
             color: '#374151',
-            fontSize: '13px',
-            lineHeight: '1.4',
+            fontSize: window.innerWidth < 768 ? '14px' : '15px',
+            lineHeight: '1.5',
             pointerEvents: 'none',
             fontFamily: 'inherit'
           }}
         >
-          <div style={{ fontWeight: '600', marginBottom: '10px', color: '#111827', fontSize: '14px' }}>Bubble Calculation:</div>
-          <div style={{ marginBottom: '4px' }}>• X-axis: CPC (Cost Per Click) in £</div>
+          <div style={{ fontWeight: '600', marginBottom: '10px', color: '#111827', fontSize: window.innerWidth < 768 ? '15px' : '16px' }}>Bubble Calculation:</div>
+          <div style={{ marginBottom: '4px' }}>• X-axis: CPC (Cost Per Click) in $</div>
           <div style={{ marginBottom: '4px' }}>• Y-axis: Number of Leads</div>
           <div style={{ marginBottom: '4px' }}>• Bubble size: Spend amount ÷ 10</div>
           <div style={{ marginBottom: '10px' }}>• Color: AI Score</div>
-          <div style={{ fontSize: '11px', color: '#6b7280', lineHeight: '1.3' }}>
+          <div style={{ fontSize: window.innerWidth < 768 ? '12px' : '13px', color: '#6b7280', lineHeight: '1.4' }}>
             <span style={{color: '#22c55e', marginRight: '3px'}}>■</span> Green: 80%+ | 
             <span style={{color: '#84cc16', marginRight: '3px'}}>■</span> Yellow-Green: 60-79% | 
             <span style={{color: '#eab308', marginRight: '3px'}}>■</span> Yellow: 40-59% | 

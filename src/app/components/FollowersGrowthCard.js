@@ -14,10 +14,13 @@ const PageViewsByDayCard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availableDates, setAvailableDates] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsTablet(width >= 768 && width <= 1024);
     };
     
     checkMobile();
@@ -77,7 +80,7 @@ const PageViewsByDayCard = () => {
     return `${firstDate} - ${lastDate}`;
   };
 
-  const dayCategories = isMobile 
+  const dayCategories = (isMobile || isTablet)
     ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     : ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 

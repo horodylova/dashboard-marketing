@@ -17,10 +17,13 @@ const SpendDistributionCard = () => {
   const [campaignData, setCampaignData] = useState(null);
   const [spendData, setSpendData] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsTablet(width >= 768 && width <= 1024);
     };
     
     checkMobile();
@@ -65,8 +68,15 @@ const SpendDistributionCard = () => {
     return colors[campaignName] || '#0078d4';
   };
 
+  const getContainerStyle = () => {
+    if (isTablet) {
+      return { maxHeight: "392px", minHeight: "392px" };
+    }
+    return {};
+  };
+
   return (
-    <div className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-4 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
+    <div className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-4 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl" style={getContainerStyle()}>
       <div className="k-d-flex k-justify-content-between k-align-items-center k-p-4">
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
           Spend Distribution per Campaign
@@ -74,7 +84,7 @@ const SpendDistributionCard = () => {
       </div>
       <div className="k-px-4 k-pb-4 k-flex-1 k-justify-content-center">
         {spendData.length > 0 ? (
-          <Chart style={{ height: isMobile ? '350px' : '293px' }}>
+          <Chart style={{ height: isMobile ? '350px' : isTablet ? '320px' : '293px' }}>
             <ChartSeries>
               <ChartSeriesItem
                 type="pie"
@@ -98,10 +108,10 @@ const SpendDistributionCard = () => {
               </ChartSeriesItem>
             </ChartSeries>
             <ChartLegend
-              position={isMobile ? "bottom" : "right"}
+              position="bottom"
               align="center"
-              orientation={isMobile ? "horizontal" : "vertical"}
-              padding={isMobile ? { top: 20, bottom: 10 } : { left: 20, right: 20 }}
+              orientation="horizontal"
+              padding={{ top: 20, bottom: 10 }}
             />
           </Chart>
         ) : (
