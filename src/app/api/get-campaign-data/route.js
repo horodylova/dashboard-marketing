@@ -14,17 +14,6 @@ export async function GET(request) {
     const rawData = await response.json();
 
     const data = rawData.map(item => {
-      if (item[1] === 'IG Story - Narrow Audience') {
-        console.log('Raw IG Story data:', {
-          campaign_name: item[1],
-          raw_cpc: item[16],
-          raw_cpc_type: typeof item[16],
-          parsed_cpc: parseFloat(item[16]),
-          date: item[5],
-          time: item[6]
-        });
-      }
-      
       const result = {
         campaign_id: item[0],
         campaign_name: item[1],

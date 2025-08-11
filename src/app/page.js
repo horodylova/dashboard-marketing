@@ -50,7 +50,7 @@ export default function SocialMediaManagementDashboard() {
       try {
         const response = await fetch('/api/get-campaign-data');
         const data = await response.json();
-        console.log('Campaign data fetched successfully:', data);
+       
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       }
