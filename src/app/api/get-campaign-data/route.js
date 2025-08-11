@@ -40,13 +40,22 @@ export async function GET(request) {
       return result;
     });
 
-    return NextResponse.json({ data });
+    return new Response(JSON.stringify({ data }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600'
+      }
+    });
 
   } catch (error) {
     console.error('Error fetching from Make API:', error);
-    return NextResponse.json(
-      { message: 'Internal Server Error', error: error.message },
-      { status: 500 }
-    );
+    return new Response(JSON.stringify({
+      message: 'Internal Server Error', 
+      error: error.message 
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
