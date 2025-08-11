@@ -1,4 +1,4 @@
-# 📊 Marketing Campaign Analytics Dashboard 
+# 📊 Marketing Campaign Analytics Dashboard Update
 Automated social media advertising campaign monitoring and analysis system for marketing agencies
 
 ## 🚀 About the Project
