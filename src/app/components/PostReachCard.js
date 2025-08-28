@@ -48,6 +48,7 @@ const CampaignPerformanceMatrix = () => {
 
   useEffect(() => {
     const fetchCampaignData = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch('/api/get-campaign-data');
         const data = await response.json();
@@ -62,12 +63,11 @@ const CampaignPerformanceMatrix = () => {
         const dates = Array.from(uniqueDates).sort();
         setAvailableDates(dates);
         
-        if (dates.length > 0) {
+        if (dates.includes('2025-08-13')) {
+          setSelectedDate(new Date('2025-08-13'));
+        } else if (dates.length > 0) {
           setSelectedDate(new Date(dates[dates.length - 1]));
         }
-        
-        const matrixData = getCampaignPerformanceMatrix(data, selectedDate);
-        setChartData(matrixData);
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {

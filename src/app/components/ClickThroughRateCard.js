@@ -40,8 +40,11 @@ const ClicksByDayCard = () => {
         const dates = getActiveCampaignDates(data);
         setAvailableDates(dates);
         
-        const clicksData = getClicksByDayOfWeek(data, selectedDate);
-        setChartData(clicksData);
+        if (dates.includes('2025-08-13')) {
+          setSelectedDate(new Date('2025-08-13'));
+        } else if (dates.length > 0) {
+          setSelectedDate(new Date(dates[dates.length - 1]));
+        }
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {
@@ -50,7 +53,7 @@ const ClicksByDayCard = () => {
     };
 
     fetchCampaignData();
-  }, [selectedDate]);
+  }, []);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.value);
