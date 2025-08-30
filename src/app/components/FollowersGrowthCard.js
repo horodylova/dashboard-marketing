@@ -3,14 +3,11 @@
 import { useState, useEffect } from 'react';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip } from '@progress/kendo-react-charts';
-import { useMediaQuery } from '@progress/kendo-react-layout';
 
 const FollowersGrowthCard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const isMobile = useMediaQuery('(max-width: 768px)');
-  const isTablet = useMediaQuery('(max-width: 1024px)');
 
   const getPageViewsByDayOfWeek = (data) => {
     const dayOfWeekData = {
@@ -58,9 +55,7 @@ const FollowersGrowthCard = () => {
     setSelectedDate(event.value);
   };
 
-  const dayCategories = (isMobile || isTablet)
-    ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    : ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const dayCategories = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   return (
     <div className="k-d-flex k-flex-col k-col-span-md-6 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
@@ -98,25 +93,15 @@ const FollowersGrowthCard = () => {
                 />
               </ChartValueAxis>
               <ChartSeries>
-                {chartData.map((campaign, index) => (
-                  <ChartSeriesItem
-                    key={index}
-                    type="column"
-                    data={dayCategories.map(day => {
-                      const fullDayName = day === 'Mon' ? 'Monday' :
-                                         day === 'Tue' ? 'Tuesday' :
-                                         day === 'Wed' ? 'Wednesday' :
-                                         day === 'Thu' ? 'Thursday' :
-                                         day === 'Fri' ? 'Friday' :
-                                         day === 'Sat' ? 'Saturday' :
-                                         day === 'Sun' ? 'Sunday' : day;
-                      const dayData = chartData.find(d => d.day === fullDayName);
-                      return dayData ? dayData.views : 0;
-                    })}
-                    name="Page Views"
-                    color="#28a745"
-                  />
-                ))}
+                <ChartSeriesItem
+                  type="column"
+                  data={dayCategories.map(day => {
+                    const dayData = chartData.find(d => d.day === day);
+                    return dayData ? dayData.views : 0;
+                  })}
+                  name="Page Views"
+                  color="#28a745"
+                />
               </ChartSeries>
             </Chart>
           </div>
