@@ -1,18 +1,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { SvgIcon } from '@progress/kendo-react-common';
-import { xIcon } from '@progress/kendo-svg-icons';
-import { DatePicker, DateInput } from '@progress/kendo-react-dateinputs';
 import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartLegend, ChartTooltip } from '@progress/kendo-react-charts';
-import { getPageViewsByDayOfWeek, getActiveCampaignDates } from '../utils/campaignUtils';
+import { getPageViewsByDayOfWeek } from '../utils/campaignUtils';
 
 const PageViewsByDayCard = () => {
   const [campaignData, setCampaignData] = useState(null);
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [availableDates, setAvailableDates] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
 
@@ -36,13 +31,6 @@ const PageViewsByDayCard = () => {
         const response = await fetch('/api/get-campaign-data');
         const data = await response.json();
         setCampaignData(data);
-        
-        const dates = getActiveCampaignDates(data);
-        setAvailableDates(dates);
-        
-      if (dates.length > 0) {
-          setSelectedDate(new Date(dates[dates.length - 1]));
-        }
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {
@@ -60,10 +48,6 @@ const PageViewsByDayCard = () => {
     }
   }, [campaignData]);
 
-  const handleDateChange = (event) => {
-    setSelectedDate(event.value);
-  };
-
   const getCampaignColor = (campaignName) => {
     const colors = {
       'FB Story - Broad Audience': '#1877F2',
@@ -72,20 +56,6 @@ const PageViewsByDayCard = () => {
       'IG Reels - Retargeting': '#C13584'
     };
     return colors[campaignName] || '#666666';
-  };
-
-  const hasDataForSelectedDate = () => {
-    if (!campaignData || !campaignData.data) return false;
-    const dateString = selectedDate.toISOString().split('T')[0];
-    return campaignData.data.some(item => item.date === dateString);
-  };
-
-  const getDateRange = () => {
-    if (availableDates.length === 0) return '';
-    const sortedDates = [...availableDates].sort();
-    const firstDate = new Date(sortedDates[0]).toLocaleDateString();
-    const lastDate = new Date(sortedDates[sortedDates.length - 1]).toLocaleDateString();
-    return `${firstDate} - ${lastDate}`;
   };
 
   const dayCategories = (isMobile || isTablet)
@@ -98,21 +68,6 @@ const PageViewsByDayCard = () => {
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
           Page Views by Day of Week
         </span>
-        <div style={{ width: '164px' }}>
-          <DatePicker
-            value={selectedDate}
-            onChange={handleDateChange}
-            fillMode="flat"
-            dateInput={() => (
-              <>
-                <DateInput ariaLabel="Page views date picker" value={selectedDate} />
-                <span className="k-clear-value">
-                  <SvgIcon icon={xIcon}></SvgIcon>
-                </span>
-              </>
-            )}
-          />
-        </div>
       </div>
       <div className="k-px-4 k-pb-4 k-flex-1" style={{ minHeight: '300px', height: '300px' }}>
         {isLoading ? (

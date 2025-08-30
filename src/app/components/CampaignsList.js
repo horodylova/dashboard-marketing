@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { ListView } from '@progress/kendo-react-listview';
 import { Checkbox } from '@progress/kendo-react-inputs';
- 
-
 
 const CampaignsListItemRender = (props) => {
   const handleCheckboxChange = () => {
@@ -67,9 +65,7 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
         const dates = Array.from(uniqueDates).sort();
         setAvailableDates(dates);
         
-        if (dates.includes('2025-08-13')) {
-          setSelectedDate(new Date('2025-08-13'));
-        } else if (dates.length > 0) {
+        if (dates.length > 0) {
           setSelectedDate(new Date(dates[dates.length - 1]));
         }
       } catch (error) {
@@ -83,113 +79,83 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
   }, []);
 
   useEffect(() => {
-    const dateString = selectedDate.toISOString().split('T')[0];
+    const uniqueCampaigns = campaignItems.reduce((acc, item) => {
+      if (!acc[item.id]) {
+        acc[item.id] = {
+          id: item.id,
+          text: item.text,
+          checked: false,
+          platform: item.platform,
+          ai_score: item.ai_score,
+          ai_comment: item.ai_comment
+        };
+      }
+      return acc;
+    }, {});
     
-    const campaignsForSelectedDate = campaignItems
-      .filter(item => item.date === dateString)
-      .reduce((acc, item) => {
-        if (!acc[item.id]) {
-          acc[item.id] = [];
-        }
-        acc[item.id].push(item);
-        return acc;
-      }, {});
-    
-    const filtered = Object.entries(campaignsForSelectedDate).map(([campaignId, campaignData]) => {
-      const latestData = campaignData.sort((a, b) => {
-        const timeA = new Date(`${a.date} ${a.time || '00:00:00'}`);
-        const timeB = new Date(`${b.date} ${b.time || '00:00:00'}`);
-        return timeB - timeA;
-      })[0];
-      
-      return {
-        id: campaignId,
-        text: latestData.text,
-        checked: localSelectedCampaign === campaignId,
-        platform: latestData.platform,
-        ai_score: latestData.ai_score,
-        ai_comment: latestData.ai_comment,
-        date: latestData.date
-      };
-    });
-    
+    const filtered = Object.values(uniqueCampaigns);
     setFilteredCampaigns(filtered);
-  }, [selectedDate, campaignItems, localSelectedCampaign]);
+  }, [campaignItems]);
+
+  useEffect(() => {
+    if (selectedCampaign) {
+      setLocalSelectedCampaign(selectedCampaign);
+    }
+  }, [selectedCampaign]);
 
   useEffect(() => {
     if (!hasAutoSelected && filteredCampaigns.length > 0 && !localSelectedCampaign) {
       const firstCampaign = filteredCampaigns[0];
-      setLocalSelectedCampaign(firstCampaign.id);
-      setHasAutoSelected(true);
-      
-      setCampaignItems(prevItems => 
-        prevItems.map(item => ({
-          ...item,
-          checked: item.id === firstCampaign.id
-        }))
-      );
-      
+      setLocalSelectedCampaign(firstCampaign);
       if (onCampaignSelect) {
-        onCampaignSelect(firstCampaign.id, firstCampaign.text);
+        onCampaignSelect(firstCampaign);
       }
+      setHasAutoSelected(true);
     }
   }, [filteredCampaigns, localSelectedCampaign, hasAutoSelected, onCampaignSelect]);
 
   useEffect(() => {
     if (localSelectedCampaign) {
-      const campaign = filteredCampaigns.find(item => item.id === localSelectedCampaign);
-      if (campaign) {
+      const campaignData = campaignItems.find(item => item.id === localSelectedCampaign.id);
+      if (campaignData) {
         setAiData({
-          score: campaign.ai_score || 0,
-          overview: campaign.ai_comment || 'No AI evaluation available for this campaign.'
+          score: campaignData.ai_score || 0,
+          overview: campaignData.ai_comment || 'No AI insights available for this campaign.'
         });
       }
     }
-  }, [localSelectedCampaign, filteredCampaigns]);
+  }, [localSelectedCampaign, campaignItems]);
 
-  const handleDateChange = (e) => {
-    setSelectedDate(e.value);
-    setLocalSelectedCampaign(null);
-    setAiData({ score: 0, overview: '' });
-    setHasAutoSelected(false);
-    
-    setCampaignItems(prevItems => 
-      prevItems.map(item => ({
-        ...item,
-        checked: false
-      }))
-    );
+  const handleDateChange = (event) => {
+    setSelectedDate(event.value);
   };
 
-  const handleCheckboxChange = (id, name) => {
-    setCampaignItems(prevItems => 
-      prevItems.map(item => ({
-        ...item,
-        checked: item.id === id ? true : false
-      }))
-    );
-    setLocalSelectedCampaign(id);
+  const handleCheckboxChange = (campaignId, campaignName) => {
+    const updatedCampaigns = filteredCampaigns.map(campaign => ({
+      ...campaign,
+      checked: campaign.id === campaignId ? !campaign.checked : false
+    }));
+    setFilteredCampaigns(updatedCampaigns);
+
+    const selectedCampaignData = updatedCampaigns.find(campaign => campaign.checked);
+    setLocalSelectedCampaign(selectedCampaignData || null);
     
     if (onCampaignSelect) {
-      onCampaignSelect(id, name);
+      onCampaignSelect(selectedCampaignData || null);
     }
   };
 
-  const dateString = selectedDate.toISOString().split('T')[0];
-  
-  const selectedCampaignInFilteredList = localSelectedCampaign && 
-    filteredCampaigns.some(item => item.id === localSelectedCampaign);
+  const selectedCampaignInFilteredList = filteredCampaigns.some(
+    campaign => localSelectedCampaign && campaign.id === localSelectedCampaign.id
+  );
 
   return (
-    <div
-      className="k-d-flex k-flex-col k-col-span-md-3 k-col-span-xl-4 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl"
-      style={{ maxHeight: '392px', minHeight: '392px' }}
-    >
-      <div className="k-d-flex k-flex-row k-justify-content-between k-align-items-center k-p-4">
+    <div className="k-d-flex k-flex-col k-col-span-md-6 k-col-span-xl-4 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
+      <div className="k-d-flex k-justify-content-between k-align-items-center k-p-4">
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-          AI Evaluation
+          Campaigns List
         </span>
-        <div style={{ width: '142px' }} >
+        <div style={{ width: '164px' }}>
           <DatePicker
             value={selectedDate}
             onChange={handleDateChange}
@@ -207,18 +173,6 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
             <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle k-p-4">
               <p>Loading campaigns...</p>
             </div>
-          ) : availableDates.includes(dateString) ? (
-            filteredCampaigns.length > 0 ? (
-              <ListView
-                className="k-w-full k-height-auto k-overflow-y-auto k-gap-1"
-                data={filteredCampaigns}
-                item={(props) => <CampaignsListItemRender {...props} onCheckboxChange={handleCheckboxChange} />}
-              />
-            ) : (
-              <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle k-p-4">
-                <p>No campaigns found for the selected date.</p>
-              </div>
-            )
           ) : (
             filteredCampaigns.length > 0 ? (
               <ListView
@@ -231,13 +185,6 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
                 <p>No campaigns found.</p>
               </div>
             )
-          ) : (
-            <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle k-p-4">
-              <p>No data available for the selected date.</p>
-              {availableDates.length > 0 && (
-                <p>Data available from {availableDates[0]} to {availableDates[availableDates.length - 1]}.</p>
-              )}
-            </div>
           )}
         </div>
         
