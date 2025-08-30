@@ -25,54 +25,35 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
 
   useEffect(() => {
     if (selectedCampaign) {
-      const fetchCampaignTrendData = async () => {
+      const fetchTrendData = async () => {
+        if (!selectedCampaign) return;
+        
         setIsLoading(true);
         try {
           const response = await fetch('/api/get-campaign-data');
           const data = await response.json();
           
-          const today = new Date();
-          const sevenDaysAgo = new Date(today);
-          sevenDaysAgo.setDate(today.getDate() - 6);
+          const campaignData = data.data.filter(item => 
+            item.campaign_id === selectedCampaign.id
+          );
           
-          const filteredData = data.data
-            .filter(item => item.campaign_id === selectedCampaign)
-            .filter(item => {
-              const itemDate = new Date(item.date);
-              return itemDate >= sevenDaysAgo && itemDate <= today;
-            })
-            .map(item => {
-              let aiScore = 0;
-              if (item.ai_score) {
-                if (typeof item.ai_score === 'string' && item.ai_score.includes('%')) {
-                  aiScore = parseFloat(item.ai_score.replace('%', ''));
-                } else {
-                  aiScore = parseFloat(item.ai_score) || 0;
-                }
-              }
-              return {
-                date: new Date(item.date),
-                aiScore: aiScore
-              };
-            })
-            .sort((a, b) => a.date - b.date);
-
-          const dailyData = [];
-          for (let i = 0; i < 7; i++) {
-            const currentDate = new Date(sevenDaysAgo);
-            currentDate.setDate(sevenDaysAgo.getDate() + i);
+          const today = new Date();
+          const last7Days = [];
+          
+          for (let i = 6; i >= 0; i--) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+            const dateString = date.toISOString().split('T')[0];
             
-            const dayData = filteredData.find(item => 
-              item.date.toDateString() === currentDate.toDateString()
-            );
+            const dayData = campaignData.find(item => item.date === dateString);
             
-            dailyData.push({
-              date: formatDateLabel(currentDate),
-              aiScore: dayData ? dayData.aiScore : null
+            last7Days.push({
+              date: formatDateLabel(date),
+              aiScore: dayData ? dayData.ai_score : null
             });
           }
           
-          setChartData(dailyData);
+          setChartData(last7Days);
         } catch (error) {
           console.error('Error fetching campaign trend data:', error);
         } finally {
@@ -80,7 +61,7 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
         }
       };
 
-      fetchCampaignTrendData();
+      fetchTrendData();
     } else {
       setChartData([]);
     }

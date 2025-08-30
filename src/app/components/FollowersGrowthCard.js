@@ -53,6 +53,13 @@ const PageViewsByDayCard = () => {
     fetchCampaignData();
   }, []);
 
+  useEffect(() => {
+    if (campaignData) {
+      const pageViewsData = getPageViewsByDayOfWeek(campaignData);
+      setChartData(pageViewsData);
+    }
+  }, [campaignData]);
+
   const handleDateChange = (event) => {
     setSelectedDate(event.value);
   };
@@ -112,17 +119,6 @@ const PageViewsByDayCard = () => {
           <div className="k-d-flex k-justify-content-center k-align-items-center" style={{ height: '100%' }}>
             <p>Loading...</p>
           </div>
-        ) : !hasDataForSelectedDate() ? (
-          <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center" style={{ height: '100%' }}>
-            <p className="k-font-size-md k-color-subtle k-text-center k-mb-2">
-              No data available for {selectedDate.toLocaleDateString()}
-            </p>
-            {availableDates.length > 0 && (
-              <p className="k-font-size-sm k-color-subtle k-text-center">
-                Available data range: {getDateRange()}
-              </p>
-            )}
-          </div>
         ) : (
           <div style={{ height: '100%' }}>
             <Chart>
@@ -144,12 +140,10 @@ const PageViewsByDayCard = () => {
                   return (
                     <ChartSeriesItem
                       key={campaign.name}
-                      type="line"
+                      type="column"
                       data={campaign.data}
                       name={campaign.name}
                       color={getCampaignColor(campaign.name)}
-                      markers={{ visible: true }}
-                      legendItem={{ type: 'line' }}
                     />
                   );
                 })}

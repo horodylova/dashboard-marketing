@@ -1,6 +1,35 @@
 
 import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 
+export async function GET(request) {
+  try {
+    const filePath = path.join(process.cwd(), 'public', 'campaign-data.json');
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const data = JSON.parse(fileContents);
+
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600'
+      }
+    });
+
+  } catch (error) {
+    console.error('Error reading campaign data:', error);
+    return new Response(JSON.stringify({ error: 'Failed to load campaign data' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+}
+
+/*
+// Make.com webhook implementation (commented out for demo)
 export async function GET(request) {
   try {
     const makeWebhookUrl = 'https://hook.eu2.make.com/wz2dy834j224f03ij1jhzhxnpfh10qrj';
@@ -40,7 +69,7 @@ export async function GET(request) {
       return result;
     });
 
-    return new Response(JSON.stringify({ data }), {
+    return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
@@ -49,13 +78,13 @@ export async function GET(request) {
     });
 
   } catch (error) {
-    console.error('Error fetching from Make API:', error);
-    return new Response(JSON.stringify({
-      message: 'Internal Server Error', 
-      error: error.message 
-    }), {
+    console.error('Error fetching campaign data:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch campaign data' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
   }
 }
+*/

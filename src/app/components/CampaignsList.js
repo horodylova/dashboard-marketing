@@ -220,6 +220,18 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
               </div>
             )
           ) : (
+            filteredCampaigns.length > 0 ? (
+              <ListView
+                className="k-w-full k-height-auto k-overflow-y-auto k-gap-1"
+                data={filteredCampaigns}
+                item={(props) => <CampaignsListItemRender {...props} onCheckboxChange={handleCheckboxChange} />}
+              />
+            ) : (
+              <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle k-p-4">
+                <p>No campaigns found.</p>
+              </div>
+            )
+          ) : (
             <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center k-flex-1 k-color-subtle k-p-4">
               <p>No data available for the selected date.</p>
               {availableDates.length > 0 && (

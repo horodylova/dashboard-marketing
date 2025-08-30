@@ -6,15 +6,12 @@ import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAx
 import { SvgIcon } from '@progress/kendo-react-common';
 import { infoCircleIcon } from '@progress/kendo-svg-icons';
 
-const getCampaignPerformanceMatrix = (data, selectedDate) => {
-  if (!data || !data.data || !selectedDate) return [];
-  
-  const dateString = selectedDate.toISOString().split('T')[0];
-  const filteredData = data.data.filter(item => item.date === dateString);
+const getCampaignPerformanceMatrix = (data) => {
+  if (!data || !data.data) return [];
   
   const campaignMap = new Map();
   
-  filteredData.forEach(item => {
+  data.data.forEach(item => {
     const campaignName = item.campaign_name;
     if (!campaignMap.has(campaignName)) {
       campaignMap.set(campaignName, {
@@ -78,10 +75,10 @@ const CampaignPerformanceMatrix = () => {
 
   useEffect(() => {
     if (campaignData) {
-      const matrixData = getCampaignPerformanceMatrix(campaignData, selectedDate);
+      const matrixData = getCampaignPerformanceMatrix(campaignData);
       setChartData(matrixData);
     }
-  }, [selectedDate, campaignData]);
+  }, [campaignData]);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.value);

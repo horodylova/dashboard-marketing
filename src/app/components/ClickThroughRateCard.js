@@ -53,6 +53,13 @@ const ClicksByDayCard = () => {
     fetchCampaignData();
   }, []);
 
+  useEffect(() => {
+    if (campaignData) {
+      const clicksData = getClicksByDayOfWeek(campaignData);
+      setChartData(clicksData);
+    }
+  }, [campaignData]);
+
   const handleDateChange = (event) => {
     setSelectedDate(event.value);
   };
@@ -111,17 +118,6 @@ const ClicksByDayCard = () => {
         {isLoading ? (
           <div className="k-d-flex k-justify-content-center k-align-items-center" style={{ height: '100%' }}>
             <p>Loading...</p>
-          </div>
-        ) : !hasDataForSelectedDate() ? (
-          <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center" style={{ height: '100%' }}>
-            <p className="k-font-size-md k-color-subtle k-text-center k-mb-2">
-              No data available for {selectedDate.toLocaleDateString()}
-            </p>
-            {availableDates.length > 0 && (
-              <p className="k-font-size-sm k-color-subtle k-text-center">
-                Available data range: {getDateRange()}
-              </p>
-            )}
           </div>
         ) : (
           <div style={{ height: '100%' }}>
