@@ -11,13 +11,13 @@ function updateCampaignDates() {
   startOfWeek.setDate(today.getDate() - currentDayOfWeek);
   
   const dateMapping = {
-    '2025-01-20': 0, // Monday
-    '2025-01-21': 1, // Tuesday  
-    '2025-01-22': 2, // Wednesday
-    '2025-01-23': 3, // Thursday
-    '2025-01-24': 4, // Friday
-    '2025-01-25': 5, // Saturday
-    '2025-01-26': 6  // Sunday
+    '2025-08-24': 0,
+    '2025-08-25': 1,
+    '2025-08-26': 2,
+    '2025-08-27': 3,
+    '2025-08-28': 4,
+    '2025-08-29': 5,
+    '2025-08-30': 6
   };
   
   data.forEach(item => {

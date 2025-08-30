@@ -33,7 +33,7 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
           const response = await fetch('/api/get-campaign-data');
           const data = await response.json();
           
-          const campaignData = data.data.filter(item => 
+          const campaignData = data.filter(item => 
             item.campaign_id === selectedCampaign.id
           ).sort((a, b) => new Date(a.date) - new Date(b.date));
           

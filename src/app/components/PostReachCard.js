@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
-import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip } from '@progress/kendo-react-charts';
+import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip, ChartLegend } from '@progress/kendo-react-charts';
 import { SvgIcon } from '@progress/kendo-react-common';
 import { infoCircleIcon } from '@progress/kendo-svg-icons';
 
@@ -17,10 +17,16 @@ const PostReachCard = () => {
       setIsLoading(true);
       try {
         const response = await fetch('/api/get-campaign-data');
-        const data = await response.json();
+        const result = await response.json();
+        const data = result.data || result;
+        
+        if (!data || !Array.isArray(data)) {
+          setChartData([]);
+          return;
+        }
         
         const campaignGroups = {};
-        data.data.forEach(item => {
+        data.forEach(item => {
           const key = `${item.campaign_name}-${item.platform}`;
           if (!campaignGroups[key]) {
             campaignGroups[key] = {
@@ -40,13 +46,21 @@ const PostReachCard = () => {
           campaignGroups[key].count += 1;
         });
 
+        const campaignColors = ['#007bff', '#dc3545', '#28a745', '#ffc107', '#6f42c1', '#fd7e14', '#20c997', '#e83e8c'];
+        const campaignNames = [...new Set(Object.values(campaignGroups).map(g => g.campaign))];
+        const colorMap = {};
+        campaignNames.forEach((name, index) => {
+          colorMap[name] = campaignColors[index % campaignColors.length];
+        });
+
         const processedData = Object.values(campaignGroups).map(group => ({
           campaign: group.campaign,
           platform: group.platform,
           avgCpc: group.totalCpc / group.count,
           totalLeads: group.totalLeads,
           totalSpend: group.totalSpend,
-          avgAiScore: group.totalAiScore / group.count
+          avgAiScore: group.totalAiScore / group.count,
+          color: colorMap[group.campaign]
         }));
 
         setChartData(processedData);
@@ -62,13 +76,6 @@ const PostReachCard = () => {
 
   const handleDateChange = (event) => {
     setSelectedDate(event.value);
-  };
-
-  const getAIScoreColor = (score) => {
-    if (score >= 8) return '#28a745';
-    if (score >= 6) return '#ffc107';
-    if (score >= 4) return '#fd7e14';
-    return '#dc3545';
   };
 
   return (
@@ -106,7 +113,13 @@ const PostReachCard = () => {
         ) : (
           chartData.length > 0 ? (
             <Chart style={{ height: '362px' }}>
-              <ChartTooltip format="{3}: CPC ${0}, Leads {1}, Spend ${2}" />
+              <ChartTooltip 
+                format="{3}: CPC ${0}, Leads {1}, Spend ${2}" 
+                background="#333"
+                color="#fff"
+                border={{ color: '#666', width: 1 }}
+              />
+              <ChartLegend position="right" />
               <ChartCategoryAxis>
                 <ChartCategoryAxisItem
                   title={{ text: 'Cost Per Click (CPC) - $' }}
@@ -131,7 +144,8 @@ const PostReachCard = () => {
                       `${item.campaign} (${item.platform})`
                     ]]}
                     name={`${item.campaign} (${item.platform})`}
-                    color={getAIScoreColor(item.avgAiScore)}
+                    color={item.color}
+                    opacity={0.9}
                   />
                 ))}
               </ChartSeries>

@@ -2,35 +2,49 @@
 
 import { useState, useEffect } from 'react';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
-import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip } from '@progress/kendo-react-charts';
+import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip, ChartLegend } from '@progress/kendo-react-charts';
 
 const FollowersGrowthCard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getPageViewsByDayOfWeek = (data) => {
-    const dayOfWeekData = {
-      Monday: 0,
-      Tuesday: 0,
-      Wednesday: 0,
-      Thursday: 0,
-      Friday: 0,
-      Saturday: 0,
-      Sunday: 0
-    };
+  const getPageViewsByDayOfWeekAndCampaign = (data) => {
+    if (!data || !Array.isArray(data)) {
+      return { categories: [], series: [] };
+    }
+    
+    const dayOfWeekData = {};
+    const campaigns = {};
 
     data.forEach(item => {
       const date = new Date(item.date);
       const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       const dayName = dayNames[date.getDay()];
-      dayOfWeekData[dayName] += item.landing_page_views || 0;
+      
+      if (!dayOfWeekData[dayName]) {
+        dayOfWeekData[dayName] = {};
+      }
+      
+      if (!dayOfWeekData[dayName][item.campaign_name]) {
+        dayOfWeekData[dayName][item.campaign_name] = 0;
+      }
+      
+      dayOfWeekData[dayName][item.campaign_name] += item.landing_page_views || 0;
+      campaigns[item.campaign_name] = true;
     });
 
-    return Object.entries(dayOfWeekData).map(([day, views]) => ({
-      day,
-      views
+    const categories = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const campaignNames = Object.keys(campaigns);
+    const colors = ['#007bff', '#dc3545', '#28a745', '#ffc107'];
+    
+    const series = campaignNames.map((campaign, index) => ({
+      name: campaign,
+      data: categories.map(day => dayOfWeekData[day]?.[campaign] || 0),
+      color: colors[index % colors.length]
     }));
+
+    return { categories, series };
   };
 
   useEffect(() => {
@@ -38,9 +52,9 @@ const FollowersGrowthCard = () => {
       setIsLoading(true);
       try {
         const response = await fetch('/api/get-campaign-data');
-        const data = await response.json();
-        const pageViewsData = getPageViewsByDayOfWeek(data.data);
-        setChartData(pageViewsData);
+        const result = await response.json();
+        const processedData = getPageViewsByDayOfWeekAndCampaign(result.data || result);
+        setChartData(processedData);
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {
@@ -54,8 +68,6 @@ const FollowersGrowthCard = () => {
   const handleDateChange = (event) => {
     setSelectedDate(event.value);
   };
-
-  const dayCategories = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   return (
     <div className="k-d-flex k-flex-col k-col-span-md-6 k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl">
@@ -80,9 +92,10 @@ const FollowersGrowthCard = () => {
           <div style={{ height: '100%' }}>
             <Chart>
               <ChartTooltip format="{0}: {1} page views" />
+              <ChartLegend position="bottom" />
               <ChartCategoryAxis>
                 <ChartCategoryAxisItem
-                  categories={dayCategories}
+                  categories={chartData.categories || []}
                 />
               </ChartCategoryAxis>
               <ChartValueAxis>
@@ -93,15 +106,16 @@ const FollowersGrowthCard = () => {
                 />
               </ChartValueAxis>
               <ChartSeries>
-                <ChartSeriesItem
-                  type="column"
-                  data={dayCategories.map(day => {
-                    const dayData = chartData.find(d => d.day === day);
-                    return dayData ? dayData.views : 0;
-                  })}
-                  name="Page Views"
-                  color="#28a745"
-                />
+                {(chartData.series || []).map((series, index) => (
+                  <ChartSeriesItem
+                    key={index}
+                    type="line"
+                    data={series.data}
+                    name={series.name}
+                    color={series.color}
+                    markers={{ visible: true }}
+                  />
+                ))}
               </ChartSeries>
             </Chart>
           </div>

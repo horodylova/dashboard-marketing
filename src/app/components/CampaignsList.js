@@ -41,7 +41,7 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
         const response = await fetch('/api/get-campaign-data');
         const data = await response.json();
          
-        const campaignList = data.data.map(item => ({
+        const campaignList = data.map(item => ({
           id: item.campaign_id,
           text: item.campaign_name,
           checked: false,
