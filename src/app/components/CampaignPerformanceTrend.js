@@ -35,25 +35,19 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
           
           const campaignData = data.data.filter(item => 
             item.campaign_id === selectedCampaign.id
-          );
+          ).sort((a, b) => new Date(a.date) - new Date(b.date));
           
-          const today = new Date();
-          const last7Days = [];
+          const last7Records = campaignData.slice(-7);
           
-          for (let i = 6; i >= 0; i--) {
-            const date = new Date(today);
-            date.setDate(today.getDate() - i);
-            const dateString = date.toISOString().split('T')[0];
-            
-            const dayData = campaignData.find(item => item.date === dateString);
-            
-            last7Days.push({
-              date: formatDateLabel(date),
-              aiScore: dayData ? dayData.ai_score : null
-            });
-          }
+          const chartData = last7Records.map(item => ({
+            date: new Date(item.date).toLocaleDateString('en-US', { 
+              month: 'short', 
+              day: 'numeric' 
+            }),
+            aiScore: item.ai_score
+          }));
           
-          setChartData(last7Days);
+          setChartData(chartData);
         } catch (error) {
           console.error('Error fetching campaign trend data:', error);
         } finally {

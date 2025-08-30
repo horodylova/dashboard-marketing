@@ -1,52 +1,55 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip, ChartLegend } from '@progress/kendo-react-charts';
+import { useState, useEffect } from 'react';
+import { DatePicker } from '@progress/kendo-react-dateinputs';
+import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip } from '@progress/kendo-react-charts';
 import { SvgIcon } from '@progress/kendo-react-common';
 import { infoCircleIcon } from '@progress/kendo-svg-icons';
 
-const getCampaignPerformanceMatrix = (data) => {
-  if (!data || !data.data) return [];
-  
-  const campaignMap = new Map();
-  
-  data.data.forEach(item => {
-    const campaignName = item.campaign_name;
-    if (!campaignMap.has(campaignName)) {
-      campaignMap.set(campaignName, {
-        name: campaignName,
-        spend: 0,
-        clicks: 0,
-        leads: 0,
-        aiScore: item.ai_score || 0
-      });
-    }
-    
-    const campaign = campaignMap.get(campaignName);
-    campaign.spend += parseFloat(item.spend) || 0;
-    campaign.clicks += parseInt(item.clicks) || 0;
-    campaign.leads += parseInt(item.leads) || 0;
-  });
-  
-  return Array.from(campaignMap.values()).map(campaign => ({
-    ...campaign,
-    cpc: campaign.clicks > 0 ? campaign.spend / campaign.clicks : 0
-  }));
-};
-
-const CampaignPerformanceMatrix = () => {
-  const [campaignData, setCampaignData] = useState(null);
+const PostReachCard = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
-    const fetchCampaignData = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
       try {
         const response = await fetch('/api/get-campaign-data');
         const data = await response.json();
-        setCampaignData(data);
+        
+        const campaignGroups = {};
+        data.data.forEach(item => {
+          const key = `${item.campaign_name}-${item.platform}`;
+          if (!campaignGroups[key]) {
+            campaignGroups[key] = {
+              campaign: item.campaign_name,
+              platform: item.platform,
+              totalCpc: 0,
+              totalLeads: 0,
+              totalSpend: 0,
+              totalAiScore: 0,
+              count: 0
+            };
+          }
+          campaignGroups[key].totalCpc += item.cpc || 0;
+          campaignGroups[key].totalLeads += item.leads || 0;
+          campaignGroups[key].totalSpend += item.spend || 0;
+          campaignGroups[key].totalAiScore += item.ai_score || 0;
+          campaignGroups[key].count += 1;
+        });
+
+        const processedData = Object.values(campaignGroups).map(group => ({
+          campaign: group.campaign,
+          platform: group.platform,
+          avgCpc: group.totalCpc / group.count,
+          totalLeads: group.totalLeads,
+          totalSpend: group.totalSpend,
+          avgAiScore: group.totalAiScore / group.count
+        }));
+
+        setChartData(processedData);
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {
@@ -54,15 +57,12 @@ const CampaignPerformanceMatrix = () => {
       }
     };
 
-    fetchCampaignData();
+    fetchData();
   }, []);
 
-  useEffect(() => {
-    if (campaignData) {
-      const matrixData = getCampaignPerformanceMatrix(campaignData);
-      setChartData(matrixData);
-    }
-  }, [campaignData]);
+  const handleDateChange = (event) => {
+    setSelectedDate(event.value);
+  };
 
   const getAIScoreColor = (score) => {
     if (score >= 8) return '#28a745';
@@ -90,6 +90,13 @@ const CampaignPerformanceMatrix = () => {
             />
           </div>
         </div>
+        <div style={{ width: '164px' }}>
+          <DatePicker
+            value={selectedDate}
+            onChange={handleDateChange}
+            fillMode="flat"
+          />
+        </div>
       </div>
       <div className="k-px-4 k-pb-4 k-flex-1" style={{ minHeight: '362px' }}>
         {isLoading ? (
@@ -108,36 +115,30 @@ const CampaignPerformanceMatrix = () => {
               </ChartCategoryAxis>
               <ChartValueAxis>
                 <ChartValueAxisItem
-                  title={{ text: 'Leads' }}
+                  title={{ text: 'Total Leads' }}
                   labels={{ format: '{0}' }}
-                  min={0}
                 />
               </ChartValueAxis>
               <ChartSeries>
-                {chartData.map((campaign, index) => (
+                {chartData.map((item, index) => (
                   <ChartSeriesItem
-                    key={campaign.name}
+                    key={index}
                     type="bubble"
-                    data={[{
-                      x: campaign.cpc,
-                      y: campaign.leads,
-                      size: Math.max(campaign.spend / 10, 10),
-                      category: campaign.name
-                    }]}
-                    name={campaign.name}
-                    color={getAIScoreColor(campaign.aiScore)}
-                    xField="x"
-                    yField="y"
-                    sizeField="size"
-                    categoryField="category"
+                    data={[[
+                      item.avgCpc,
+                      item.totalLeads,
+                      item.totalSpend / 10,
+                      `${item.campaign} (${item.platform})`
+                    ]]}
+                    name={`${item.campaign} (${item.platform})`}
+                    color={getAIScoreColor(item.avgAiScore)}
                   />
                 ))}
               </ChartSeries>
-              <ChartLegend position="bottom" orientation="horizontal" />
             </Chart>
           ) : (
-            <div className="k-d-flex k-justify-content-center k-align-items-center k-flex-col k-color-subtle" style={{ height: '362px' }}>
-              <p>No campaign data available.</p>
+            <div className="k-d-flex k-justify-content-center k-align-items-center" style={{ height: '362px' }}>
+              <p>No data available</p>
             </div>
           )
         )}
@@ -146,4 +147,4 @@ const CampaignPerformanceMatrix = () => {
   );
 };
 
-export default CampaignPerformanceMatrix;
+export default PostReachCard;

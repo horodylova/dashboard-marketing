@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { ListView } from '@progress/kendo-react-listview';
 import { Checkbox } from '@progress/kendo-react-inputs';
 
@@ -29,10 +28,8 @@ const CampaignsListItemRender = (props) => {
 
 const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
   const [campaignItems, setCampaignItems] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [localSelectedCampaign, setLocalSelectedCampaign] = useState(null);
   const [aiData, setAiData] = useState({ score: 0, overview: '' });
-  const [availableDates, setAvailableDates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filteredCampaigns, setFilteredCampaigns] = useState([]);
   const [hasAutoSelected, setHasAutoSelected] = useState(false);
@@ -55,19 +52,6 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
         }));
         
         setCampaignItems(campaignList);
-        
-        const uniqueDates = new Set();
-        data.data.forEach(item => {
-          if (item.date) {
-            uniqueDates.add(item.date);
-          }
-        });
-        const dates = Array.from(uniqueDates).sort();
-        setAvailableDates(dates);
-        
-        if (dates.length > 0) {
-          setSelectedDate(new Date(dates[dates.length - 1]));
-        }
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {
@@ -81,13 +65,17 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
   useEffect(() => {
     const uniqueCampaigns = campaignItems.reduce((acc, item) => {
       if (!acc[item.id]) {
+        const latestRecord = campaignItems
+          .filter(campaign => campaign.id === item.id)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+        
         acc[item.id] = {
           id: item.id,
           text: item.text,
           checked: false,
           platform: item.platform,
-          ai_score: item.ai_score,
-          ai_comment: item.ai_comment
+          ai_score: latestRecord.ai_score,
+          ai_comment: latestRecord.ai_comment
         };
       }
       return acc;
@@ -126,10 +114,6 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
     }
   }, [localSelectedCampaign, campaignItems]);
 
-  const handleDateChange = (event) => {
-    setSelectedDate(event.value);
-  };
-
   const handleCheckboxChange = (campaignId, campaignName) => {
     const updatedCampaigns = filteredCampaigns.map(campaign => ({
       ...campaign,
@@ -155,13 +139,6 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
           Campaigns List
         </span>
-        <div style={{ width: '164px' }}>
-          <DatePicker
-            value={selectedDate}
-            onChange={handleDateChange}
-            fillMode="flat"
-          />
-        </div>
       </div>
       <div className="k-d-flex k-flex-col k-px-4 k-flex-1 k-overflow-hidden">
         <div className="k-d-flex k-justify-content-between k-mb-2">
