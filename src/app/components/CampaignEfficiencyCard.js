@@ -76,7 +76,11 @@ const CampaignEfficiencyCard = () => {
         
         if (dates.length > 0) {
           setFirstAvailableDate(dates[0]);
-          setSelectedDate(new Date(dates[dates.length - 1]));
+          if (dates.includes('2025-08-13')) {
+            setSelectedDate(new Date('2025-08-13'));
+          } else {
+            setSelectedDate(new Date(dates[dates.length - 1]));
+          }
         }
         setIsLoading(false);
       } catch (error) {
@@ -86,32 +90,6 @@ const CampaignEfficiencyCard = () => {
     };
 
     fetchCampaignData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch('/api/get-campaign-data');
-        const data = await response.json();
-        setCampaignData(data);
-        
-        const dates = getActiveCampaignDates(data);
-        setActiveDates(dates);
-        
-        if (dates.includes('2025-08-13')) {
-          setSelectedDate(new Date('2025-08-13'));
-        } else if (dates.length > 0) {
-          setSelectedDate(new Date(dates[dates.length - 1]));
-        }
-      } catch (error) {
-        console.error('Error fetching campaign data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
   }, []);
 
   useEffect(() => {
