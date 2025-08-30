@@ -29,9 +29,7 @@ const MetricComparisonCard = () => {
         const dates = getActiveCampaignDates(data);
         setAvailableDates(dates);
         
-        if (dates.includes('2025-08-13')) {
-          setSelectedDate(new Date('2025-08-13'));
-        } else if (dates.length > 0) {
+       if (dates.length > 0) {
           setSelectedDate(new Date(dates[dates.length - 1]));
         }
       } catch (error) {

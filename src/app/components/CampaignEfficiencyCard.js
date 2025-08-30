@@ -76,11 +76,7 @@ const CampaignEfficiencyCard = () => {
         
         if (dates.length > 0) {
           setFirstAvailableDate(dates[0]);
-          if (dates.includes('2025-08-13')) {
-            setSelectedDate(new Date('2025-08-13'));
-          } else {
-            setSelectedDate(new Date(dates[dates.length - 1]));
-          }
+          setSelectedDate(new Date(dates[dates.length - 1]));
         }
         setIsLoading(false);
       } catch (error) {
