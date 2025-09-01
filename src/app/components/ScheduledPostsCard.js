@@ -1,37 +1,25 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { SvgIcon } from '@progress/kendo-react-common';
-import { xIcon } from '@progress/kendo-svg-icons';
-import { DatePicker, DateInput } from '@progress/kendo-react-dateinputs';
-import { Popup } from '@progress/kendo-react-popup';
 import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartLegend, ChartTooltip } from '@progress/kendo-react-charts';
-import { getMetricComparisonData, getActiveCampaignDates } from '../utils/campaignUtils';
+import { getMetricComparisonData } from '../utils/campaignUtils';
 
 const MetricComparisonCard = () => {
   const [campaignData, setCampaignData] = useState(null);
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [availableDates, setAvailableDates] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-  const [anchor, setAnchor] = useState(null);
-  const [firstAvailableDate, setFirstAvailableDate] = useState("");
 
   useEffect(() => {
     const fetchCampaignData = async () => {
       setIsLoading(true);
       try {
         const response = await fetch('/api/get-campaign-data');
-        const data = await response.json();
+        const rawData = await response.json();
+        const data = { data: rawData };
         setCampaignData(data);
         
-        const dates = getActiveCampaignDates(data);
-        setAvailableDates(dates);
-        
-       if (dates.length > 0) {
-          setSelectedDate(new Date(dates[dates.length - 1]));
-        }
+        const metricsData = getMetricComparisonData(data, null);
+        setChartData(metricsData);
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {
@@ -41,50 +29,6 @@ const MetricComparisonCard = () => {
 
     fetchCampaignData();
   }, []);
-
-  useEffect(() => {
-    if (!campaignData || !selectedDate) return;
-    
-    const dateString = selectedDate.toISOString().split('T')[0];
-    
-    if (!availableDates.includes(dateString)) {
-      setChartData([]);
-      return;
-    }
-    
-    const metricsData = getMetricComparisonData(campaignData, selectedDate);
-    setChartData(metricsData);
-  }, [campaignData, selectedDate, availableDates]);
-
-  const handleDateChange = (e) => {
-    const newDate = e.value;
-    setSelectedDate(newDate);
-    
-    const dateString = newDate.toISOString().split('T')[0];
-    if (!availableDates.includes(dateString)) {
-      setShowPopup(true);
-    } else {
-      setShowPopup(false);
-    }
-  };
-
-  const handleDatePickerClick = (e) => {
-    setAnchor(e.target);
-  };
-
-  const hasDataForSelectedDate = () => {
-    if (!campaignData || !campaignData.data) return false;
-    const dateString = selectedDate.toISOString().split('T')[0];
-    return campaignData.data.some(item => item.date === dateString);
-  };
-
-  const getDateRange = () => {
-    if (availableDates.length === 0) return '';
-    const sortedDates = [...availableDates].sort();
-    const firstDate = new Date(sortedDates[0]).toLocaleDateString();
-    const lastDate = new Date(sortedDates[sortedDates.length - 1]).toLocaleDateString();
-    return `${firstDate} - ${lastDate}`;
-  };
 
   const normalizeValue = (value, max) => {
     return max > 0 ? (value / max) * 100 : 0;
@@ -126,28 +70,8 @@ const MetricComparisonCard = () => {
             Metric Comparison
           </span>
           <span className="k-font-size-sm k-color-subtle k-mt-1">
-            Radar chart comparing campaign performance metrics: Leads, Clicks, and Impressions for selected date
+            Radar chart comparing campaign performance metrics: Leads, Clicks, and Impressions
           </span>
-        </div>
-        <div style={{ width: '164px' }} onClick={handleDatePickerClick}>
-          <DatePicker
-            value={selectedDate}
-            onChange={handleDateChange}
-            fillMode="flat"
-          />
-          {showPopup && anchor && (
-            <Popup
-              anchor={anchor}
-              show={showPopup}
-              popupClass="k-popup-content"
-              animate={false}
-              position="bottom"
-            >
-              <div className="k-p-3 k-bg-error-lighter k-color-error k-rounded-md">
-                Data available from {firstAvailableDate}
-              </div>
-            </Popup>
-          )}
         </div>
       </div>
       <div className="k-d-flex k-px-4 k-flex-1" style={{ height: '350px', minHeight: '350px' }}>
@@ -155,16 +79,11 @@ const MetricComparisonCard = () => {
           <div className="k-d-flex k-justify-content-center k-align-items-center" style={{ height: '100%', width: '100%' }}>
             <p>Loading...</p>
           </div>
-        ) : !hasDataForSelectedDate() ? (
+        ) : chartData.length === 0 ? (
           <div className="k-d-flex k-flex-col k-justify-content-center k-align-items-center" style={{ height: '100%', width: '100%' }}>
             <p className="k-font-size-md k-color-subtle k-text-center k-mb-2">
-              No data available for {selectedDate.toLocaleDateString()}
+              No campaign data available
             </p>
-            {availableDates.length > 0 && (
-              <p className="k-font-size-sm k-color-subtle k-text-center">
-                Available data range: {getDateRange()}
-              </p>
-            )}
           </div>
         ) : (
           <div style={{ height: '100%', width: '100%' }}>
@@ -195,8 +114,7 @@ const MetricComparisonCard = () => {
                     opacity={0.6}
                     markers={{ visible: true }}
                   />
-                ))}
-              </ChartSeries>
+                ))}              </ChartSeries>
               <ChartLegend position="bottom" orientation="horizontal" />
             </Chart>
           </div>

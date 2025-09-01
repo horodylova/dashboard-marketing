@@ -339,3 +339,81 @@ export function getCampaignPerformanceMatrix(data, selectedDate = null) {
     };
   });
 }
+
+export function getCampaignEfficiencyData(data) {
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  const campaigns = getUniqueCampaigns({ data: data });
+  
+  return campaigns.map(campaign => {
+    const totalClicks = data
+      .filter(item => item.campaign_id === campaign.id)
+      .reduce((total, item) => total + (item.clicks || 0), 0);
+    
+    const totalLandingPageViews = data
+      .filter(item => item.campaign_id === campaign.id)
+      .reduce((total, item) => total + (item.landing_page_views || 0), 0);
+    
+    const efficiency = totalLandingPageViews > 0 
+      ? (totalClicks / totalLandingPageViews) * 100 
+      : 0;
+    
+    return {
+      id: campaign.id,
+      name: campaign.name,
+      efficiency: Math.round(efficiency * 100) / 100
+    };
+  });
+}
+
+export function getCampaignEfficiencyByDayOfWeek(data, selectedDate = null) {
+  if (!data || !Array.isArray(data)) return [];
+  
+  let filteredData = data;
+  
+  if (selectedDate) {
+    const dateString = selectedDate.toISOString().split('T')[0];
+    filteredData = data.filter(item => item.date === dateString);
+  }
+  
+  const campaignMap = new Map();
+  
+  filteredData.forEach(item => {
+    if (!campaignMap.has(item.campaign_id)) {
+      campaignMap.set(item.campaign_id, {
+        id: item.campaign_id,
+        name: item.campaign_name,
+        platform: item.platform,
+        totalClicks: 0,
+        totalLandingPageViews: 0
+      });
+    }
+    
+    const campaign = campaignMap.get(item.campaign_id);
+    campaign.totalClicks += item.clicks || 0;
+    campaign.totalLandingPageViews += item.landing_page_views || 0;
+  });
+  
+  return Array.from(campaignMap.values()).map(campaign => {
+    const efficiency = campaign.totalLandingPageViews > 0 
+      ? (campaign.totalClicks / campaign.totalLandingPageViews) * 100 
+      : 0;
+    
+    return {
+      id: campaign.id,
+      name: campaign.name,
+      efficiency: Math.round(efficiency * 100) / 100,
+      platform: campaign.platform
+    };
+  }).filter(campaign => campaign.efficiency > 0);
+}
+
+function calculateTotalClicks(data, campaignId) {
+  if (!data || !data.data) return 0;
+  
+  return data.data
+    .filter(item => item.campaign_id === campaignId)
+    .reduce((total, item) => total + (item.clicks || 0), 0);
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { DatePicker } from '@progress/kendo-react-dateinputs';
 import {
   Chart,
   ChartSeries,
@@ -8,14 +9,12 @@ import {
   ChartSeriesLabels,
   ChartLegend,
 } from '@progress/kendo-react-charts';
-import { 
-  getUniqueCampaigns, 
-  getLatestSpend 
-} from '../utils/campaignUtils';
 
 const SpendDistributionCard = () => {
-  const [campaignData, setCampaignData] = useState(null);
+  const [campaignData, setCampaignData] = useState([]);
   const [spendData, setSpendData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
 
@@ -34,24 +33,44 @@ const SpendDistributionCard = () => {
 
   useEffect(() => {
     const fetchCampaignData = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch('/api/get-campaign-data');
-        const data = await response.json();
+        const result = await response.json();
+        const data = result.data || result;
+        
+        if (!data || !Array.isArray(data)) {
+          setSpendData([]);
+          return;
+        }
+        
         setCampaignData(data);
         
-        const campaigns = getUniqueCampaigns(data);
-        const spendDistribution = campaigns.map(campaign => {
-          const spend = getLatestSpend(data, campaign.id);
-          return {
-            campaign: campaign.name,
-            spend: spend,
-            color: getCampaignColor(campaign.name)
-          };
-        }).filter(item => item.spend > 0);
+        const campaignSpend = {};
+        data.forEach(item => {
+          if (item.spend && item.spend > 0) {
+            if (!campaignSpend[item.campaign_name]) {
+              campaignSpend[item.campaign_name] = 0;
+            }
+            campaignSpend[item.campaign_name] += parseFloat(item.spend);
+          }
+        });
+        
+        const spendDistribution = Object.entries(campaignSpend)
+          .map(([name, spend]) => ({
+            campaign: name,
+            spend: Math.round(spend * 100) / 100,
+            color: getCampaignColor(name)
+          }))
+          .filter(item => item.spend > 0)
+          .sort((a, b) => b.spend - a.spend);
         
         setSpendData(spendDistribution);
       } catch (error) {
         console.error('Error fetching campaign data:', error);
+        setSpendData([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -60,12 +79,16 @@ const SpendDistributionCard = () => {
 
   const getCampaignColor = (campaignName) => {
     const colors = {
-      'FB Story - Broad Audience': '#1877F2',
-      'IG Story - Narrow Audience': '#E4405F',
-      'FB Feed - Lookalike': '#4267B2',
-      'IG Reels - Retargeting': '#C13584'
+      'Summer Sale 2025': '#E82C33',
+      'Tech Product Launch': '#31A2ED',
+      'Fitness App Promotion': '#59C55D',
+      'B2B Software Demo': '#E23C7E'
     };
     return colors[campaignName] || '#0078d4';
+  };
+
+  const handleDateChange = (event) => {
+    setSelectedDate(event.value);
   };
 
   const getContainerStyle = () => {
@@ -81,17 +104,28 @@ const SpendDistributionCard = () => {
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
           Spend Distribution per Campaign
         </span>
+        <div style={{ width: '164px' }}>
+          <DatePicker
+            value={selectedDate}
+            onChange={handleDateChange}
+            fillMode="flat"
+          />
+        </div>
       </div>
       <div className="k-px-4 k-pb-4 k-flex-1 k-justify-content-center">
-        {spendData.length > 0 ? (
+        {isLoading ? (
+          <div className="k-d-flex k-align-items-center k-justify-content-center k-flex-1">
+            <span className="k-color-subtle">Loading spend data...</span>
+          </div>
+        ) : spendData.length > 0 ? (
           <Chart style={{ height: isMobile ? '350px' : isTablet ? '320px' : '293px' }}>
             <ChartSeries>
               <ChartSeriesItem
                 type="pie"
-                legendItem={{ type: 'line' }}
                 data={spendData}
                 categoryField="campaign"
                 field="spend"
+                colorField="color"
                 padding={10}
                 border={{ width: 3, color: '#fff' }}
                 tooltip={{ 
@@ -104,6 +138,7 @@ const SpendDistributionCard = () => {
                   format="${0}"
                   font="12px Arial"
                   color="white"
+                  visible={true}
                 />
               </ChartSeriesItem>
             </ChartSeries>
@@ -112,11 +147,15 @@ const SpendDistributionCard = () => {
               align="center"
               orientation="horizontal"
               padding={{ top: 20, bottom: 10 }}
+              labels={{
+                font: "14px Quicksand, sans-serif",
+                color: "#656565"
+              }}
             />
           </Chart>
         ) : (
           <div className="k-d-flex k-align-items-center k-justify-content-center k-flex-1">
-            <span className="k-color-subtle">Loading spend data...</span>
+            <span className="k-color-subtle">No spend data available</span>
           </div>
         )}
       </div>
