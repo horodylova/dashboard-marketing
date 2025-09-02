@@ -20,6 +20,7 @@ import  Footer from './components/Footer'
 export default function SocialMediaManagementDashboard() {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [campaignName, setCampaignName] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [drawerExpanded, setDrawerExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
@@ -62,6 +63,10 @@ export default function SocialMediaManagementDashboard() {
   const handleCampaignSelect = (campaignId, name) => {
     setSelectedCampaign(campaignId);
     setCampaignName(name);
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
   };
 
   const toggleDrawer = () => {
@@ -155,10 +160,13 @@ export default function SocialMediaManagementDashboard() {
                 <CampaignsList 
                   selectedCampaign={selectedCampaign}
                   onCampaignSelect={handleCampaignSelect}
+                  selectedDate={selectedDate}
+                  onDateChange={handleDateChange}
                 />
                 <CampaignPerformanceTrend 
                   selectedCampaign={selectedCampaign}
                   campaignName={campaignName}
+                  selectedDate={selectedDate}
                 />
                 <CampaignEfficiencyCard/>
                 <FollowersCard />
@@ -176,12 +184,15 @@ export default function SocialMediaManagementDashboard() {
                   <CampaignsList 
                     selectedCampaign={selectedCampaign}
                     onCampaignSelect={handleCampaignSelect}
+                    selectedDate={selectedDate}
+                    onDateChange={handleDateChange}
                   />
                 </div>
                 <div style={{ minHeight: '400px', minWidth: '0' }}>
                   <CampaignPerformanceTrend 
                     selectedCampaign={selectedCampaign}
                     campaignName={campaignName}
+                    selectedDate={selectedDate}
                   />
                 </div>
                 <div style={{ minHeight: '300px', minWidth: '0' }}>
@@ -209,10 +220,13 @@ export default function SocialMediaManagementDashboard() {
                 <CampaignsList 
                   selectedCampaign={selectedCampaign}
                   onCampaignSelect={handleCampaignSelect}
+                  selectedDate={selectedDate}
+                  onDateChange={handleDateChange}
                 />
                 <CampaignPerformanceTrend 
                   selectedCampaign={selectedCampaign}
                   campaignName={campaignName}
+                  selectedDate={selectedDate}
                 />
                 <CampaignEfficiencyCard/>
                 <FollowersCard />

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ListView } from '@progress/kendo-react-listview';
 import { Checkbox } from '@progress/kendo-react-inputs';
+import { DatePicker } from '@progress/kendo-react-dateinputs';
 
 const CampaignsListItemRender = (props) => {
   const handleCheckboxChange = () => {
@@ -26,7 +27,7 @@ const CampaignsListItemRender = (props) => {
   );
 };
 
-const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
+const CampaignsList = ({ selectedCampaign, onCampaignSelect, selectedDate, onDateChange }) => {
   const [campaignItems, setCampaignItems] = useState([]);
   const [localSelectedCampaign, setLocalSelectedCampaign] = useState(null);
   const [aiData, setAiData] = useState({ score: 0, overview: '' });
@@ -129,6 +130,12 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
     }
   };
 
+  const handleDateChange = (event) => {
+    if (onDateChange) {
+      onDateChange(event.value);
+    }
+  };
+
   const selectedCampaignInFilteredList = filteredCampaigns.some(
     campaign => localSelectedCampaign && campaign.id === localSelectedCampaign.id
   );
@@ -139,6 +146,13 @@ const CampaignsList = ({ selectedCampaign, onCampaignSelect }) => {
         <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
           Campaigns List
         </span>
+        <div style={{ width: '164px' }}>
+          <DatePicker
+            value={selectedDate || new Date()}
+            onChange={handleDateChange}
+            fillMode="flat"
+          />
+        </div>
       </div>
       <div className="k-d-flex k-flex-col k-px-4 k-flex-1 k-overflow-hidden">
         <div className="k-d-flex k-justify-content-between k-mb-2">

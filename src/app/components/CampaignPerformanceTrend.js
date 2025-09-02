@@ -12,7 +12,7 @@ import {
   ChartSeriesLabels
 } from '@progress/kendo-react-charts';
 
-const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
+const CampaignPerformanceTrend = ({ selectedCampaign, campaignName, selectedDate }) => {
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,6 +21,10 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
       month: 'short', 
       day: 'numeric' 
     });
+  };
+
+  const getDayOfWeek = (date) => {
+    return date.getDay();
   };
 
   useEffect(() => {
@@ -33,13 +37,16 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
           const response = await fetch('/api/get-campaign-data');
           const data = await response.json();
           
-          const campaignData = data.filter(item => 
-            item.campaign_id === selectedCampaign.id
-          ).sort((a, b) => new Date(a.date) - new Date(b.date));
+          console.log('Selected date:', selectedDate);
+          console.log('Selected campaign:', selectedCampaign);
           
-          const last7Records = campaignData.slice(-7);
+          const campaignData = data.filter(item => {
+            return item.campaign_id === selectedCampaign.id;
+          }).sort((a, b) => new Date(a.date) - new Date(b.date));
           
-          const chartData = last7Records.map(item => ({
+          console.log('Filtered campaign data:', campaignData);
+          
+          const chartData = campaignData.map(item => ({
             date: new Date(item.date).toLocaleDateString('en-US', { 
               month: 'short', 
               day: 'numeric' 
@@ -47,6 +54,7 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
             aiScore: item.ai_score
           }));
           
+          console.log('Chart data:', chartData);
           setChartData(chartData);
         } catch (error) {
           console.error('Error fetching campaign trend data:', error);
@@ -59,7 +67,7 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName }) => {
     } else {
       setChartData([]);
     }
-  }, [selectedCampaign]);
+  }, [selectedCampaign, selectedDate]);
 
   const getYAxisRange = () => {
     if (chartData.length === 0) return { min: 0, max: 100 };

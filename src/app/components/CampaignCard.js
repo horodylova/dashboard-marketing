@@ -16,8 +16,9 @@ const CampaignCard = () => {
   useEffect(() => {
     const fetchCampaignData = async () => {
       try {
-        const response = await fetch('/api/get-campaign-data');
-        const data = await response.json();
+        const response = await fetch('/campaign-data.json');
+        const rawData = await response.json();
+        const data = { data: rawData };
         setCampaignData(data);
         setCampaigns(getUniqueCampaigns(data));
       } catch (error) {
@@ -55,7 +56,7 @@ const CampaignCard = () => {
                 {campaign.name}
               </div>
             </div>
-            <div className="k-d-flex k-flex-col k-gap-1 k-px-2 k-px-md-4 k-pb-2 k-font-size-xs k-font-size-md-sm">
+            <div className="k-d-flex k-flex-col k-gap-1 k-px-2 k-px-md-4 k-pb-2 k-font-size-sm k-font-size-md-md">
               <div className="k-text-center">{landingPageViews} page views</div>
               <div className="k-text-center">{leads} leads</div>
               <div className="k-text-center">${spend} spent</div>
