@@ -410,6 +410,49 @@ export function getCampaignEfficiencyByDayOfWeek(data, selectedDate = null) {
   }).filter(campaign => campaign.efficiency > 0);
 }
 
+export function getMetricComparisonByDayOfWeek(data, selectedDate = null) {
+  if (!data || !data.data || !Array.isArray(data.data)) return [];
+  
+  let filteredData = data.data;
+  
+  if (selectedDate) {
+    const selectedDay = selectedDate.getDay();
+    filteredData = data.data.filter(item => {
+      if (!item.date) return false;
+      const itemDate = new Date(item.date);
+      return itemDate.getDay() === selectedDay;
+    });
+  }
+  
+  const campaigns = getUniqueCampaigns({ data: filteredData });
+  
+  return campaigns.map(campaign => {
+    const campaignData = filteredData.filter(item => item.campaign_id === campaign.id);
+    
+    if (campaignData.length === 0) {
+      return {
+        campaign: campaign.name,
+        leads: 0,
+        clicks: 0,
+        impressions: 0
+      };
+    }
+    
+    const latestData = campaignData.sort((a, b) => {
+      const dateA = new Date(`${a.date} ${a.time || '00:00:00'}`);
+      const dateB = new Date(`${b.date} ${b.time || '00:00:00'}`);
+      return dateB - dateA;
+    })[0];
+    
+    return {
+      campaign: campaign.name,
+      leads: latestData.leads || 0,
+      clicks: latestData.clicks || 0,
+      impressions: latestData.impressions || 0
+    };
+  });
+}
+
 function calculateTotalClicks(data, campaignId) {
   if (!data || !data.data) return 0;
   

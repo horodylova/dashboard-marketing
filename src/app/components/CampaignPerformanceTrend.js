@@ -23,51 +23,47 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName, selectedDate
     });
   };
 
-  const getDayOfWeek = (date) => {
-    return date.getDay();
-  };
-
   useEffect(() => {
-    if (selectedCampaign) {
-      const fetchTrendData = async () => {
-        if (!selectedCampaign) return;
+    const fetchTrendData = async () => {
+      if (!selectedCampaign || !selectedCampaign.id) {
+        setChartData([]);
+        return;
+      }
+      
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/get-campaign-data');
+        const data = await response.json();
         
-        setIsLoading(true);
-        try {
-          const response = await fetch('/api/get-campaign-data');
-          const data = await response.json();
-          
-          console.log('Selected date:', selectedDate);
-          console.log('Selected campaign:', selectedCampaign);
-          
-          const campaignData = data.filter(item => {
-            return item.campaign_id === selectedCampaign.id;
-          }).sort((a, b) => new Date(a.date) - new Date(b.date));
-          
-          console.log('Filtered campaign data:', campaignData);
-          
-          const chartData = campaignData.map(item => ({
-            date: new Date(item.date).toLocaleDateString('en-US', { 
-              month: 'short', 
-              day: 'numeric' 
-            }),
-            aiScore: item.ai_score
-          }));
-          
-          console.log('Chart data:', chartData);
-          setChartData(chartData);
-        } catch (error) {
-          console.error('Error fetching campaign trend data:', error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+        console.log('Selected campaign:', selectedCampaign);
+        console.log('All data:', data);
+        
+        const campaignData = data.filter(item => {
+          return item.campaign_id === selectedCampaign.id;
+        }).sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        console.log('Filtered campaign data:', campaignData);
+        
+        const chartData = campaignData.map(item => ({
+          date: new Date(item.date).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric' 
+          }),
+          aiScore: item.ai_score
+        }));
+        
+        console.log('Chart data:', chartData);
+        setChartData(chartData);
+      } catch (error) {
+        console.error('Error fetching campaign trend data:', error);
+        setChartData([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      fetchTrendData();
-    } else {
-      setChartData([]);
-    }
-  }, [selectedCampaign, selectedDate]);
+    fetchTrendData();
+  }, [selectedCampaign]);
 
   const getYAxisRange = () => {
     if (chartData.length === 0) return { min: 0, max: 100 };
@@ -99,9 +95,9 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName, selectedDate
         </span>
       </div>
       
-      {campaignName && (
+      {selectedCampaign && selectedCampaign.text && (
         <div className="k-px-4 k-pb-2">
-          <span className="k-font-size-sm k-color-subtle">{campaignName}</span>
+          <span className="k-font-size-sm k-color-subtle">{selectedCampaign.text}</span>
         </div>
       )}
       
@@ -123,7 +119,7 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName, selectedDate
             </ChartCategoryAxis>
             <ChartValueAxis>
               <ChartValueAxisItem 
-                title={{ text: 'AI Score (%)' }}
+                title={{ text: 'AI Score' }}
                 labels={{ font: '12px Arial' }}
                 min={yAxisRange.min}
                 max={yAxisRange.max}
@@ -134,7 +130,7 @@ const CampaignPerformanceTrend = ({ selectedCampaign, campaignName, selectedDate
                 type="line" 
                 data={chartData.map(item => item.aiScore !== null ? Math.round(item.aiScore * 10) / 10 : null)}
                 markers={{ visible: true, size: 8 }}
-                tooltip={{ visible: true, format: 'AI Score: {0}%' }}
+                tooltip={{ visible: true, format: 'AI Score: {0}' }}
                 color="#0078d4"
                 width={3}
                 missingValues="gap"

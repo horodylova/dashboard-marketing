@@ -60,9 +60,14 @@ export default function SocialMediaManagementDashboard() {
     fetchCampaignData();
   }, []);
 
-  const handleCampaignSelect = (campaignId, name) => {
-    setSelectedCampaign(campaignId);
-    setCampaignName(name);
+  const handleCampaignSelect = (campaignData) => {
+    if (campaignData) {
+      setSelectedCampaign(campaignData);
+      setCampaignName(campaignData.text);
+    } else {
+      setSelectedCampaign(null);
+      setCampaignName('');
+    }
   };
 
   const handleDateChange = (date) => {

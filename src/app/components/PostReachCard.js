@@ -13,58 +13,19 @@ const PostReachCard = () => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [visibleCampaigns, setVisibleCampaigns] = useState({});
+  const [allCampaignData, setAllCampaignData] = useState([]);
+
+  const getDayOfWeek = (date) => {
+    return date.getDay();
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCampaignData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch('/api/get-campaign-data');
-        const result = await response.json();
-        const data = result.data || result;
-        
-        if (!data || !Array.isArray(data)) {
-          setChartData([]);
-          return;
-        }
-        
-        const campaignGroups = {};
-        data.forEach(item => {
-          const key = `${item.campaign_name}-${item.platform}`;
-          if (!campaignGroups[key]) {
-            campaignGroups[key] = {
-              campaign: item.campaign_name,
-              platform: item.platform,
-              totalCpc: 0,
-              totalLeads: 0,
-              totalSpend: 0,
-              totalAiScore: 0,
-              count: 0
-            };
-          }
-          campaignGroups[key].totalCpc += item.cpc || 0;
-          campaignGroups[key].totalLeads += item.leads || 0;
-          campaignGroups[key].totalSpend += item.spend || 0;
-          campaignGroups[key].totalAiScore += item.ai_score || 0;
-          campaignGroups[key].count += 1;
-        });
-
-        const campaignColors = ['#007bff', '#dc3545', '#28a745', '#ffc107', '#6f42c1', '#fd7e14', '#20c997', '#e83e8c'];
-        
-        const processedData = Object.values(campaignGroups).map((group, index) => ({
-          x: group.totalCpc / group.count,
-          y: group.totalLeads,
-          size: group.totalSpend / 10,
-          category: `${group.campaign} (${group.platform})`,
-          color: campaignColors[index % campaignColors.length]
-        }));
-
-        setChartData(processedData);
-        
-        const initialVisibility = {};
-        processedData.forEach(item => {
-          initialVisibility[item.category] = true;
-        });
-        setVisibleCampaigns(initialVisibility);
+        const response = await fetch('/campaign-data.json');
+        const data = await response.json();
+        setAllCampaignData(data);
       } catch (error) {
         console.error('Error fetching campaign data:', error);
       } finally {
@@ -72,8 +33,58 @@ const PostReachCard = () => {
       }
     };
 
-    fetchData();
+    fetchCampaignData();
   }, []);
+
+  useEffect(() => {
+    if (allCampaignData.length > 0) {
+      const currentDay = getDayOfWeek(selectedDate || new Date());
+      
+      const currentDayData = allCampaignData.filter(item => {
+        const itemDate = new Date(item.date);
+        return getDayOfWeek(itemDate) === currentDay;
+      });
+      
+      const campaignGroups = {};
+      currentDayData.forEach(item => {
+        const key = `${item.campaign_name}-${item.platform}`;
+        if (!campaignGroups[key]) {
+          campaignGroups[key] = {
+            campaign: item.campaign_name,
+            platform: item.platform,
+            totalCpc: 0,
+            totalLeads: 0,
+            totalSpend: 0,
+            totalAiScore: 0,
+            count: 0
+          };
+        }
+        campaignGroups[key].totalCpc += item.cpc || 0;
+        campaignGroups[key].totalLeads += item.leads || 0;
+        campaignGroups[key].totalSpend += item.spend || 0;
+        campaignGroups[key].totalAiScore += item.ai_score || 0;
+        campaignGroups[key].count += 1;
+      });
+
+      const campaignColors = ['#007bff', '#dc3545', '#28a745', '#ffc107', '#6f42c1', '#fd7e14', '#20c997', '#e83e8c'];
+      
+      const processedData = Object.values(campaignGroups).map((group, index) => ({
+        x: group.totalCpc / group.count,
+        y: group.totalLeads,
+        size: group.totalSpend / 10,
+        category: `${group.campaign} (${group.platform})`,
+        color: campaignColors[index % campaignColors.length]
+      }));
+
+      setChartData(processedData);
+      
+      const initialVisibility = {};
+      processedData.forEach(item => {
+        initialVisibility[item.category] = true;
+      });
+      setVisibleCampaigns(initialVisibility);
+    }
+  }, [selectedDate, allCampaignData]);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.value);
