@@ -15,11 +15,14 @@
     "landing_page_views": 198,
     "video_plays_50": 0,
     "leads": 12,
+    "sales": 3,
+    "revenue": 450.00,
+    "avg_order_value": 150.00,
     "ctr": 1.96,
     "cpc": 0.61,
     "cpm": 12.04,
     "ai_score": 7.6,
-    "ai_comment": "Performance is solid: CTR is above average, CPC is efficient, and lead count is reasonable for this segment. The campaign is cost-effective and reaching the target audience efficiently."
+    "ai_comment": "CAC $12.54 is below target by 10%. Lead-to-sale conversion is 25%, exceeding the average for this segment. Increasing the budget by 20% is recommended to scale returns efficiently."
   },
   {
     "campaign_id": "CAMP001",
@@ -37,11 +40,14 @@
     "landing_page_views": 215,
     "video_plays_50": 0,
     "leads": 15,
+    "sales": 4,
+    "revenue": 616.00,
+    "avg_order_value": 154.00,
     "ctr": 2.03,
     "cpc": 0.62,
     "cpm": 12.56,
     "ai_score": 8.3,
-    "ai_comment": "Excellent improvement in leads and CTR over previous day. Cost metrics stay efficient. Audience engagement suggests effective creative targeting."
+    "ai_comment": "Lead-to-sale conversion rate is 26.7%, which is 7% above the weekly average. CAC is $11.05, maintaining cost targets. Budget increase of 15% should boost top-funnel acquisition further."
   },
   {
     "campaign_id": "CAMP001",
@@ -59,11 +65,14 @@
     "landing_page_views": 178,
     "video_plays_50": 0,
     "leads": 9,
+    "sales": 2,
+    "revenue": 320.00,
+    "avg_order_value": 160.00,
     "ctr": 1.87,
     "cpc": 0.64,
     "cpm": 12.06,
     "ai_score": 6.9,
-    "ai_comment": "Lower performance in leads and CTR indicates possible creative fatigue. CPC remains moderate, but strategy may require adjustment for next period."
+    "ai_comment": "Lead-to-sale rate 22% is average; CAC $15.80 is slightly above target. Test new creative and consider reallocation to high-performing segments."
   },
   {
     "campaign_id": "CAMP001",
@@ -81,11 +90,14 @@
     "landing_page_views": 238,
     "video_plays_50": 0,
     "leads": 18,
+    "sales": 6,
+    "revenue": 915.00,
+    "avg_order_value": 152.50,
     "ctr": 2.03,
     "cpc": 0.61,
     "cpm": 12.34,
     "ai_score": 8.7,
-    "ai_comment": "Significant recovery with best lead count and stable cost per click. The campaign is highly effective in driving target actions."
+    "ai_comment": "Conversion rate of 33.3% and CAC $9.94 are both better than benchmarks. Recommend scaling creative for broader reach given strong return per sale."
   },
   {
     "campaign_id": "CAMP001",
@@ -103,11 +115,14 @@
     "landing_page_views": 251,
     "video_plays_50": 0,
     "leads": 21,
+    "sales": 7,
+    "revenue": 1127.00,
+    "avg_order_value": 161.00,
     "ctr": 2.05,
     "cpc": 0.61,
     "cpm": 12.46,
     "ai_score": 9.1,
-    "ai_comment": "Record performance for leads and CTR: the campaign consistently converts new contacts at a cost-efficient rate."
+    "ai_comment": "Lead-to-sale rate 33.3% and AOV $161 outperform expectations, CAC $9.02 is excellent. Maintain budget and test higher-tier creatives to leverage momentum."
   },
   {
     "campaign_id": "CAMP001",
@@ -125,11 +140,14 @@
     "landing_page_views": 207,
     "video_plays_50": 0,
     "leads": 14,
+    "sales": 4,
+    "revenue": 624.00,
+    "avg_order_value": 156.00,
     "ctr": 2,
     "cpc": 0.61,
     "cpm": 12.11,
     "ai_score": 7.8,
-    "ai_comment": "While performance dipped, CTR and CPC remain strong. Efficiency is satisfactory for audience size and content type."
+    "ai_comment": "Sales conversion is at 28.6%, CAC $11.16 fits budget. Consistent AOV supports campaign scaling with minor targeting adjustments."
   },
   {
     "campaign_id": "CAMP001",
@@ -147,11 +165,14 @@
     "landing_page_views": 175,
     "video_plays_50": 0,
     "leads": 11,
+    "sales": 3,
+    "revenue": 480.00,
+    "avg_order_value": 160.00,
     "ctr": 1.95,
     "cpc": 0.62,
     "cpm": 12.04,
     "ai_score": 7.3,
-    "ai_comment": "Weekend engagement is lower across the board, but CTR and CPC still meet benchmarks. Lead count is adequate for this period."
+    "ai_comment": "CAC $12.25 is 6% above goal but AOV $160 is solid. Lead-to-sale rate is 27.2%. Focus on refining weekend ad delivery for incremental gains."
   },
   {
     "campaign_id": "CAMP002",
@@ -169,11 +190,14 @@
     "landing_page_views": 312,
     "video_plays_50": 156,
     "leads": 28,
+    "sales": 9,
+    "revenue": 2115.00,
+    "avg_order_value": 235.00,
     "ctr": 2.09,
     "cpc": 0.57,
     "cpm": 11.91,
     "ai_score": 9.2,
-    "ai_comment": "Outstanding launch metrics: high CTR, low CPC, and strong leads/custom video views for a tech audience. Execution is optimal."
+    "ai_comment": "Lead-to-sale is 32.1%, CAC $7.87 is extremely efficient for tech vertical. AOV $235 supports aggressive scaling and reinvestment in video creative."
   },
   {
     "campaign_id": "CAMP002",
@@ -191,11 +215,14 @@
     "landing_page_views": 342,
     "video_plays_50": 178,
     "leads": 32,
+    "sales": 11,
+    "revenue": 2596.00,
+    "avg_order_value": 236.00,
     "ctr": 2.15,
     "cpc": 0.58,
     "cpm": 12.4,
     "ai_score": 9.5,
-    "ai_comment": "Rapid lead growth and excellent CTR drive campaign success. Creativity and placement are tested and effective for this tech niche."
+    "ai_comment": "CAC $7.67 and 34.4% conversion lead-to-sale are both above target. Recommend increasing budget by 25% to maximize reach and revenue growth."
   },
   {
     "campaign_id": "CAMP002",
@@ -213,11 +240,14 @@
     "landing_page_views": 268,
     "video_plays_50": 134,
     "leads": 23,
+    "sales": 8,
+    "revenue": 1872.00,
+    "avg_order_value": 234.00,
     "ctr": 2.06,
     "cpc": 0.6,
     "cpm": 12.27,
     "ai_score": 8.8,
-    "ai_comment": "Lead count is lower but CTR stays high and CPC is efficient. Campaign maintains effectiveness despite budget adjustment."
+    "ai_comment": "Conversion 34.7% and CAC $8.63 both align with goals. Cost management strong, continue focus on optimization for engagement and up-sell."
   },
   {
     "campaign_id": "CAMP002",
@@ -235,11 +265,14 @@
     "landing_page_views": 367,
     "video_plays_50": 189,
     "leads": 35,
+    "sales": 12,
+    "revenue": 2796.00,
+    "avg_order_value": 233.00,
     "ctr": 2.12,
     "cpc": 0.59,
     "cpm": 12.44,
     "ai_score": 9.6,
-    "ai_comment": "Top engagement, best lead count, and strong cost controls. The campaign is reaching peak efficiency and audience relevance."
+    "ai_comment": "Lead-to-sale of 34.3% is optimal, CAC $7.64 notably low. Suggest reallocating spend to peak hours for maximal conversion lift."
   },
   {
     "campaign_id": "CAMP002",
@@ -257,11 +290,14 @@
     "landing_page_views": 396,
     "video_plays_50": 201,
     "leads": 39,
+    "sales": 14,
+    "revenue": 3266.00,
+    "avg_order_value": 233.00,
     "ctr": 2.12,
     "cpc": 0.59,
     "cpm": 12.5,
     "ai_score": 9.8,
-    "ai_comment": "Record campaign results across all lead and engagement measures. Executing well at scale and maintaining cost discipline."
+    "ai_comment": "Conversion rate 35.9% sets a weekly high. CAC $7.44 and AOV $233 justify scaling campaign further; monitor for creative fatigue."
   },
   {
     "campaign_id": "CAMP002",
@@ -279,11 +315,14 @@
     "landing_page_views": 320,
     "video_plays_50": 162,
     "leads": 29,
+    "sales": 10,
+    "revenue": 2330.00,
+    "avg_order_value": 233.00,
     "ctr": 2.05,
     "cpc": 0.59,
     "cpm": 12.09,
     "ai_score": 8.7,
-    "ai_comment": "Weekend engagement is lower but KPIs remain strong. The campaign is consistently outperforming normal weekend media benchmarks."
+    "ai_comment": "Conversion at 34.5% and CAC $8.09 remain strong even with lower weekend volume. Early-week retargeting should improve totals."
   },
   {
     "campaign_id": "CAMP002",
@@ -301,11 +340,14 @@
     "landing_page_views": 275,
     "video_plays_50": 138,
     "leads": 24,
+    "sales": 7,
+    "revenue": 1631.00,
+    "avg_order_value": 233.00,
     "ctr": 2.04,
     "cpc": 0.59,
     "cpm": 11.98,
     "ai_score": 8.2,
-    "ai_comment": "Stable cost and engagement metrics in the weekend period. The campaign sustains conversion efficiency even at lower activity times."
+    "ai_comment": "Lower engagement but 29.2% conversion lead-to-sale is competitive, CAC $11.90 above target. Increase creative testing for next week."
   },
   {
     "campaign_id": "CAMP003",
@@ -323,11 +365,14 @@
     "landing_page_views": 142,
     "video_plays_50": 445,
     "leads": 8,
+    "sales": 2,
+    "revenue": 204.00,
+    "avg_order_value": 102.00,
     "ctr": 2,
     "cpc": 0.54,
     "cpm": 10.72,
     "ai_score": 8,
-    "ai_comment": "Content achieves solid engagement and video completion rate; lead count is moderate for spend level. Campaign is well-optimized."
+    "ai_comment": "Lead-to-sale conversion is 25%, CAC $11.93. Recommend A/B testing video hooks to boost both lead quality and AOV."
   },
   {
     "campaign_id": "CAMP003",
@@ -345,11 +390,14 @@
     "landing_page_views": 172,
     "video_plays_50": 510,
     "leads": 12,
+    "sales": 3,
+    "revenue": 318.00,
+    "avg_order_value": 106.00,
     "ctr": 2.11,
     "cpc": 0.52,
     "cpm": 11.06,
     "ai_score": 8.7,
-    "ai_comment": "Lead count jumps and CPC improves; campaign is scaling efficiently and engaging the fitness audience strategically."
+    "ai_comment": "Conversion rate 25% and CAC $9.40 outperform prior day. Increase influencer collaborations to exploit interest spike."
   },
   {
     "campaign_id": "CAMP003",
@@ -367,11 +415,14 @@
     "landing_page_views": 129,
     "video_plays_50": 405,
     "leads": 7,
+    "sales": 1,
+    "revenue": 107.00,
+    "avg_order_value": 107.00,
     "ctr": 2,
     "cpc": 0.54,
     "cpm": 10.81,
     "ai_score": 7.5,
-    "ai_comment": "Metrics decline due to reduced spend, but CTR and video completion rates are stable. Campaign remains cost-effective."
+    "ai_comment": "Conversion dips to 14.3%, CAC $20.33 above goal. Plan shift toward gamified content and value-add features."
   },
   {
     "campaign_id": "CAMP003",
@@ -389,11 +440,14 @@
     "landing_page_views": 196,
     "video_plays_50": 575,
     "leads": 14,
+    "sales": 4,
+    "revenue": 416.00,
+    "avg_order_value": 104.00,
     "ctr": 2.13,
     "cpc": 0.51,
     "cpm": 10.84,
     "ai_score": 9.1,
-    "ai_comment": "Lead generation and cost controls both peak; campaign has reached optimal placement and content resonance."
+    "ai_comment": "Conversion 28.6%, CAC $8.91 beats TikTok vertical average. Scale ad frequency and retargeting for stronger funnel yield."
   },
   {
     "campaign_id": "CAMP003",
@@ -411,11 +465,14 @@
     "landing_page_views": 218,
     "video_plays_50": 640,
     "leads": 16,
+    "sales": 5,
+    "revenue": 530.00,
+    "avg_order_value": 106.00,
     "ctr": 2.13,
     "cpc": 0.51,
     "cpm": 10.85,
     "ai_score": 9.4,
-    "ai_comment": "Best performance in leads, clicks, and video completions. Highly optimized for target audience and cost."
+    "ai_comment": "Conversion 31.3%, CAC $8.68 best this week. Focus next spend on pre-weekend motivational themes for uptrend maintenance."
   },
   {
     "campaign_id": "CAMP003",
@@ -433,11 +490,14 @@
     "landing_page_views": 157,
     "video_plays_50": 490,
     "leads": 11,
+    "sales": 2,
+    "revenue": 210.00,
+    "avg_order_value": 105.00,
     "ctr": 2,
     "cpc": 0.54,
     "cpm": 10.74,
     "ai_score": 8.2,
-    "ai_comment": "Weekend results remain positive, with consistent engagement and lead generation. Cost metrics are tightly controlled."
+    "ai_comment": "Sales conversion is 18%, CAC $14.18. Adjust targeting for higher-value leads and explore cross-platform weekend integrations."
   },
   {
     "campaign_id": "CAMP003",
@@ -455,11 +515,14 @@
     "landing_page_views": 138,
     "video_plays_50": 430,
     "leads": 9,
+    "sales": 2,
+    "revenue": 210.00,
+    "avg_order_value": 105.00,
     "ctr": 2,
     "cpc": 0.54,
     "cpm": 10.71,
     "ai_score": 7.6,
-    "ai_comment": "Lower weekend engagement but campaign maintains a healthy baseline. Cost per action remains in optimal range."
+    "ai_comment": "Lead-to-sale conversion is 22%, CAC $10.23. Boost top funnel with short-form motivational trials for weekend prospects."
   },
   {
     "campaign_id": "CAMP004",
@@ -477,11 +540,14 @@
     "landing_page_views": 156,
     "video_plays_50": 0,
     "leads": 23,
+    "sales": 6,
+    "revenue": 5400.00,
+    "avg_order_value": 900.00,
     "ctr": 1.24,
     "cpc": 1.83,
     "cpm": 22.74,
     "ai_score": 7.5,
-    "ai_comment": "Solid start: respectable leads, CTR in line with B2B norms, and CPC is reasonable. Campaign is off to a good, cost-efficient beginning."
+    "ai_comment": "CAC $15.03 meets B2B target. Lead-to-sale rate 26% is satisfactory. Add a lower-funnel nurturing sequence to improve sale conversion."
   },
   {
     "campaign_id": "CAMP004",
@@ -499,11 +565,14 @@
     "landing_page_views": 175,
     "video_plays_50": 0,
     "leads": 27,
+    "sales": 8,
+    "revenue": 7280.00,
+    "avg_order_value": 910.00,
     "ctr": 1.28,
     "cpc": 1.79,
     "cpm": 22.96,
     "ai_score": 8.3,
-    "ai_comment": "Strong increase in efficiency with better lead count and slightly improved CPC. Campaign is delivering at scale."
+    "ai_comment": "Conversion rate 29.6%, CAC $13.34 is solid. Increase touchpoints within business hours to further scale sales velocity."
   },
   {
     "campaign_id": "CAMP004",
@@ -521,11 +590,14 @@
     "landing_page_views": 138,
     "video_plays_50": 0,
     "leads": 19,
+    "sales": 5,
+    "revenue": 4550.00,
+    "avg_order_value": 910.00,
     "ctr": 1.21,
     "cpc": 1.87,
     "cpm": 22.64,
     "ai_score": 7,
-    "ai_comment": "Performance is stable; lower spend leads to fewer leads, but efficiency remains. Suitable for weekday B2B campaigns."
+    "ai_comment": "Lead-to-sale rate 26.3%, CAC $16.44 has room for improvement. Consider retargeting decision makers with demo case studies."
   },
   {
     "campaign_id": "CAMP004",
@@ -543,11 +615,14 @@
     "landing_page_views": 186,
     "video_plays_50": 0,
     "leads": 29,
+    "sales": 10,
+    "revenue": 9200.00,
+    "avg_order_value": 920.00,
     "ctr": 1.31,
     "cpc": 1.77,
     "cpm": 23.18,
     "ai_score": 8.9,
-    "ai_comment": "Peak performance: highest leads generated and CPC is lowest. Campaign is winning in all key B2B KPIs."
+    "ai_comment": "Lead-to-sale hits 34.5%, CAC $13.75. Allocate more spend to top decision maker segments for higher contract value."
   },
   {
     "campaign_id": "CAMP004",
@@ -565,11 +640,14 @@
     "landing_page_views": 164,
     "video_plays_50": 0,
     "leads": 25,
+    "sales": 7,
+    "revenue": 6520.00,
+    "avg_order_value": 931.43,
     "ctr": 1.27,
     "cpc": 1.8,
     "cpm": 22.84,
     "ai_score": 8.4,
-    "ai_comment": "Strong efficiency continues: high conversion, cost per click is stable, targeting is accurate for business audience."
+    "ai_comment": "Conversion 28%, CAC $14.25 is competitive. Improve content targeting around ROI and efficiency for higher close rate."
   },
   {
     "campaign_id": "CAMP004",
@@ -587,11 +665,14 @@
     "landing_page_views": 81,
     "video_plays_50": 0,
     "leads": 11,
+    "sales": 3,
+    "revenue": 2700.00,
+    "avg_order_value": 900.00,
     "ctr": 1.1,
     "cpc": 1.93,
     "cpm": 21.27,
     "ai_score": 6.3,
-    "ai_comment": "Weekend results show low activity; lead count and CTR drop as expected for B2B, but CPC is still within norms for industry."
+    "ai_comment": "Low conversion (27.2%) and CAC $17.18; consider weekend pause or increased frequency for weekday selling periods."
   },
   {
     "campaign_id": "CAMP004",
@@ -609,10 +690,17 @@
     "landing_page_views": 64,
     "video_plays_50": 0,
     "leads": 8,
+    "sales": 2,
+    "revenue": 1900.00,
+    "avg_order_value": 950.00,
     "ctr": 1.08,
     "cpc": 2.01,
     "cpm": 21.78,
     "ai_score": 5.8,
-    "ai_comment": "Lowest engagement and leads for the week due to weekend trend; CPC rises, suggesting need for weekday focus in future."
+    "ai_comment": "Conversion at 25%, CAC $19.60 is above target. Focus all budget on Mon-Fri windows for B2B buyer engagement."
   }
 ]
+
+
+
+
