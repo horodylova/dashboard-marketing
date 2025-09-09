@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@progress/kendo-react-buttons';
 import AddCompanyModal from './AddCompanyModal';
 
-const CompanyDrawerSection = ({ isMobile = false }) => {
+const CompanyDrawerSection = ({ expanded = true, onToggle, isMobile = false, isTablet = false, isMobileMenuOpen = false, onMobileMenuToggle }) => {
   const [companies, setCompanies] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [isClient, setIsClient] = useState(false);
@@ -85,16 +85,48 @@ const CompanyDrawerSection = ({ isMobile = false }) => {
   }
 
   return (
-    <div 
-      className="company-drawer-section" 
-      style={{ 
-        background: 'white',
-        minHeight: isMobile ? '100vh' : '100vh',
-        width: isMobile ? '100%' : (window.innerWidth >= 1024 ? '320px' : '280px'),
-        padding: '16px 0',
-        paddingTop: isMobile ? '60px' : '50px'
-      }}
-    >
+    <>
+      {(expanded || isMobile || isMobileMenuOpen) && (
+        <div 
+          className="company-drawer-section" 
+          style={{ 
+            background: 'white',
+            minHeight: isMobile ? '100vh' : '100vh',
+            width: isMobile ? '100%' : (window.innerWidth >= 1024 ? '320px' : '280px'),
+            padding: '16px 0',
+            paddingTop: isMobile ? '60px' : '50px',
+            position: isMobile ? 'fixed' : 'relative',
+            top: isMobile ? 0 : 'auto',
+            left: isMobile ? 0 : 'auto',
+            zIndex: isMobile ? 999 : 'auto',
+            transform: isMobile && !isMobileMenuOpen ? 'translateX(-100%)' : 'translateX(0)',
+            transition: 'transform 0.3s ease'
+          }}
+        >
+          {!isMobile && onToggle && (
+            <button
+              onClick={onToggle}
+              style={{
+                position: 'absolute',
+                right: '-12px',
+                top: '60px',
+                width: '24px',
+                height: '24px',
+                backgroundColor: 'var(--kendo-color-primary)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '12px',
+                zIndex: 1001
+              }}
+            >
+              ←
+            </button>
+          )}
       <div 
         className="companies-list"
         style={{
@@ -193,7 +225,9 @@ const CompanyDrawerSection = ({ isMobile = false }) => {
       </div>
       
       <div style={{
-        padding: isMobile ? '0 20px' : '0 16px',
+        paddingLeft: isMobile ? '20px' : '16px',
+        paddingRight: isMobile ? '20px' : '16px',
+        paddingBottom: '0',
         borderTop: '1px solid rgba(31, 31, 31, 0.16)',
         paddingTop: '16px'
       }}>
@@ -226,6 +260,8 @@ const CompanyDrawerSection = ({ isMobile = false }) => {
           Add Company
         </Button>
       </div>
+        </div>
+      )}
 
       <AddCompanyModal
         visible={showModal}
@@ -233,7 +269,7 @@ const CompanyDrawerSection = ({ isMobile = false }) => {
         onSave={handleSaveCompany}
         editingCompany={editingCompany}
       />
-    </div>
+    </>
   );
 };
 

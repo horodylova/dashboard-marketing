@@ -15,6 +15,8 @@ import ScheduledPostsCard from "./components/ScheduledPostsCard";
 import CampaignsList from './components/CampaignsList';
 import CampaignCard from './components/CampaignCard';
 import CampaignEfficiencyCard from './components/CampaignEfficiencyCard';
+import FinancialPerformanceCard from './components/FinancialPerformanceCard';
+import MarketingEfficiencyCard from './components/MarketingEfficiencyCard';
 import  Footer from './components/Footer'
 
 export default function SocialMediaManagementDashboard() {
@@ -215,6 +217,12 @@ export default function SocialMediaManagementDashboard() {
                 <div style={{ minHeight: '400px', minWidth: '0' }}>
                   <ClickThroughRateCard />
                 </div>
+                <div style={{ minHeight: '400px', minWidth: '0' }}>
+                  <FinancialPerformanceCard />
+                </div>
+                <div style={{ minHeight: '400px', minWidth: '0' }}>
+                  <MarketingEfficiencyCard />
+                </div>
                 <div className="k-col-span-2" style={{ minHeight: '400px' }}>
                   <PostReachCard />
                 </div>
@@ -238,6 +246,8 @@ export default function SocialMediaManagementDashboard() {
                 <ScheduledPostsCard />
                 <FollowersGrowthCard />
                 <ClickThroughRateCard />
+               <FinancialPerformanceCard />
+                <MarketingEfficiencyCard />
                 <PostReachCard />
               </div>
             )}

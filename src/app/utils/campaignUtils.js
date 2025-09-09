@@ -460,3 +460,57 @@ function calculateTotalClicks(data, campaignId) {
     .filter(item => item.campaign_id === campaignId)
     .reduce((total, item) => total + (item.clicks || 0), 0);
 }
+
+export function calculateCAC(spend, leads) {
+  if (!leads || leads === 0) return 0;
+  return parseFloat((spend / leads).toFixed(2));
+}
+
+export function calculateROMI(revenue, spend) {
+  if (!spend || spend === 0) return 0;
+  return parseFloat(((revenue - spend) / spend * 100).toFixed(2));
+}
+
+export function calculateConversionRate(sales, leads) {
+  if (!leads || leads === 0) return 0;
+  return parseFloat((sales / leads * 100).toFixed(2));
+}
+
+export function calculateLTV(avgOrderValue, repeatPurchaseRate) {
+  if (!avgOrderValue || !repeatPurchaseRate) return 0;
+  return parseFloat((avgOrderValue * repeatPurchaseRate).toFixed(2));
+}
+
+export function calculateTotalSales(data, campaignId) {
+  if (!data || !data.data || !Array.isArray(data.data)) return 0;
+  
+  const latestDataByDate = getLatestDataByDate(data.data, campaignId);
+  
+  return Object.values(latestDataByDate)
+    .reduce((total, item) => total + (item.sales || 0), 0);
+}
+
+export function calculateTotalRevenue(data, campaignId) {
+  if (!data || !data.data || !Array.isArray(data.data)) return 0;
+  
+  const latestDataByDate = getLatestDataByDate(data.data, campaignId);
+  
+  return Object.values(latestDataByDate)
+    .reduce((total, item) => total + (item.revenue || 0), 0);
+}
+
+export function getLatestAvgOrderValue(data, campaignId) {
+  if (!data || !data.data || !Array.isArray(data.data)) return 0;
+  
+  const campaignData = data.data.filter(item => item.campaign_id === campaignId);
+  
+  if (campaignData.length === 0) return 0;
+  
+  campaignData.sort((a, b) => {
+    const dateA = new Date(`${a.date} ${a.time}`);
+    const dateB = new Date(`${b.date} ${b.time}`);
+    return dateB - dateA;
+  });
+  
+  return campaignData[0].avg_order_value || 0;
+}
