@@ -18,8 +18,8 @@
     "ctr": 1.96,
     "cpc": 0.61,
     "cpm": 12.04,
-    "ai_score": 8.5,
-    "ai_comment": "Initial performance is strong, with a CTR above the industry average of 1.5%. Consider increasing the daily budget by 20-30% to capitalize on this positive momentum and expand your reach."
+    "ai_score": 7.6,
+    "ai_comment": "Performance is solid: CTR is above average, CPC is efficient, and lead count is reasonable for this segment. The campaign is cost-effective and reaching the target audience efficiently."
   },
   {
     "campaign_id": "CAMP001",
@@ -40,8 +40,8 @@
     "ctr": 2.03,
     "cpc": 0.62,
     "cpm": 12.56,
-    "ai_score": 8.8,
-    "ai_comment": "This campaign shows excellent day-over-day improvement, with a rising CTR and a 25% increase in leads. The creative content is clearly resonating with the target audience and driving results."
+    "ai_score": 8.3,
+    "ai_comment": "Excellent improvement in leads and CTR over previous day. Cost metrics stay efficient. Audience engagement suggests effective creative targeting."
   },
   {
     "campaign_id": "CAMP001",
@@ -62,8 +62,8 @@
     "ctr": 1.87,
     "cpc": 0.64,
     "cpm": 12.06,
-    "ai_score": 7.9,
-    "ai_comment": "We've observed a performance dip with the CTR dropping to 1.87% and the lead count decreasing. This could be a sign of ad fatigue, so we recommend testing new creative variations or adjusting targeting parameters."
+    "ai_score": 6.9,
+    "ai_comment": "Lower performance in leads and CTR indicates possible creative fatigue. CPC remains moderate, but strategy may require adjustment for next period."
   },
   {
     "campaign_id": "CAMP001",
@@ -84,8 +84,8 @@
     "ctr": 2.03,
     "cpc": 0.61,
     "cpm": 12.34,
-    "ai_score": 9.1,
-    "ai_comment": "This campaign has made a remarkable recovery, with all metrics returning to their previous peak levels and leads hitting a new high of 18. The increased spend is paying off, leading to improved reach and engagement."
+    "ai_score": 8.7,
+    "ai_comment": "Significant recovery with best lead count and stable cost per click. The campaign is highly effective in driving target actions."
   },
   {
     "campaign_id": "CAMP001",
@@ -106,8 +106,8 @@
     "ctr": 2.05,
     "cpc": 0.61,
     "cpm": 12.46,
-    "ai_score": 9.3,
-    "ai_comment": "The campaign has reached a new performance peak with 21 leads generated and a CTR that remains above 2%. The consistent CPC of $0.61 shows excellent cost efficiency while scaling up reach and impressions."
+    "ai_score": 9.1,
+    "ai_comment": "Record performance for leads and CTR: the campaign consistently converts new contacts at a cost-efficient rate."
   },
   {
     "campaign_id": "CAMP001",
@@ -128,8 +128,8 @@
     "ctr": 2,
     "cpc": 0.61,
     "cpm": 12.11,
-    "ai_score": 8.7,
-    "ai_comment": "Performance shows an expected decline but remains within acceptable parameters, with the CTR holding steady at 2%. This demographic typically shows 15-20% lower engagement, so these results are quite satisfactory."
+    "ai_score": 7.8,
+    "ai_comment": "While performance dipped, CTR and CPC remain strong. Efficiency is satisfactory for audience size and content type."
   },
   {
     "campaign_id": "CAMP001",
@@ -150,8 +150,8 @@
     "ctr": 1.95,
     "cpc": 0.62,
     "cpm": 12.04,
-    "ai_score": 8.2,
-    "ai_comment": "Performance aligns with typical weekend patterns, showing reduced activity but maintaining cost efficiency. The slight increase in CPC to $0.62 is normal as competition for ad space can shift on weekends."
+    "ai_score": 7.3,
+    "ai_comment": "Weekend engagement is lower across the board, but CTR and CPC still meet benchmarks. Lead count is adequate for this period."
   },
   {
     "campaign_id": "CAMP002",
@@ -173,7 +173,7 @@
     "cpc": 0.57,
     "cpm": 11.91,
     "ai_score": 9.2,
-    "ai_comment": "The launch day performance is outstanding, with tech enthusiasts showing high engagement across all metrics. This indicates an excellent product-market fit, confirmed by the 50% video completion rate and strong lead generation."
+    "ai_comment": "Outstanding launch metrics: high CTR, low CPC, and strong leads/custom video views for a tech audience. Execution is optimal."
   },
   {
     "campaign_id": "CAMP002",
@@ -195,7 +195,7 @@
     "cpc": 0.58,
     "cpm": 12.4,
     "ai_score": 9.5,
-    "ai_comment": "Excellent momentum is building, with a 14% increase in leads and the CTR climbing to 2.15%. The tech audience is highly engaged with the video content, so we recommend increasing the video budget and testing longer-form content."
+    "ai_comment": "Rapid lead growth and excellent CTR drive campaign success. Creativity and placement are tested and effective for this tech niche."
   },
   {
     "campaign_id": "CAMP002",
@@ -217,7 +217,7 @@
     "cpc": 0.6,
     "cpm": 12.27,
     "ai_score": 8.8,
-    "ai_comment": "Solid performance is being maintained despite a reduced spend. The consistent CTR above 2% demonstrates stable audience interest and effective creative resonance with tech enthusiasts."
+    "ai_comment": "Lead count is lower but CTR stays high and CPC is efficient. Campaign maintains effectiveness despite budget adjustment."
   },
   {
     "campaign_id": "CAMP002",
@@ -238,8 +238,8 @@
     "ctr": 2.12,
     "cpc": 0.59,
     "cpm": 12.44,
-    "ai_score": 9.4,
-    "ai_comment": "There's been a surge in performance, delivering the highest lead count yet and showing excellent cost efficiency. The increased investment in reach is paying dividends with video engagement rates remaining strong."
+    "ai_score": 9.6,
+    "ai_comment": "Top engagement, best lead count, and strong cost controls. The campaign is reaching peak efficiency and audience relevance."
   },
   {
     "campaign_id": "CAMP002",
@@ -260,8 +260,8 @@
     "ctr": 2.12,
     "cpc": 0.59,
     "cpm": 12.5,
-    "ai_score": 9.6,
-    "ai_comment": "The campaign is showing record-breaking performance with 39 leads generated and nearly 500 clicks achieved. It has found its optimal rhythm with tech enthusiasts, demonstrating peak engagement and conversion efficiency."
+    "ai_score": 9.8,
+    "ai_comment": "Record campaign results across all lead and engagement measures. Executing well at scale and maintaining cost discipline."
   },
   {
     "campaign_id": "CAMP002",
@@ -282,8 +282,8 @@
     "ctr": 2.05,
     "cpc": 0.59,
     "cpm": 12.09,
-    "ai_score": 9,
-    "ai_comment": "Weekend performance shows a natural decline but maintains strong fundamentals, with the CTR staying above 2%. Tech professionals tend to be less active on the weekends, making these engagement levels particularly impressive."
+    "ai_score": 8.7,
+    "ai_comment": "Weekend engagement is lower but KPIs remain strong. The campaign is consistently outperforming normal weekend media benchmarks."
   },
   {
     "campaign_id": "CAMP002",
@@ -304,8 +304,8 @@
     "ctr": 2.04,
     "cpc": 0.59,
     "cpm": 11.98,
-    "ai_score": 8.6,
-    "ai_comment": "Performance remains remarkably stable with consistent cost metrics and engagement rates. The tech audience is staying interested even during off-peak hours, which indicates strong brand affinity and product appeal."
+    "ai_score": 8.2,
+    "ai_comment": "Stable cost and engagement metrics in the weekend period. The campaign sustains conversion efficiency even at lower activity times."
   },
   {
     "campaign_id": "CAMP003",
@@ -326,8 +326,8 @@
     "ctr": 2,
     "cpc": 0.54,
     "cpm": 10.72,
-    "ai_score": 8.1,
-    "ai_comment": "This is a strong TikTok debut, with an impressive 50% video completion rate that suggests high content quality. The fitness audience is engaging well with the creative format, so consider increasing your video content budget to capitalize on this engagement."
+    "ai_score": 8,
+    "ai_comment": "Content achieves solid engagement and video completion rate; lead count is moderate for spend level. Campaign is well-optimized."
   },
   {
     "campaign_id": "CAMP003",
@@ -349,7 +349,7 @@
     "cpc": 0.52,
     "cpm": 11.06,
     "ai_score": 8.7,
-    "ai_comment": "The campaign is showing excellent progression with a 50% increase in leads and improved cost efficiency across all metrics. The TikTok algorithm is favoring this fitness content, resulting in better organic reach and engagement."
+    "ai_comment": "Lead count jumps and CPC improves; campaign is scaling efficiently and engaging the fitness audience strategically."
   },
   {
     "campaign_id": "CAMP003",
@@ -370,8 +370,8 @@
     "ctr": 2,
     "cpc": 0.54,
     "cpm": 10.81,
-    "ai_score": 7.8,
-    "ai_comment": "Performance is showing a slight dip, but it is maintaining healthy engagement with a 50% video completion rate. The reduced spend resulted in a proportional decrease in reach, suggesting consistent audience interest and platform stability."
+    "ai_score": 7.5,
+    "ai_comment": "Metrics decline due to reduced spend, but CTR and video completion rates are stable. Campaign remains cost-effective."
   },
   {
     "campaign_id": "CAMP003",
@@ -392,8 +392,8 @@
     "ctr": 2.13,
     "cpc": 0.51,
     "cpm": 10.84,
-    "ai_score": 9,
-    "ai_comment": "This campaign is delivering exceptional results, with the highest lead count and best CPC performance yet. The fitness audience is most active and motivated during this time, which is aligning perfectly with their behavior and app download patterns."
+    "ai_score": 9.1,
+    "ai_comment": "Lead generation and cost controls both peak; campaign has reached optimal placement and content resonance."
   },
   {
     "campaign_id": "CAMP003",
@@ -414,8 +414,8 @@
     "ctr": 2.13,
     "cpc": 0.51,
     "cpm": 10.85,
-    "ai_score": 9.2,
-    "ai_comment": "The campaign is at its peak performance with a record 640 video completions and 16 leads generated. This fitness content is resonating perfectly with TikTok's young demographic, achieving optimal engagement during the pre-weekend motivation surge."
+    "ai_score": 9.4,
+    "ai_comment": "Best performance in leads, clicks, and video completions. Highly optimized for target audience and cost."
   },
   {
     "campaign_id": "CAMP003",
@@ -436,8 +436,8 @@
     "ctr": 2,
     "cpc": 0.54,
     "cpm": 10.74,
-    "ai_score": 8.4,
-    "ai_comment": "We're seeing strong weekend fitness motivation with solid engagement despite a reduced spend. Young fitness enthusiasts are actively seeking workout content on weekends, making this an optimal time for fitness app promotion."
+    "ai_score": 8.2,
+    "ai_comment": "Weekend results remain positive, with consistent engagement and lead generation. Cost metrics are tightly controlled."
   },
   {
     "campaign_id": "CAMP003",
@@ -458,8 +458,8 @@
     "ctr": 2,
     "cpc": 0.54,
     "cpm": 10.71,
-    "ai_score": 8,
-    "ai_comment": "The campaign's performance maintains its baseline metrics with consistent CTR and cost efficiency. The fitness audience remains engaged even on their rest days, indicating strong brand awareness and app consideration among these target users."
+    "ai_score": 7.6,
+    "ai_comment": "Lower weekend engagement but campaign maintains a healthy baseline. Cost per action remains in optimal range."
   },
   {
     "campaign_id": "CAMP004",
@@ -480,8 +480,8 @@
     "ctr": 1.24,
     "cpc": 1.83,
     "cpm": 22.74,
-    "ai_score": 8.9,
-    "ai_comment": "The campaign is off to a great start, generating a high number of quality B2B leads. The CTR is well within the expected range for this platform, indicating a high-quality audience is being reached."
+    "ai_score": 7.5,
+    "ai_comment": "Solid start: respectable leads, CTR in line with B2B norms, and CPC is reasonable. Campaign is off to a good, cost-efficient beginning."
   },
   {
     "campaign_id": "CAMP004",
@@ -502,8 +502,8 @@
     "ctr": 1.28,
     "cpc": 1.79,
     "cpm": 22.96,
-    "ai_score": 9.3,
-    "ai_comment": "Performance is showing a significant positive trend, with an increase in both clicks and leads. The cost per click remains efficient, allowing us to scale the campaign with confidence while maintaining profitability."
+    "ai_score": 8.3,
+    "ai_comment": "Strong increase in efficiency with better lead count and slightly improved CPC. Campaign is delivering at scale."
   },
   {
     "campaign_id": "CAMP004",
@@ -524,8 +524,8 @@
     "ctr": 1.21,
     "cpc": 1.87,
     "cpm": 22.64,
-    "ai_score": 8.4,
-    "ai_comment": "Engagement levels are consistent with typical B2B trends for this part of the week, with a slight dip in performance as spending decreases. The campaign continues to deliver valuable leads at a steady rate, confirming its overall effectiveness."
+    "ai_score": 7,
+    "ai_comment": "Performance is stable; lower spend leads to fewer leads, but efficiency remains. Suitable for weekday B2B campaigns."
   },
   {
     "campaign_id": "CAMP004",
@@ -546,8 +546,8 @@
     "ctr": 1.31,
     "cpc": 1.77,
     "cpm": 23.18,
-    "ai_score": 9.5,
-    "ai_comment": "The campaign is experiencing its peak, with lead generation hitting a new high of 29 conversions. The cost per click is decreasing as the campaign scales, which shows excellent efficiency and ROI."
+    "ai_score": 8.9,
+    "ai_comment": "Peak performance: highest leads generated and CPC is lowest. Campaign is winning in all key B2B KPIs."
   },
   {
     "campaign_id": "CAMP004",
@@ -568,8 +568,8 @@
     "ctr": 1.27,
     "cpc": 1.8,
     "cpm": 22.84,
-    "ai_score": 9,
-    "ai_comment": "We're seeing strong performance as the week wraps up, with lead generation remaining high. The campaign is successfully reaching and converting the target audience of business decision-makers with a high degree of precision."
+    "ai_score": 8.4,
+    "ai_comment": "Strong efficiency continues: high conversion, cost per click is stable, targeting is accurate for business audience."
   },
   {
     "campaign_id": "CAMP004",
@@ -590,8 +590,8 @@
     "ctr": 1.1,
     "cpc": 1.93,
     "cpm": 21.27,
-    "ai_score": 7.2,
-    "ai_comment": "B2B activity is low as expected on the weekend, resulting in a performance dip. Despite this, the cost per lead remains within an acceptable range for this industry and audience."
+    "ai_score": 6.3,
+    "ai_comment": "Weekend results show low activity; lead count and CTR drop as expected for B2B, but CPC is still within norms for industry."
   },
   {
     "campaign_id": "CAMP004",
@@ -612,7 +612,7 @@
     "ctr": 1.08,
     "cpc": 2.01,
     "cpm": 21.78,
-    "ai_score": 6.8,
-    "ai_comment": "We're seeing minimal B2B engagement as the weekend continues, which is a normal trend for this platform. The campaign has successfully delivered high-value leads throughout the week and is now in a holding pattern."
+    "ai_score": 5.8,
+    "ai_comment": "Lowest engagement and leads for the week due to weekend trend; CPC rises, suggesting need for weekday focus in future."
   }
 ]
