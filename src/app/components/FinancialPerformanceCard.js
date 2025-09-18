@@ -220,15 +220,18 @@ const FinancialPerformanceCard = () => {
               />
             </ChartCategoryAxis>
             <ChartValueAxis>
-              <ChartValueAxisItem name="currency" title={{ text: "Amount ($)" }} />
+              <ChartValueAxisItem name="currency" title={{ text: "Revenue/Profit ($)" }} />
+              <ChartValueAxisItem name="spend" title={{ text: "Spend ($)" }} position="right" />
             </ChartValueAxis>
             <ChartSeries>
               <ChartSeriesItem 
-                type="column" 
+                type="line" 
                 data={chartData.map(item => item.spend)}
                 name="Spend"
                 color="#dc3545"
-                axis="currency"
+                axis="spend"
+                markers={{ visible: true, size: 6 }}
+                width={3}
               />
               <ChartSeriesItem 
                 type="column" 
@@ -245,25 +248,7 @@ const FinancialPerformanceCard = () => {
                 axis="currency"
               />
             </ChartSeries>
-            <ChartTooltip 
-              render={(context) => {
-                const dataItem = chartData[context.point.categoryIx];
-                if (!dataItem) return null;
-                return (
-                  <div className="k-p-2 k-bg-surface k-border k-rounded k-font-size-sm">
-                    <div className="k-font-weight-bold k-mb-1">{dataItem.campaign}</div>
-                    <div>Spend: {formatCurrency(dataItem.spend)}</div>
-                    <div>Revenue: {formatCurrency(dataItem.revenue)}</div>
-                    <div>Profit: {formatCurrency(dataItem.profit)}</div>
-                    <div>CAC: {formatCurrency(dataItem.cac)}</div>
-                    <div>ROMI: {formatPercentage(dataItem.romi)}</div>
-                    <div>Conversion: {formatPercentage(dataItem.conversionRate)}</div>
-                    <div>Leads: {dataItem.leads}</div>
-                    <div>Sales: {dataItem.sales}</div>
-                  </div>
-                );
-              }}
-            />
+            <ChartTooltip format="{0}: ${1}" />
           </Chart>
         ) : (
           <div className="k-d-flex k-justify-content-center k-align-items-center k-flex-1">
