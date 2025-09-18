@@ -111,7 +111,11 @@ const Header = ({ onMobileMenuToggle, isMobileMenuOpen, isMobile }) => {
             </div>
             
             <div style={{ height: 'calc(100vh - 78px)', overflow: 'auto' }}>
-              <CompanyDrawerSection isMobile={true} />
+              <CompanyDrawerSection 
+                isMobile={true} 
+                isMobileMenuOpen={isMobileMenuOpen}
+                onMobileMenuToggle={onMobileMenuToggle}
+              />
             </div>
           </div>
         </>
