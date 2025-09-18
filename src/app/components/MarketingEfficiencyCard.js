@@ -124,8 +124,15 @@ const MarketingEfficiencyCard = () => {
   };
 
   const handleInfoClick = (event) => {
+    event.stopPropagation();
     setTooltipPosition({ x: event.clientX, y: event.clientY });
     setShowTooltip(!showTooltip);
+  };
+
+  const handleContainerClick = () => {
+    if (showTooltip) {
+      setShowTooltip(false);
+    }
   };
 
   const formatCurrency = (value) => {
@@ -147,24 +154,28 @@ const MarketingEfficiencyCard = () => {
   }
 
   return (
-   <div className="k-d-flex k-flex-col k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl k-col-span-md-6" style={{ minHeight: '300px', minWidth: '0' }}>
+   <div 
+     className="k-d-flex k-flex-col k-border k-border-solid k-border-border k-bg-surface-alt k-overflow-hidden k-elevation-1 k-rounded-xl k-col-span-md-6" 
+     style={{ minHeight: '300px', minWidth: '0' }}
+     onClick={handleContainerClick}
+   >
       <div className="k-d-flex k-justify-content-between k-align-items-center k-p-4">
-        <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
-          Marketing Efficiency
-        </span>
         <div className="k-d-flex k-align-items-center k-gap-2">
-          <div style={{ width: '164px' }}>
-            <DatePicker
-              value={selectedDate}
-              onChange={handleDateChange}
-              fillMode="flat"
-            />
-          </div>
+          <span className="k-font-size-lg k-font-bold k-line-height-sm k-color-primary-emphasis">
+            Marketing Efficiency
+          </span>
           <SvgIcon 
             icon={infoCircleIcon} 
             size="small" 
             style={{ cursor: 'pointer', opacity: 0.7 }}
             onClick={handleInfoClick}
+          />
+        </div>
+        <div style={{ width: '164px' }}>
+          <DatePicker
+            value={selectedDate}
+            onChange={handleDateChange}
+            fillMode="flat"
           />
         </div>
       </div>
@@ -220,18 +231,15 @@ const MarketingEfficiencyCard = () => {
             </ChartSeries>
             <ChartTooltip 
               render={(context) => {
-                const dataItem = chartData[context.point.categoryIx];
-                if (!dataItem) return null;
-                return (
-                  <div className="k-p-2 k-bg-surface k-border k-rounded k-font-size-sm">
-                    <div className="k-font-weight-bold k-mb-1">{dataItem.campaign}</div>
-                    <div>ROMI: {formatPercentage(dataItem.romi)}</div>
-                    <div>CAC: {formatCurrency(dataItem.cac)}</div>
-                    <div>Conversion: {formatPercentage(dataItem.conversionRate)}</div>
-                    <div>Leads: {dataItem.leads}</div>
-                    <div>Sales: {dataItem.sales}</div>
-                  </div>
-                );
+                const seriesName = context.point.series.name;
+                const value = context.point.value;
+                
+                if (seriesName === "CAC ($)") {
+                  return `CAC ${value.toFixed(2)} $`;
+                } else if (seriesName === "ROMI (%)") {
+                  return `ROMI ${value.toFixed(1)} %`;
+                }
+                return `${seriesName} ${value}`;
               }}
             />
           </Chart>
@@ -269,21 +277,26 @@ const MarketingEfficiencyCard = () => {
             left: tooltipPosition.x - 150,
             top: tooltipPosition.y - 100,
             zIndex: 10000,
-            maxWidth: '300px',
-            padding: '8px',
+            maxWidth: '320px',
+            padding: '12px',
             backgroundColor: 'var(--kendo-color-surface-alt)',
             border: '1px solid var(--kendo-color-border)',
             borderRadius: '4px',
             fontSize: '12px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            color: '#000'
           }}
+          onClick={(e) => e.stopPropagation()}
         >
-          <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>Marketing Efficiency</div>
-          <div>Shows marketing effectiveness metrics: return on investment, customer acquisition cost, and conversion rates.</div>
-          <div style={{ marginTop: '4px' }}>
-            <strong>ROMI:</strong> (Revenue - Spend) / Spend × 100%<br/>
-            <strong>CAC:</strong> Spend / Leads<br/>
-            <strong>Conversion:</strong> Sales / Leads × 100%
+          <div style={{ marginTop: '8px', color: '#000' }}>
+            <div style={{ marginBottom: '4px' }}><strong>ROMI:</strong> Return on Marketing Investment - measures revenue generated per dollar spent</div>
+            <div style={{ marginBottom: '4px' }}><strong>CAC:</strong> Customer Acquisition Cost - average cost to acquire one customer</div>
+            <div style={{ marginBottom: '4px' }}><strong>Conversion Rate:</strong> Percentage of leads that convert to actual sales</div>
+            <div style={{ marginBottom: '4px' }}><strong>Efficiency Analysis:</strong> Compare campaign performance using standardized metrics</div>
+            <div style={{ marginBottom: '4px' }}><strong>Day-of-Week Filter:</strong> View efficiency data for campaigns active on selected day</div>
+          </div>
+          <div style={{ marginTop: '10px', fontSize: '11px', opacity: 0.8, fontStyle: 'italic', color: '#000' }}>
+            💡 Higher ROMI and lower CAC indicate more efficient marketing campaigns
           </div>
         </div>
       )}

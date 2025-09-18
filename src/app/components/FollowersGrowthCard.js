@@ -8,6 +8,19 @@ const FollowersGrowthCard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [chartData, setChartData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const getPageViewsByDayOfWeekAndCampaign = (data) => {
     if (!data || !Array.isArray(data)) {
@@ -34,13 +47,15 @@ const FollowersGrowthCard = () => {
       campaigns[item.campaign_name] = true;
     });
 
-    const categories = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const fullCategories = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const shortCategories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const categories = isMobile ? shortCategories : fullCategories;
     const campaignNames = Object.keys(campaigns);
     const colors = ['#007bff', '#dc3545', '#28a745', '#ffc107'];
     
     const series = campaignNames.map((campaign, index) => ({
       name: campaign,
-      data: categories.map(day => dayOfWeekData[day]?.[campaign] || 0),
+      data: fullCategories.map(day => dayOfWeekData[day]?.[campaign] || 0),
       color: colors[index % colors.length]
     }));
 
@@ -63,7 +78,7 @@ const FollowersGrowthCard = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isMobile]);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.value);

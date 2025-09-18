@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { Chart, ChartSeries, ChartSeriesItem, ChartCategoryAxis, ChartCategoryAxisItem, ChartValueAxis, ChartValueAxisItem, ChartTooltip } from '@progress/kendo-react-charts';
 import { SvgIcon } from '@progress/kendo-react-common';
 import { infoCircleIcon } from '@progress/kendo-svg-icons';
@@ -16,17 +15,12 @@ import {
 } from '../utils/campaignUtils';
 
 const FinancialPerformanceCard = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
   const [chartData, setChartData] = useState([]);
   const [summaryData, setSummaryData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [allCampaignData, setAllCampaignData] = useState({ data: [] });
-
-  const getDayOfWeek = (date) => {
-    return date.getDay();
-  };
 
   useEffect(() => {
     const fetchCampaignData = async () => {
@@ -47,15 +41,8 @@ const FinancialPerformanceCard = () => {
 
   useEffect(() => {
     if (allCampaignData.data && allCampaignData.data.length > 0) {
-      const currentDay = getDayOfWeek(selectedDate || new Date());
-      
-      const currentDayData = allCampaignData.data.filter(item => {
-        const itemDate = new Date(item.date);
-        return getDayOfWeek(itemDate) === currentDay;
-      });
-      
       const campaignGroups = {};
-      currentDayData.forEach(item => {
+      allCampaignData.data.forEach(item => {
         const key = item.campaign_id;
         if (!campaignGroups[key]) {
           campaignGroups[key] = {
@@ -122,11 +109,7 @@ const FinancialPerformanceCard = () => {
         overallConversion: calculateConversionRate(totalSales, totalLeads)
       });
     }
-  }, [allCampaignData, selectedDate]);
-
-  const handleDateChange = (event) => {
-    setSelectedDate(event.value);
-  };
+  }, [allCampaignData]);
 
   const handleInfoClick = (event) => {
     event.stopPropagation();
@@ -174,13 +157,6 @@ const FinancialPerformanceCard = () => {
             size="small" 
             style={{ cursor: 'pointer', opacity: 0.7 }}
             onClick={handleInfoClick}
-          />
-        </div>
-        <div style={{ width: '164px' }}>
-          <DatePicker
-            value={selectedDate}
-            onChange={handleDateChange}
-            fillMode="flat"
           />
         </div>
       </div>
@@ -248,7 +224,7 @@ const FinancialPerformanceCard = () => {
                 axis="currency"
               />
             </ChartSeries>
-            <ChartTooltip format="{0}: ${1}" />
+            <ChartTooltip format="{0} ${1}" />
           </Chart>
         ) : (
           <div className="k-d-flex k-justify-content-center k-align-items-center k-flex-1">

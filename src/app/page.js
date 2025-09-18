@@ -176,6 +176,8 @@ export default function SocialMediaManagementDashboard() {
                   selectedDate={selectedDate}
                 />
                 <CampaignEfficiencyCard/>
+                <FinancialPerformanceCard />
+                <MarketingEfficiencyCard />
                 <FollowersCard />
                 <ScheduledPostsCard />
                 <FollowersGrowthCard />
@@ -217,10 +219,10 @@ export default function SocialMediaManagementDashboard() {
                 <div style={{ minHeight: '400px', minWidth: '0' }}>
                   <ClickThroughRateCard />
                 </div>
-                <div style={{ minHeight: '400px', minWidth: '0' }}>
+                <div className="k-col-span-2" style={{ minHeight: '400px' }}>
                   <FinancialPerformanceCard />
                 </div>
-                <div style={{ minHeight: '400px', minWidth: '0' }}>
+                <div className="k-col-span-2" style={{ minHeight: '400px' }}>
                   <MarketingEfficiencyCard />
                 </div>
                 <div className="k-col-span-2" style={{ minHeight: '400px' }}>
